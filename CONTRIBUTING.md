@@ -1,0 +1,39 @@
+## Setting up the development environment
+
+To set up the development environment, you will need to install the `poetry` tool for python package development and dependency management. 
+Detailed instructions for installing `poetry` can be found [here](https://python-poetry.org/docs/).
+
+The instructios to run the official installer are as follows (as of 2024-08-15):
+```bash
+curl -sSL https://install.python-poetry.org | python3 -
+```
+
+Once you have installed `poetry`, you can clone the repository and install the dependencies to a virtual environment by running the following commands from the root of the repository:
+```bash
+python3 -m venv .venv
+source .venv/bin/activate
+poetry install --with dev
+```
+
+This will create a virtual environment in the `.venv` directory and install the dependencies listed in the `pyproject.toml` file, including the development dependencies.
+
+## Testing the library
+
+We use `pytest` for testing the library along side `pytest-cov` for coverage. To run the tests, you can use the following target from the included `Makefile`:
+```bash
+make test
+```
+
+We aim for >85% test coverage in the library. If you are adding new functionality, please ensure that you add tests for the new functionality and that the overall test coverage does not drop below 85%.
+
+Tests are stored in the `tests` directory and are organized by module. You can run tests for a specific module by specifying the module name as an argument to `pytest`. For example:
+```bash
+pytest tests/data
+```
+
+## Building the documentation
+
+We use `sphinx` for building the documentation. We use the builtin `autodoc` and `napoleon` extensions to support automatic documentation of python code with Google style docstrings. We also use the `myst-parser` extension to enable us to write documentation in markdown rather than rst. To build the documentation, you can use the following target from the included `Makefile`:
+```bash
+make docs
+```
