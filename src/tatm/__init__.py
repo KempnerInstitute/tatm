@@ -1,0 +1,1 @@
+from tatm.cli import cli
