@@ -3,6 +3,7 @@ import json
 import pathlib
 import yaml
 
+
 @dataclasses.dataclass
 class Metadata:
     name: str
@@ -20,7 +21,7 @@ class Metadata:
             str: Metadata as a JSON string.
         """
         return json.dumps(dataclasses.asdict(self))
-    
+
     def to_json(self, filename):
         """Write the metadata to a JSON file.
 
@@ -29,7 +30,7 @@ class Metadata:
         """
         with open(filename, "w") as f:
             json.dump(dataclasses.asdict(self), f)
-    
+
     @classmethod
     def from_json(cls, json_path):
         """Create a Metadata object from a JSON file."""
@@ -41,14 +42,14 @@ class Metadata:
             metadata["dataset_path"] = str(parent_dir)
 
         return cls(**metadata)
-    
+
     def as_yaml(self):
         return yaml.dump(dataclasses.asdict(self))
-    
+
     def to_yaml(self, filename):
         with open(filename, "w") as f:
             yaml.dump(dataclasses.asdict(self), f)
-    
+
     @classmethod
     def from_yaml(cls, yaml_path):
         with open(yaml_path, "r") as f:

@@ -1,6 +1,7 @@
 import pathlib
 from tatm.data.metadata import Metadata
 
+
 def test_json_load():
     filename = "tests/data/metadata_test.json"
     metadata = Metadata.from_json(filename)

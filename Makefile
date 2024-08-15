@@ -12,5 +12,9 @@ install-test:
 test:
 	pytest --cov=tatm tests
 
+lint:
+	black src/tatm tests
+	flake8 src/tatm tests
+
 build-docs:
 	cd docs && make html
