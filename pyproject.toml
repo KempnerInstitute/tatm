@@ -7,7 +7,7 @@ readme = "README.md"
 packages = [{include = "tatm", from = "src"}]
 
 [tool.poetry.dependencies]
-python = "^3.12"
+python = "^3.10"
 click = "^8.1.7"
 datasets = "^2.21.0"
 tokenizers = "^0.20.0"
