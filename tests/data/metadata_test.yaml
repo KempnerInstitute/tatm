@@ -1,6 +1,6 @@
 content_field: text
 data_content: text
-date_downloaded: date_downloaded
-description: description
-download_source: download_source
+date_downloaded: "2021-01-01"
+description: A test metadata file.
+download_source: http://example.com
 name: test
