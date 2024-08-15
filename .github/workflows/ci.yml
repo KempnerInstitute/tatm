@@ -21,9 +21,9 @@ jobs:
                   poetry install --with test
             - name: Check formatting and PEP8
               run: |
-                    black --check src/tatm tests
-                    flake8 src/tatm tests
+                    poetry run black --check src/tatm tests
+                    poetry run flake8 src/tatm tests
             - name: Run tests
               run: |
-                  pytest --cov=src/tatm --cov-fail-under=85 tests
+                  poetry run pytest --cov=src/tatm --cov-fail-under=85 tests
 
