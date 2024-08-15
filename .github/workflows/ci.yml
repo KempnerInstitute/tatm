@@ -1,0 +1,28 @@
+name: Package Testing
+on:
+    - push
+    - pull_request
+
+jobs:
+    TestPackage:
+        runs-on: ubuntu-latest
+        steps:
+            - name: Checkout repository
+              uses: actions/checkout@v4
+            - name: Set up Python
+              uses: actions/setup-python@v3
+              with:
+                  python-version: 3.10
+            - name: Set up Poetry
+              run: |
+                  pip install poetry
+            - name: Install test dependencies
+              run: |
+                  poetry install --with test
+            - name: Check formatting and PEP8
+              run: |
+                    make lint
+            - name: Run tests
+              run: |
+                  make test
+
