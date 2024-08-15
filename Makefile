@@ -10,7 +10,7 @@ install-test:
 	poetry install --with test
 
 test:
-	pytest --cov=tatm tests
+	pytest --cov=tatm --cov-fail-under=85 tests
 
 lint:
 	black src/tatm tests
