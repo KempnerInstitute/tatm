@@ -16,6 +16,7 @@ def test_json_load():
     assert metadata.data_content == "text"
     assert metadata.content_field == "text"
 
+
 def test_yaml_load():
     filename = "tests/data/metadata_test.yaml"
     metadata = Metadata.from_yaml(filename)
@@ -27,6 +28,7 @@ def test_yaml_load():
     assert metadata.download_source == "http://example.com"
     assert metadata.data_content == "text"
     assert metadata.content_field == "text"
+
 
 def test_json_save(tmp_path):
     metadata = Metadata(
@@ -46,6 +48,7 @@ def test_json_save(tmp_path):
     assert json_dict["download_source"] == "http://example.com"
     assert json_dict["data_content"] == "text"
     assert json_dict["content_field"] == "text"
+
 
 def test_yaml_save(tmp_path):
     metadata = Metadata(
