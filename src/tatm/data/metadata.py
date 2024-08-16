@@ -138,7 +138,6 @@ def create_metadata_interactive():
         if not corpus:
             break
         corpuses.append(corpus)
-    
 
     metadata = Metadata(
         name=name,

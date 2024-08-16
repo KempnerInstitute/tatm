@@ -73,9 +73,11 @@ def test_yaml_save(tmp_path):
 
 def test_interactive_creation(monkeypatch, tmp_path):
 
-    output_types = ["","json", "yaml"]
+    output_types = ["", "json", "yaml"]
     content_types = ["", "text"]
-    for output_type, content_type in [(o, c) for o in output_types for c in content_types]:
+    for output_type, content_type in [
+        (o, c) for o in output_types for c in content_types
+    ]:
         responses = iter(
             [
                 output_type,
