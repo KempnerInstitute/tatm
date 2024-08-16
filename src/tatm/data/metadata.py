@@ -2,6 +2,23 @@ import dataclasses
 import json
 import pathlib
 import yaml
+import datetime
+import os
+from enum import Enum
+
+
+class DatasetContentType(str, Enum):
+    """Enum class for dataset content"""
+
+    TEXT = "text"
+    IMAGE = "image"
+    AUDIO = "audio"
+    VIDEO = "video"
+    OTHER = "other"
+
+    @classmethod
+    def has_value(cls, value):
+        return any(value == item.value for item in cls)
 
 
 @dataclasses.dataclass
@@ -11,8 +28,16 @@ class Metadata:
     description: str
     date_downloaded: str
     download_source: str
-    data_content: str
+    data_content: DatasetContentType
     content_field: str = "text"
+    corpuses: list = dataclasses.field(default_factory=list)
+
+    def __post_init__(self):
+        self._validate()
+
+    def _validate(self):
+        if not DatasetContentType.has_value(self.data_content):
+            raise ValueError(f"Invalid data_content value: {self.data_content}")
 
     def as_json(self):
         """Return the metadata as a JSON string.
@@ -29,7 +54,7 @@ class Metadata:
             filename (str): The path of the file to write the metadata to.
         """
         with open(filename, "w") as f:
-            json.dump(dataclasses.asdict(self), f)
+            f.write(self.as_json())
 
     @classmethod
     def from_json(cls, json_path):
@@ -44,11 +69,13 @@ class Metadata:
         return cls(**metadata)
 
     def as_yaml(self):
-        return yaml.dump(dataclasses.asdict(self))
+        out = dataclasses.asdict(self)
+        out["data_content"] = self.data_content.value
+        return yaml.dump(out)
 
     def to_yaml(self, filename):
         with open(filename, "w") as f:
-            yaml.dump(dataclasses.asdict(self), f)
+            f.write(self.as_yaml())
 
     @classmethod
     def from_yaml(cls, yaml_path):
@@ -59,3 +86,72 @@ class Metadata:
             parent_dir = pathlib.Path(yaml_path).resolve().parent
             metadata["dataset_path"] = str(parent_dir)
         return cls(**metadata)
+
+
+def create_metadata_interactive():
+    """Construct a Metadata object interactively."""
+
+    output_format = input("Output format ([json], yaml): ")
+    if not output_format:
+        output_format = "json"
+    if output_format not in ["json", "yaml"]:
+        raise ValueError("Invalid output format value.")
+
+    current_dir = os.getcwd()
+
+    output_path = input(f"Output path [{current_dir}/metadata.{output_format}]: ")
+    if not output_path:
+        output_path = f"{current_dir}/metadata.{output_format}"
+
+    name = input("Name: ")
+
+    dataset_path = input(f"Dataset path [{current_dir}]: ")
+    if not dataset_path:
+        dataset_path = current_dir
+
+    description = input("Dataset Description: ")
+
+    cur_date = datetime.datetime.now().strftime("%Y-%m-%d")
+    date_downloaded = input(f"Date downloaded [{cur_date}]: ")
+    if not date_downloaded:
+        date_downloaded = cur_date
+
+    download_source = input("Download source: ")
+
+    data_content = input("Data content ([text], image, audio, video, other): ")
+    if not data_content:
+        data_content = "text"
+    if data_content not in ["text", "image", "audio", "video", "other"]:
+        raise ValueError("Invalid data content value.")
+
+    content_field = input("Content field [text]: ")
+    if not content_field:
+        content_field = "text"
+
+    corpuses = []
+    while True:
+        if corpuses:
+            print("Current corpuses: ", corpuses)
+            corpus = input("Add another corpus (leave blank to finish): ")
+        else:
+            corpus = input("List any corpuses in the dataset (leave blank to finish): ")
+        if not corpus:
+            break
+        corpuses.append(corpus)
+    
+
+    metadata = Metadata(
+        name=name,
+        dataset_path=dataset_path,
+        description=description,
+        date_downloaded=date_downloaded,
+        download_source=download_source,
+        data_content=DatasetContentType(data_content),
+        content_field=content_field,
+        corpuses=corpuses,
+    )
+
+    if output_format == "json":
+        metadata.to_json(output_path)
+    else:
+        metadata.to_yaml(output_path)
