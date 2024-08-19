@@ -1,10 +1,11 @@
 import dataclasses
-import json
-import pathlib
-import yaml
 import datetime
+import json
 import os
+import pathlib
 from enum import Enum
+
+import yaml
 
 
 class DatasetContentType(str, Enum):
@@ -22,7 +23,7 @@ class DatasetContentType(str, Enum):
 
 
 @dataclasses.dataclass
-class Metadata:
+class DatasetMetadata:
     name: str
     dataset_path: str
     description: str
@@ -34,6 +35,7 @@ class Metadata:
 
     def __post_init__(self):
         self._validate()
+        self.data_content = DatasetContentType(self.data_content)
 
     def _validate(self):
         if not DatasetContentType.has_value(self.data_content):
@@ -139,7 +141,7 @@ def create_metadata_interactive():
             break
         corpuses.append(corpus)
 
-    metadata = Metadata(
+    metadata = DatasetMetadata(
         name=name,
         dataset_path=dataset_path,
         description=description,
