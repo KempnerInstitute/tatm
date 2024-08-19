@@ -1,12 +1,18 @@
-import pathlib
 import json
+import pathlib
+
 import yaml
-from tatm.data.metadata import Metadata, DatasetContentType, create_metadata_interactive
+
+from tatm.data.metadata import (
+    DatasetContentType,
+    DatasetMetadata,
+    create_metadata_interactive,
+)
 
 
 def test_json_load():
     filename = "tests/data/metadata_test.json"
-    metadata = Metadata.from_json(filename)
+    metadata = DatasetMetadata.from_json(filename)
     test_file_dir = pathlib.Path(filename).resolve().parent
     assert metadata.name == "test"
     assert metadata.dataset_path == str(test_file_dir)
@@ -19,7 +25,7 @@ def test_json_load():
 
 def test_yaml_load():
     filename = "tests/data/metadata_test.yaml"
-    metadata = Metadata.from_yaml(filename)
+    metadata = DatasetMetadata.from_yaml(filename)
     test_file_dir = pathlib.Path(filename).resolve().parent
     assert metadata.name == "test"
     assert metadata.dataset_path == str(test_file_dir)
@@ -31,7 +37,7 @@ def test_yaml_load():
 
 
 def test_json_save(tmp_path):
-    metadata = Metadata(
+    metadata = DatasetMetadata(
         name="test",
         dataset_path="./",
         description="A test metadata file.",
@@ -51,7 +57,7 @@ def test_json_save(tmp_path):
 
 
 def test_yaml_save(tmp_path):
-    metadata = Metadata(
+    metadata = DatasetMetadata(
         name="test",
         dataset_path="./",
         description="A test metadata file.",
@@ -97,9 +103,9 @@ def test_interactive_creation(monkeypatch, tmp_path):
         monkeypatch.setattr("builtins.input", lambda _: next(responses))
         create_metadata_interactive()
         if output_type in ["", "json"]:
-            metadata = Metadata.from_json(tmp_path / "metadata_test.json")
+            metadata = DatasetMetadata.from_json(tmp_path / "metadata_test.json")
         else:
-            metadata = Metadata.from_yaml(tmp_path / "metadata_test.yaml")
+            metadata = DatasetMetadata.from_yaml(tmp_path / "metadata_test.yaml")
         assert metadata.name == "test"
         assert metadata.dataset_path == "./"
         assert metadata.description == "A test metadata file."

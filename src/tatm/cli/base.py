@@ -1,4 +1,5 @@
 import click
+
 from tatm.cli.data import data
 
 
