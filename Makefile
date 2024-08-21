@@ -20,5 +20,5 @@ lint:
 	black src/tatm tests
 	flake8 src/tatm tests
 
-docs:
+build-docs:
 	cd docs && make html
