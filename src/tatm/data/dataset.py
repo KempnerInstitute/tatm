@@ -73,7 +73,12 @@ class TatmTextDataset(TatmDataset):
 
     def __iter__(self):
         """Iterate over the dataset."""
-        return iter(self.dataset)
+        self.data_iter = iter(self.dataset)
+        return self
+
+    def __next__(self):
+        """Get the next item from the dataset."""
+        return next(self.data_iter)
 
 
 def get_dataset(identifier: Union[str, DatasetMetadata]) -> TatmDataset:
