@@ -29,7 +29,9 @@ def test_ray_run(tmp_path):
     assert np.array_equal(engine_result[0 : len(tokenized)], tokenized)
 
     actors = ray.util.state.list_actors()
-    assert len([x for x in actors if x.state == "ALIVE"]) == 0
+    assert (
+        len([x for x in actors if x.state == "ALIVE"]) == 0
+    )  # Ensure all actors are cleaned up
 
     # Clean up
     ray.shutdown()
