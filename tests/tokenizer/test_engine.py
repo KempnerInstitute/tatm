@@ -10,6 +10,7 @@ from tatm.tokenizer import Engine
 
 
 def test_ray_run(tmp_path):
+    """Integration test for the Engine class with Ray."""
     # Initialize Ray
     ray.init(num_cpus=4)
     dataset = tatm.data.get_dataset("tests/data/json_dataset")
