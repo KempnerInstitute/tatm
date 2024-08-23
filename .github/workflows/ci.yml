@@ -21,6 +21,7 @@ jobs:
                   poetry install --with test
             - name: Check formatting and PEP8
               run: |
+                    poetry run isort --check-only src/tatm tests
                     poetry run black --check src/tatm tests
                     poetry run flake8 src/tatm tests
             - name: Run tests

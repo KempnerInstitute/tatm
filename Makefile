@@ -10,11 +10,15 @@ install-test:
 	poetry install --with test
 
 test:
+	isort --check-only src/tatm tests
+	black --check src/tatm tests
+	flake8 src/tatm tests
 	pytest --cov=tatm  --cov-report term-missing --cov-fail-under=85 tests
 
 lint:
+	isort src/tatm tests
 	black src/tatm tests
 	flake8 src/tatm tests
 
-docs:
+build-docs:
 	cd docs && make html
