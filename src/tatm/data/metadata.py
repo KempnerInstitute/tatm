@@ -24,14 +24,32 @@ class DatasetContentType(str, Enum):
 
 @dataclasses.dataclass
 class DatasetMetadata:
-    name: str
-    dataset_path: str
-    description: str
-    date_downloaded: str
-    download_source: str
-    data_content: DatasetContentType
-    content_field: str = "text"
-    corpuses: list = dataclasses.field(default_factory=list)
+    """Generic Dataset Metadata Class holding information about a dataset.
+
+    Args:
+        name (str): Name of the dataset.
+        dataset_path (str): Path to the dataset.
+        description (str): Description of the dataset.
+        date_downloaded (str): Date the dataset was downloaded.
+        download_source (str): Source of the dataset.
+        data_content (DatasetContentType): Type of data in the dataset.
+        content_field (str, optional): Field in the dataset that contains the content. Defaults to "text".
+        corpuses (list, optional): List of corpuses in the dataset. Defaults to dataclasses.field(default_factory=list).
+
+    Raises:
+        ValueError: Raises a ValueError if the data_content value is invalid.
+    """
+
+    name: str  #: Name of the dataset.
+    dataset_path: str  #: Path to the dataset.
+    description: str  #: Description of the dataset.
+    date_downloaded: str  #: Date the dataset was downloaded.
+    download_source: str  #: Source of the dataset.
+    data_content: DatasetContentType  #: Type of data in the dataset.
+    content_field: str = "text"  #: Field in the dataset that contains the content.
+    corpuses: list = dataclasses.field(
+        default_factory=list
+    )  #: List of corpuses in the dataset.
 
     def __post_init__(self):
         self._validate()

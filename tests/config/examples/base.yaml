@@ -1,0 +1,4 @@
+backend: slurm
+slurm:
+  partition: debug
+  account: kempner_dev

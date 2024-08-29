@@ -1,4 +1,15 @@
 from dataclasses import dataclass
+from enum import Enum
+
+
+class Backend(str, Enum):
+    """Enum class representing the available compute backends for running a command."""
+
+    slurm = "slurm"
+
+    @classmethod
+    def has_value(cls, value):
+        return any(value == item.value for item in cls)
 
 
 @dataclass(kw_only=True)
@@ -45,6 +56,7 @@ class Job:
     nodes: int = 1  #: Number of nodes to use for the job.
     cpus_per_task: int = 1  #: Number of CPUs to use per task.
     gpus_per_node: int = None  #: Number of GPUs to use per node.
+    time_limit: str = None #: Time limit for the job. Expressed in D-HH:MM:SS format.
     memory: str = (
         "0"  #: Memory to allocate for the job. Default is 0, which means all available memory.
     )

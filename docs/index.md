@@ -15,5 +15,6 @@ of new models, datasets, and training frameworks.
 :maxdepth: 2
 :caption: Contents:
 data.md
+config.md
 ```
 

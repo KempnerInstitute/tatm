@@ -1,7 +1,8 @@
 import string
+import subprocess
 from dataclasses import dataclass
 from pathlib import Path
-from typing import List
+from typing import List, Union
 
 from tatm.compute.job import Job
 
@@ -19,8 +20,15 @@ class SlurmJob(Job):
     """
 
     partition: str
-    account: str
+    account: str = None
+    qos: str = None
+    constraints: Union[str,List[str]] = None
+    slurm_bin_dir: str = "/usr/bin/"
     modules: list = None
+
+    def __post_init__(self):
+        if isinstance(self.constraints, str):
+            self.constraints = [self.constraints]
 
 
 def _slurm_create_ray_job(job: SlurmJob, command: List[str], job_file_path: str = None):
@@ -67,3 +75,32 @@ def _fill_ray_slurm_template(
     job_content = job_template.safe_substitute(**options)
 
     return job_content
+
+def _submit_job_command(job: SlurmJob, job_file_path: str):
+    sbatch_path = str(Path(job.slurm_bin_dir) / "sbatch")
+
+    submit_command = [sbatch_path]
+
+    submit_command.extend(["--nodes", job.nodes])
+    submit_command.extend(["--cpus-per-task", job.cpus_per_task])
+    if job.gpus_per_node:
+        submit_command.extend(["--gres", f"gpu:{job.gpus_per_node}"])
+    submit_command.extend(["--mem", job.memory])
+    if job.time_limit:
+        submit_command.extend(["--time", job.time_limit])
+
+    if job.qos:
+        submit_command.extend(["--qos", job.qos])
+    submit_command.extend(["--partition", job.partition])
+    if job.account:
+        submit_command.extend(["--account", job.account])
+
+    if job.constraints:
+        submit_command.extend(["--constraint", ",".join(job.constraints)])
+    
+    
+
+
+    submit_command.append(job_file_path)
+
+    return submit_command

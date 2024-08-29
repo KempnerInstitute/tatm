@@ -13,7 +13,7 @@ class TatmDataset(ABC):
     """Generic dataset class, provides interface to access multiple types of datasets.
 
     Args:
-        ABC (_type_): _description_
+        metadata (DatasetMetadata): Metadata object.
     """
 
     def __init__(self, metadata: DatasetMetadata):
@@ -44,7 +44,7 @@ class TatmTextDataset(TatmDataset):
     """Text dataset class, provides interface to access text datasets.
 
     Args:
-        TatmDataset (_type_): _description_
+        metadata (DatasetMetadata): Metadata object.
     """
 
     @classmethod
