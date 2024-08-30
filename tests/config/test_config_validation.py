@@ -2,6 +2,7 @@ import pytest
 
 from tatm.config import EnvironmentConfig
 
+
 def test_environment_config():
     env = EnvironmentConfig()
     assert env.singularity_image is None

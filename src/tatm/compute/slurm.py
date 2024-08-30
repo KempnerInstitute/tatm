@@ -22,7 +22,7 @@ class SlurmJob(Job):
     partition: str
     account: str = None
     qos: str = None
-    constraints: Union[str,List[str]] = None
+    constraints: Union[str, List[str]] = None
     slurm_bin_dir: str = "/usr/bin/"
     modules: list = None
 
@@ -37,9 +37,10 @@ def _slurm_create_ray_job(job: SlurmJob, command: List[str], job_file_path: str 
         job_file_path = Path.cwd() / f"tatm_{command[0]}_job.submit"
 
     job_content = _fill_ray_slurm_template(
-        job.modules,
+        job.environment.modules,
         job.environment.conda_env,
         job.environment.singularity_image,
+        job.environment.venv,
         command,
     )
 
@@ -48,7 +49,11 @@ def _slurm_create_ray_job(job: SlurmJob, command: List[str], job_file_path: str 
 
 
 def _fill_ray_slurm_template(
-    modules: List[str], conda_env: str, singularity_image: str, command: List[str]
+    modules: List[str],
+    conda_env: str,
+    singularity_image: str,
+    venv: str,
+    command: List[str],
 ):
     with open(Path(__file__).parent / "templates" / "slurm" / "ray.submit") as f:
         job_template = string.Template(f.read())
@@ -65,6 +70,11 @@ def _fill_ray_slurm_template(
     else:
         options["CONDA_ACTIVATE"] = ""
 
+    if venv:
+        options["VENV_ACTIVATE"] = f"source {venv}/bin/activate"
+    else:
+        options["VENV_ACTIVATE"] = ""
+
     if singularity_image:
         options["SINGULARITY_WRAP"] = f"singularity exec {singularity_image}"
     else:
@@ -75,6 +85,7 @@ def _fill_ray_slurm_template(
     job_content = job_template.safe_substitute(**options)
 
     return job_content
+
 
 def _submit_job_command(job: SlurmJob, job_file_path: str):
     sbatch_path = str(Path(job.slurm_bin_dir) / "sbatch")
@@ -97,10 +108,25 @@ def _submit_job_command(job: SlurmJob, job_file_path: str):
 
     if job.constraints:
         submit_command.extend(["--constraint", ",".join(job.constraints)])
-    
-    
-
 
     submit_command.append(job_file_path)
 
     return submit_command
+
+
+def submit_job(job: SlurmJob, job_file_path: str, submit=True):
+    """Submit a Slurm job. If submit is False, return the command to submit the job.
+
+    Args:
+        job (SlurmJob): Instance of SlurmJob containing the job specifications.
+        job_file_path (str): Path to the job file to submit.
+        submit (bool, optional): Should the job be submitted. Defaults to True. If false, return the command to submit the job for inspection.
+
+    Returns:
+        _type_: _description_
+    """
+    command = _submit_job_command(job, job_file_path)
+    if not submit:
+        return command
+    result = subprocess.run(command, check=True, capture_output=True)
+    return result

@@ -1,5 +1,5 @@
 import dataclasses
-from typing import List, Union, Optional
+from typing import List, Optional, Union
 
 from omegaconf import MISSING, OmegaConf
 
@@ -15,9 +15,11 @@ class SlurmConfig:
     qos: Optional[str] = None  #: Quality of Service to use for the job.
     slurm_bin_dir: str = "/usr/bin/"  #: Directory containing the Slurm binaries.
 
+
 @dataclasses.dataclass
 class EnvironmentConfig:
     """Environment configuration for compute jobs."""
+
     modules: Optional[List[str]] = None
     conda_env: Optional[str] = None
     venv: Optional[str] = None
@@ -27,7 +29,12 @@ class EnvironmentConfig:
         if self.conda_env is not None and self.venv is not None:
             raise ValueError("Cannot specify both conda_env and venv.")
         if self.singularity_image and (self.conda_env or self.venv):
-            raise ValueError("Cannot specify both singularity_image and conda_env or venv.")
+            raise ValueError(
+                "Cannot specify both singularity_image and conda_env or venv."
+            )
+        if isinstance(self.modules, str):
+            self.modules = self.modules.split(",")
+
 
 @dataclasses.dataclass
 class TatmConfig:

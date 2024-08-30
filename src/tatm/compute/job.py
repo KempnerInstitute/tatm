@@ -29,6 +29,7 @@ class Environment:
     modules: list = None
     conda_env: str = None
     singularity_image: str = None
+    venv: str = None
 
     def __post_init__(self):
         if self.modules is None:
@@ -56,7 +57,7 @@ class Job:
     nodes: int = 1  #: Number of nodes to use for the job.
     cpus_per_task: int = 1  #: Number of CPUs to use per task.
     gpus_per_node: int = None  #: Number of GPUs to use per node.
-    time_limit: str = None #: Time limit for the job. Expressed in D-HH:MM:SS format.
+    time_limit: str = None  #: Time limit for the job. Expressed in D-HH:MM:SS format.
     memory: str = (
         "0"  #: Memory to allocate for the job. Default is 0, which means all available memory.
     )

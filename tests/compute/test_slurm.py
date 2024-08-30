@@ -3,10 +3,8 @@ from tatm.compute.slurm import SlurmJob, _slurm_create_ray_job, _submit_job_comm
 
 
 def test_slurm_create_ray_job(tmp_path):
-    env = Environment(conda_env="test_env")
-    job = SlurmJob(
-        partition="partition", account="account", environment=env, modules=["python"]
-    )
+    env = Environment(conda_env="test_env", modules=["python", "mpi"])
+    job = SlurmJob(partition="partition", account="account", environment=env)
     output_path = tmp_path / "ray.submit"
     command = ["tokenize", "--num-workers", "10", "test_data"]
     _slurm_create_ray_job(job, command, output_path)
@@ -41,8 +39,19 @@ def test_slurm_create_ray_singularity_job(tmp_path):
             print(f"Got: {content[i]}")
             assert content[i] == expected_content[i]
 
+
 def test_submit_command():
-    job = SlurmJob(partition="partition", account="account",  nodes=2, cpus_per_task=4, time_limit="1-00:00:00", memory="10G", gpus_per_node=1, constraints="h100", qos="high")
+    job = SlurmJob(
+        partition="partition",
+        account="account",
+        nodes=2,
+        cpus_per_task=4,
+        time_limit="1-00:00:00",
+        memory="10G",
+        gpus_per_node=1,
+        constraints="h100",
+        qos="high",
+    )
 
     job_file_path = "test_job_file"
 
@@ -75,4 +84,3 @@ def test_submit_command():
             print(f"Expected: {expected_command[i]}")
             print(f"Got: {command[i]}")
             assert command[i] == expected_command[i]
-

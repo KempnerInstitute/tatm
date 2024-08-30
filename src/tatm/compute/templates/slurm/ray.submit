@@ -4,7 +4,7 @@
 
 ${MODULES}
 
-${CONDA_ACTIVATE}
+${CONDA_ACTIVATE}${VENV_ACTIVATE}
 
 # choose available port on the head node
 head_port=`comm -23 <(seq 15000 65535 | sort) <(ss -Htan | awk '{print $4}' | cut -d':' -f2 | sort -u) | shuf | head -n 1`
