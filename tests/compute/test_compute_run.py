@@ -1,4 +1,4 @@
-from tatm.compute.run import TatmRunOptions, run
+from tatm.compute.run import TatmRunOptions, _add_default_options, run
 from tatm.config import load_config
 
 
@@ -45,3 +45,35 @@ def test_run_tokenize(tmp_path):
             print(f"Expected: {expected_content[i]}")
             print(f"Got: {content[i]}")
             assert content[i] == expected_content[i]
+
+
+def test_set_option_defaults():
+    options = TatmRunOptions(
+        nodes=2,
+        cpus_per_task=None,
+        submit_script=None,
+        time_limit=None,
+        memory="25G",
+        gpus_per_node=None,
+        constraints=None,
+        submit=True,
+    )
+    defaults = TatmRunOptions(
+        nodes=1,
+        cpus_per_task=40,
+        submit_script=None,
+        time_limit="1-00:00:00",
+        memory="40G",
+        gpus_per_node=None,
+        constraints=None,
+        submit=True,
+    )
+    _add_default_options(options, defaults)
+    assert options.nodes == 2
+    assert options.cpus_per_task == 40
+    assert options.submit_script is None
+    assert options.time_limit == "1-00:00:00"
+    assert options.memory == "25G"
+    assert options.gpus_per_node is None
+    assert options.constraints is None
+    assert options.submit is True

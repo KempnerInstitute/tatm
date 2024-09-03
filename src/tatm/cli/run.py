@@ -36,7 +36,7 @@ def parse_config_opts(opts, validate=True):
 @click.argument("wrapped_command", nargs=-1)
 @click.option(
     "--config",
-    "-c",
+    "--conf",
     default=None,
     help=(
         "Path to configuration file or specific configuration settings. First, all config"
@@ -57,13 +57,14 @@ def parse_config_opts(opts, validate=True):
 @click.option(
     "--cpus-per-task",
     "--cpus",
+    "-c",
     default=None,
     type=int,
     help="Number of CPUs to use per task.",
 )
 @click.option("--submit-script", default=None, help="Path to submit script to create.")
 @click.option("--time-limit", default=None, help="Time limit for the job.")
-@click.option("--memory", default=None, help="Memory to allocate for the job.")
+@click.option("--memory", "--mem", default=None, help="Memory to allocate for the job.")
 @click.option("--gpus-per-node", default=None, help="Number of GPUs to use per node.")
 @click.option("--constraints", default=None, help="Constraints for the job.")
 @click.option(

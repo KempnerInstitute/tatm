@@ -23,6 +23,18 @@ class TatmRunOptions:
     )
 
 
+TOKENIZE_DEFAULTS = TatmRunOptions(
+    nodes=1,
+    cpus_per_task=40,
+    submit_script=None,
+    time_limit="1-00:00:00",
+    memory="40G",
+    gpus_per_node=None,
+    constraints=None,
+    submit=True,
+)
+
+
 def run(config: TatmConfig, options: TatmRunOptions, command):
     if not command:
         raise ValueError("No command provided to run.")
@@ -63,3 +75,9 @@ def run_tokenize(config: TatmConfig, options: TatmRunOptions, command):
             return submit_job(job, submit_script, submit=False)
     else:
         raise ValueError(f"Backend {config.backend} not supported.")
+
+
+def _add_default_options(options: TatmRunOptions, default: TatmRunOptions):
+    for key, value in default.__dict__.items():
+        if getattr(options, key) is None:
+            setattr(options, key, value)
