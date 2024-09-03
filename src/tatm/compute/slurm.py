@@ -47,6 +47,8 @@ def _slurm_create_ray_job(job: SlurmJob, command: List[str], job_file_path: str 
     with open(job_file_path, "w") as f:
         f.write(job_content)
 
+    return job_file_path
+
 
 def _fill_ray_slurm_template(
     modules: List[str],
@@ -92,8 +94,8 @@ def _submit_job_command(job: SlurmJob, job_file_path: str):
 
     submit_command = [sbatch_path]
 
-    submit_command.extend(["--nodes", job.nodes])
-    submit_command.extend(["--cpus-per-task", job.cpus_per_task])
+    submit_command.extend(["--nodes", str(job.nodes)])
+    submit_command.extend(["--cpus-per-task", str(job.cpus_per_task)])
     if job.gpus_per_node:
         submit_command.extend(["--gres", f"gpu:{job.gpus_per_node}"])
     submit_command.extend(["--mem", job.memory])

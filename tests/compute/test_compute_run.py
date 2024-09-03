@@ -18,9 +18,9 @@ def test_run_tokenize(tmp_path):
     expected_command = [
         "/usr/bin/sbatch",
         "--nodes",
-        1,
+        "1",
         "--cpus-per-task",
-        1,
+        "1",
         "--mem",
         "10G",
         "--time",

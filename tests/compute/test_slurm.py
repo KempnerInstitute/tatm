@@ -59,9 +59,9 @@ def test_submit_command():
     expected_command = [
         "/usr/bin/sbatch",
         "--nodes",
-        2,
+        "2",
         "--cpus-per-task",
-        4,
+        "4",
         "--gres",
         "gpu:1",
         "--mem",

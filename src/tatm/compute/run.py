@@ -55,11 +55,11 @@ def run_tokenize(config: TatmConfig, options: TatmRunOptions, command):
             constraints=options.constraints,
             environment=env,
         )
-        _slurm_create_ray_job(job, command, options.submit_script)
+        submit_script = _slurm_create_ray_job(job, command, options.submit_script)
 
         if options.submit:
-            return submit_job(job, options.submit_script)
+            return submit_job(job, submit_script, submit=True)
         else:
-            return submit_job(job, options.submit_script, submit=False)
+            return submit_job(job, submit_script, submit=False)
     else:
         raise ValueError(f"Backend {config.backend} not supported.")
