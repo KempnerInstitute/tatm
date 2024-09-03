@@ -48,6 +48,7 @@ def run(config: TatmConfig, options: TatmRunOptions, command):
 
 
 def run_tokenize(config: TatmConfig, options: TatmRunOptions, command):
+    _add_default_options(options, TOKENIZE_DEFAULTS)
     if config.backend == Backend.slurm:
         env = Environment(
             conda_env=config.environment.conda_env,
