@@ -1,3 +1,4 @@
+import logging
 import os
 import pathlib
 
@@ -21,11 +22,22 @@ from tatm.tokenizer import Engine
     help="Output directory for tokenized data",
     type=click.Path(),
 )
+@click.option("--verbose", "-v", is_flag=True, help="Enable verbose logging")
 @click.option("--file-prefix", default="tokenized", help="Prefix for tokenized files")
-def tokenize(datasets, num_workers, tokenizer, output_dir, file_prefix):
+def tokenize(datasets, num_workers, tokenizer, output_dir, file_prefix, verbose):
+    if verbose:
+        log_level = logging.DEBUG
+    else:
+        log_level = logging.INFO
+
     os.makedirs(output_dir, exist_ok=True)
 
     ray.init()
-    e = Engine(datasets, tokenizer, str(pathlib.Path(output_dir) / file_prefix))
+    e = Engine(
+        datasets,
+        tokenizer,
+        str(pathlib.Path(output_dir) / file_prefix),
+        log_level=log_level,
+    )
     e.run_with_ray(num_workers)
     ray.shutdown()

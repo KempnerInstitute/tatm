@@ -13,6 +13,7 @@ import ray
 import tokenizers
 
 from tatm.data import DatasetMetadata, get_dataset
+from tatm.utils import configure_logging
 
 LOGGER = logging.getLogger(__name__)
 
@@ -30,6 +31,7 @@ class DataServer:
         data: List[Union[str, DatasetMetadata]],
         seed: int = 2130,
         max_queue_size: int = 1024,
+        log_level: str = logging.INFO,
     ):
         self.data = data
         self.datasets = [get_dataset(d) for d in data]
@@ -38,6 +40,7 @@ class DataServer:
         self.initialized = False
         self.initialize()
         self.shutdown_flag = False
+        configure_logging(log_level)
 
     def initialize(self):
         self.dataset_iters = [iter(dataset) for dataset in self.datasets]
@@ -98,6 +101,7 @@ class TokenWriter:
         max_file_size: int = 1024 * 1024 * 1024,
         max_queue_size: int = 1024,
         dtype: str = "uint16",
+        log_level: str = logging.INFO,
     ):
         self.file_prefix = file_prefix
         self.max_file_size = max_file_size
@@ -108,6 +112,7 @@ class TokenWriter:
         self.num_written = 0
         self.shutdown = False
         self.queue = Queue(maxsize=max_queue_size)
+        configure_logging(log_level)
 
     def create_new_file(self):
         self.current_array = np.memmap(
@@ -138,9 +143,14 @@ class TokenWriter:
         self.position += len(data)
         self.num_written += 1
         if self.num_written % 1000 == 0:
-            LOGGER.info(
-                f"Written {self.num_written} items to {self.file_prefix}_{self.file_id}.bin"
-            )
+            if self.num_written % 10000 == 0:
+                LOGGER.info(
+                    f"Written {self.num_written} items to {self.file_prefix}_{self.file_id}.bin"
+                )
+            else:
+                LOGGER.debug(
+                    f"Written {self.num_written} items to {self.file_prefix}_{self.file_id}.bin"
+                )
 
     def run(self):
         while not self.shutdown:
@@ -167,6 +177,7 @@ class TokenizerWorker:
         server: DataServer,
         writer: TokenWriter,
         reset_threshold: int = 10000,
+        log_level: str = logging.INFO,
     ):
         self.server = server
         self.writer = writer
@@ -174,6 +185,7 @@ class TokenizerWorker:
         self.tokenizer = tokenizers.Tokenizer.from_pretrained(tokenizer)
         self.reset_threshold = reset_threshold
         self.documents_tokenized = 0
+        configure_logging(log_level)
 
     def process_example(self):
         if ray.is_initialized():
@@ -207,23 +219,33 @@ class TokenizerWorker:
 
 class Engine:
     def __init__(
-        self, data: List[Union[str, DatasetMetadata]], tokenizer: str, file_prefix: str
+        self,
+        data: List[Union[str, DatasetMetadata]],
+        tokenizer: str,
+        file_prefix: str,
+        log_level: str = logging.INFO,
     ):
         self.data = data
         self.tokenizer = tokenizer
         self.file_prefix = file_prefix
+        self.log_level = log_level
 
     def run_with_ray(self, num_workers=2):
         if not ray.is_initialized():
             raise RuntimeError(
                 "Ray is not initialized. Please initialize Ray before running the engine."
             )
-        server = DataServer.options(max_concurrency=num_workers + 1).remote(self.data)
+        server = DataServer.options(max_concurrency=num_workers + 1).remote(
+            self.data, log_level=self.log_level
+        )
         writer = TokenWriter.options(max_concurrency=num_workers + 1).remote(
-            self.file_prefix
+            self.file_prefix,
+            log_level=self.log_level,
         )
         workers = [
-            TokenizerWorker.remote(self.tokenizer, server, writer)
+            TokenizerWorker.remote(
+                self.tokenizer, server, writer, log_level=self.log_level
+            )
             for _ in range(num_workers)
         ]
         s = server.run.remote()

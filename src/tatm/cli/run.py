@@ -83,4 +83,4 @@ def run(**kwargs):
     print(cfg)
     result = tatm.compute.run.run(cfg, options, wrapped_command)
     if not kwargs["submit"]:
-        print(" ".join(result))
+        print(" ".join([str(x) for x in result]))
