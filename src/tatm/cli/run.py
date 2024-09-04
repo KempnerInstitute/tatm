@@ -73,15 +73,12 @@ def parse_config_opts(opts, validate=True):
     help="Submit the job after creating the submit script. Set to False to only create the submit script.",
 )
 def run(**kwargs):
-    print(kwargs)
     config = kwargs.pop("config")
     wrapped_command = kwargs.pop("wrapped_command")
     files, overrides = parse_config_opts(config)
     cfg = load_config(files, overrides)
 
     options = tatm.compute.run.TatmRunOptions(**kwargs)
-    print(options)
-    print(cfg)
     result = tatm.compute.run.run(cfg, options, wrapped_command)
     if not kwargs["submit"]:
         print(" ".join([str(x) for x in result]))
