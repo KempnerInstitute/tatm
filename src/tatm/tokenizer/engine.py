@@ -41,6 +41,11 @@ class DataServer:
         self.initialize()
         self.shutdown_flag = False
         configure_logging(log_level)
+        self.debug_mode = log_level == logging.DEBUG
+        if self.debug_mode:
+            LOGGER.warning(
+                "Running in debug mode. Note that this may impact performance as the queue interaction pattern changes to allow us to inspect the queue."
+            )
 
     def initialize(self):
         self.dataset_iters = [iter(dataset) for dataset in self.datasets]
@@ -74,7 +79,16 @@ class DataServer:
             if example is None:
                 LOGGER.info("No more examples to fetch.")
                 break
-            self.queue.put(example)
+            if not self.debug_mode:
+                self.queue.put(example)
+            else:
+                while True:
+                    try:
+                        self.queue.put(example, block=False)
+                        break
+                    except queue.Full:
+                        LOGGER.debug("DataServer queue is full")
+                        time.sleep(0.1)
 
         while True:
             # Ensure that all workers receive a termination signal
@@ -86,7 +100,15 @@ class DataServer:
                 break
 
     def next_item(self):
-        return self.queue.get()
+        if not self.debug_mode:
+            return self.queue.get()
+        else:
+            while True:
+                try:
+                    return self.queue.get(block=False)
+                except queue.Empty:
+                    LOGGER.debug("DataServer queue is empty")
+                    time.sleep(0.1)
 
     def shutdown(self):
         self.shutdown_flag = True
@@ -113,6 +135,11 @@ class TokenWriter:
         self.shutdown = False
         self.queue = Queue(maxsize=max_queue_size)
         configure_logging(log_level)
+        self.debug_mode = log_level == logging.DEBUG
+        if self.debug_mode:
+            LOGGER.warning(
+                "Running in debug mode. Note that this may impact performance as the queue interaction pattern changes to allow us to inspect the queue."
+            )
 
     def create_new_file(self):
         self.current_array = np.memmap(
@@ -131,7 +158,28 @@ class TokenWriter:
             self.file_id += 1
 
     def put(self, data: np.ndarray):
-        self.queue.put(data)
+        if not self.debug_mode:
+            self.queue.put(data)
+            return
+        else:
+            while True:
+                try:
+                    self.queue.put(data, block=False)
+                    break
+                except queue.Full:
+                    LOGGER.debug("TokenWriter queue is full")
+                    time.sleep(0.1)
+
+    def get(self):
+        if not self.debug_mode:
+            return self.queue.get()
+        else:
+            while True:
+                try:
+                    return self.queue.get(block=False)
+                except queue.Empty:
+                    LOGGER.debug("TokenWriter queue is empty")
+                    time.sleep(0.1)
 
     def write(self, data: np.ndarray):
         if self.current_array is None:
@@ -154,7 +202,8 @@ class TokenWriter:
 
     def run(self):
         while not self.shutdown:
-            data = self.queue.get()
+            data = self.get()
+
             if data is None:
                 LOGGER.info("Received shutdown signal.")
                 break
@@ -186,19 +235,19 @@ class TokenizerWorker:
         self.reset_threshold = reset_threshold
         self.documents_tokenized = 0
         configure_logging(log_level)
+        self.debug_mode = log_level == logging.DEBUG
+        if self.debug_mode:
+            LOGGER.warning(
+                "Running in debug mode. Note that this may impact performance as the queue interaction pattern changes to allow us to inspect the queue."
+            )
 
     def process_example(self):
-        if ray.is_initialized():
-            example: ExampleMessage = ray.get(self.server.next_item.remote())
-        else:
-            example: ExampleMessage = self.server.next_item()
+        example: ExampleMessage = ray.get(self.server.next_item.remote())
         if example is None:
             return False
         tokens = self.tokenizer.encode(example.data[example.content_field]).ids
-        if ray.is_initialized():
-            ray.get(self.writer.put.remote(np.array(tokens)))
-        else:
-            self.writer.put(np.array(tokens))
+
+        ray.get(self.writer.put.remote(np.array(tokens)))
         return True
 
     def run(self):
