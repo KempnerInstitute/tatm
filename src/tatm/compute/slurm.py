@@ -21,6 +21,9 @@ class SlurmJob(Job):
 
     partition: str
     account: str = None
+    job_name: str = None
+    log_file: str = None
+    error_file: str = None
     qos: str = None
     constraints: Union[str, List[str]] = None
     slurm_bin_dir: str = "/usr/bin/"
@@ -110,6 +113,15 @@ def _submit_job_command(job: SlurmJob, job_file_path: str):
 
     if job.constraints:
         submit_command.extend(["--constraint", ",".join(job.constraints)])
+
+    if job.job_name:
+        submit_command.extend(["--job-name", job.job_name])
+
+    if job.log_file:
+        submit_command.extend(["--output", job.log_file])
+
+    if job.error_file:
+        submit_command.extend(["--error", job.error_file])
 
     submit_command.append(job_file_path)
 

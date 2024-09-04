@@ -51,6 +51,9 @@ def test_submit_command():
         gpus_per_node=1,
         constraints="h100",
         qos="high",
+        job_name="test_job",
+        log_file="test.out",
+        error_file="test.err",
     )
 
     job_file_path = "test_job_file"
@@ -76,6 +79,12 @@ def test_submit_command():
         "account",
         "--constraint",
         "h100",
+        "--job-name",
+        "test_job",
+        "--output",
+        "test.out",
+        "--error",
+        "test.err",
         job_file_path,
     ]
     for i in range(len(command)):

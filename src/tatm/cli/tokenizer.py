@@ -29,7 +29,7 @@ def tokenize(datasets, num_workers, tokenizer, output_dir, file_prefix, verbose)
         log_level = logging.DEBUG
     else:
         log_level = logging.INFO
-
+    logging.getLogger("tatm").setLevel(log_level)
     os.makedirs(output_dir, exist_ok=True)
 
     ray.init()

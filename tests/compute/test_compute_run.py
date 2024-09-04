@@ -29,6 +29,10 @@ def test_run_tokenize(tmp_path):
         "debug",
         "--account",
         "kempner_dev",
+        "--job-name",
+        "tatm_tokenize",
+        "--output",
+        "tatm_tokenize.out",
         str(tmp_path / "run.submit"),
     ]
     for i in range(len(expected_command)):

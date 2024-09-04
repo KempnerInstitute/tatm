@@ -18,6 +18,9 @@ class TatmRunOptions:
     memory: str = None
     gpus_per_node: int = None
     constraints: str = None
+    log_file: str = None
+    error_file: str = None
+    job_name: str = None
     submit: bool = (
         True  #: Submit the job after creating the submit script. Set to False to only create the submit script. (default: True)
     )
@@ -29,6 +32,9 @@ TOKENIZE_DEFAULTS = TatmRunOptions(
     submit_script=None,
     time_limit="1-00:00:00",
     memory="40G",
+    log_file="tatm_tokenize.out",
+    job_name="tatm_tokenize",
+    error_file=None,
     gpus_per_node=None,
     constraints=None,
     submit=True,
@@ -66,6 +72,9 @@ def run_tokenize(config: TatmConfig, options: TatmRunOptions, command):
             cpus_per_task=options.cpus_per_task,
             gpus_per_node=options.gpus_per_node,
             constraints=options.constraints,
+            job_name=options.job_name,
+            log_file=options.log_file,
+            error_file=options.error_file,
             environment=env,
         )
         submit_script = _slurm_create_ray_job(job, command, options.submit_script)
