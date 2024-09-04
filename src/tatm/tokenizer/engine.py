@@ -253,6 +253,9 @@ class Engine:
                 f"Number of workers specified ({num_workers}) is less than available CPUs ({num_cpus}). This may result in suboptimal performance."
             )
 
+        LOGGER.info(
+            f"Tokenizing data with 1 reader process, 1 writer process, and {num_workers} worker processes."
+        )
         server = DataServer.options(max_concurrency=num_workers + 1).remote(
             self.data, log_level=self.log_level
         )
