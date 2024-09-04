@@ -11,7 +11,7 @@ from tatm.tokenizer import Engine
 @click.command()
 @click.argument("datasets", nargs=-1)
 @click.option(
-    "--num-workers", default=1, help="Number of workers to use for tokenization"
+    "--num-workers", default=None, help="Number of workers to use for tokenization"
 )
 @click.option(
     "--tokenizer", default="t5-base", help="Tokenizer to use for tokenization"

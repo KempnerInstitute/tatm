@@ -230,11 +230,29 @@ class Engine:
         self.file_prefix = file_prefix
         self.log_level = log_level
 
-    def run_with_ray(self, num_workers=2):
+    def run_with_ray(self, num_workers=None):
         if not ray.is_initialized():
             raise RuntimeError(
                 "Ray is not initialized. Please initialize Ray before running the engine."
             )
+        num_cpus = ray.cluster_resources()["CPU"]
+
+        if num_workers is None:
+            num_workers = int(num_cpus) - 2
+        if num_workers < 1:
+            raise ValueError(
+                "Number of workers must be greater than 0. Note that at least 3 CPUs must be available to ray if the number of workers is not being specified explicitly."
+            )
+        if num_workers > int(num_cpus) - 2:
+            LOGGER.warning(
+                f"Number of workers specified ({num_workers}) exceeds available CPUs ({num_cpus}). Setting number of workers to {int(num_cpus) - 2} to allow for reader and writer processes."
+            )
+            num_workers = int(num_cpus) - 2
+        if num_workers < num_cpus - 2:
+            LOGGER.warning(
+                f"Number of workers specified ({num_workers}) is less than available CPUs ({num_cpus}). This may result in suboptimal performance."
+            )
+
         server = DataServer.options(max_concurrency=num_workers + 1).remote(
             self.data, log_level=self.log_level
         )
