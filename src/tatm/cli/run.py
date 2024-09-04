@@ -67,12 +67,27 @@ def parse_config_opts(opts, validate=True):
 @click.option("--memory", "--mem", default=None, help="Memory to allocate for the job.")
 @click.option("--gpus-per-node", default=None, help="Number of GPUs to use per node.")
 @click.option("--constraints", default=None, help="Constraints for the job.")
+@click.option("--log-file", "-o", default=None, help="Log file for the job.")
+@click.option("--error-file", "-e", default=None, help="Error file for the job.")
 @click.option(
     "--submit/--no-submit",
     default=True,
     help="Submit the job after creating the submit script. Set to False to only create the submit script.",
 )
 def run(**kwargs):
+    """
+    The `tatm run` command is used to wrap other tatm commands and run them in a specified compute environment.
+    It uses the configuration files and options to determine how to run the command. `tatm run` will use a template
+    submit script along with your specified environment to run the command. It will then submit the job to the compute
+    environment. If you do not want to submit the job, you can use the `--no-submit` flag. The generated submit script
+    will be placed in the current working directory. The submit script will be named `tatm_{command}.submit` where
+    `{command}` is the command you are running unless you specify a different name with the `--submit-script` option.
+
+    If the script is not submitted the command will print the submit command to the console.
+
+    The WRAPPED_COMMAND argument
+    is the command that will be run. Currently only wrapping ray based commands on slurm is supported.
+    """
     config = kwargs.pop("config")
     wrapped_command = kwargs.pop("wrapped_command")
     files, overrides = parse_config_opts(config)
