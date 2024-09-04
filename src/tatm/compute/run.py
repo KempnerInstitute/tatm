@@ -62,7 +62,6 @@ def run_tokenize(config: TatmConfig, options: TatmRunOptions, command):
             singularity_image=config.environment.singularity_image,
             venv=config.environment.venv,
         )
-        print(env)
         job = SlurmJob(
             partition=config.slurm.partition,
             account=config.slurm.account,
