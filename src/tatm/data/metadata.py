@@ -4,6 +4,7 @@ import json
 import os
 import pathlib
 from enum import Enum
+from typing import List
 
 import yaml
 
@@ -26,16 +27,6 @@ class DatasetContentType(str, Enum):
 class DatasetMetadata:
     """Generic Dataset Metadata Class holding information about a dataset.
 
-    Args:
-        name (str): Name of the dataset.
-        dataset_path (str): Path to the dataset.
-        description (str): Description of the dataset.
-        date_downloaded (str): Date the dataset was downloaded.
-        download_source (str): Source of the dataset.
-        data_content (DatasetContentType): Type of data in the dataset.
-        content_field (str, optional): Field in the dataset that contains the content. Defaults to "text".
-        corpuses (list, optional): List of corpuses in the dataset. Defaults to dataclasses.field(default_factory=list).
-
     Raises:
         ValueError: Raises a ValueError if the data_content value is invalid.
     """
@@ -47,7 +38,7 @@ class DatasetMetadata:
     download_source: str  #: Source of the dataset.
     data_content: DatasetContentType  #: Type of data in the dataset.
     content_field: str = "text"  #: Field in the dataset that contains the content.
-    corpuses: list = dataclasses.field(
+    corpuses: List[str] = dataclasses.field(
         default_factory=list
     )  #: List of corpuses in the dataset.
 

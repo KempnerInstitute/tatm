@@ -18,18 +18,16 @@ class Environment:
 
     Intended to provide a simple way to configure environment level settings for a compute job. Should hopefully be
     scheduler agnostic, although it is primarily designed for use with Slurm.
-
-    Args:
-        modules (list): List of modules to load.
-        conda_env (str): Conda environment to activate.
-        singularity_image (str): Singularity image to use. Will wrap the job in a singularity call if provided. The wrapped
-            command will be `singularity exec <singularity_image> <command>`.
     """
 
-    modules: list = None
-    conda_env: str = None
-    singularity_image: str = None
-    venv: str = None
+    modules: list = (
+        None  #: List of modules to load using lmod for the computational environment.
+    )
+    conda_env: str = None  #: Conda environment to activate for the job.
+    singularity_image: str = None  #: Singularity image to use for the job.
+    venv: str = (
+        None  #: Python virtual environment to activate for the job. Conflicts with conda_env.
+    )
 
     def __post_init__(self):
         if self.modules is None:
@@ -46,12 +44,6 @@ class Job:
 
     Intended to provide a simple way to configure job level settings for a compute job. Should hopefully be
     scheduler agnostic, although it is primarily designed for use with Slurm.
-
-    Args:
-        nodes (int): Number of nodes to use for the job.
-        cpus_per_task (int): Number of CPUs to use per task.
-        gpus_per_node (int): Number of GPUs to use per node.
-        memory (str): Memory to allocate for the job. Default is 0, which means all available memory.
     """
 
     nodes: int = 1  #: Number of nodes to use for the job.

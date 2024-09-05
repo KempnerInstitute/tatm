@@ -12,19 +12,14 @@ class SlurmJob(Job):
     """Slurm Job Configuration Class.
 
     Intended to provide a simple way to configure job level settings for a Slurm compute job.
-
-    Args:
-        partition (str): Partition to submit jobs to.
-        account (str): Account to charge jobs to.
-        slurm_bin_dir (str): Directory containing the Slurm binaries.
     """
 
-    partition: str
-    account: str = None
-    job_name: str = None
-    log_file: str = None
-    error_file: str = None
-    qos: str = None
+    partition: str  #: Partition to submit the job to.
+    account: str = None  #: Account to charge the job to.
+    job_name: str = None  #: Name of the job.
+    log_file: str = None  #: Path to the stdout file for the job.
+    error_file: str = None  #: Path to the stderr file for the job.
+    qos: str = None  #: Quality of Service for the job.
     constraints: Union[str, List[str]] = None
     slurm_bin_dir: str = "/usr/bin/"
     modules: list = None
@@ -128,16 +123,18 @@ def _submit_job_command(job: SlurmJob, job_file_path: str):
     return submit_command
 
 
-def submit_job(job: SlurmJob, job_file_path: str, submit=True):
+def submit_job(
+    job: SlurmJob, job_file_path: str, submit: bool = True
+) -> Union[str, subprocess.CompletedProcess]:
     """Submit a Slurm job. If submit is False, return the command to submit the job.
 
     Args:
-        job (SlurmJob): Instance of SlurmJob containing the job specifications.
+        job: Instance of SlurmJob containing the job specifications.
         job_file_path (str): Path to the job file to submit.
-        submit (bool, optional): Should the job be submitted. Defaults to True. If false, return the command to submit the job for inspection.
+        submit: Should the job be submitted. Defaults to True. If false, return the command to submit the job for inspection.
 
     Returns:
-        _type_: _description_
+        Either the command to submit the job or the result of the submission.
     """
     command = _submit_job_command(job, job_file_path)
     if not submit:

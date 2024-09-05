@@ -1,4 +1,5 @@
 from pathlib import Path
+from typing import List, Tuple
 
 import click
 
@@ -6,19 +7,19 @@ import tatm.compute.run
 from tatm.config import load_config
 
 
-def parse_config_opts(opts, validate=True):
+def parse_config_opts(opts: List[str], validate=True) -> Tuple[List[str]]:
     """Parse passed in configuration options. Determine if they are files or overrides.
     Assumes that if a string contains an `=` it is an override.
 
     Args:
-        opts (List[str]): List of configuration options or files.
-        validate (bool, optional): Should config files be checked for existence. Defaults to True. Primarily for testing.
+        opts: List of configuration options or files.
+        validate: Should config files be checked for existence. Defaults to True. Primarily for testing.
 
     Raises:
         FileNotFoundError: Raised if a config file is not found and validate is True.
 
     Returns:
-        Tuple[List[str]]: Returns a tuple of length 2. The first element is a list of config files, the second is a list of overrides.
+        Returns a tuple of length 2. The first element is a list of config files, the second is a list of overrides.
     """
     files, overrides = [], []
     for opt in opts:

@@ -61,7 +61,8 @@ def load_config(
     """Load the configuration from the provided paths.
 
     Args:
-        config_paths (List[str]): List of paths to load the configuration from.
+        config_paths: List of paths to load the configuration from.
+        overrides: List of overrides to apply to the configuration
 
     Returns:
         TatmConfig: Loaded configuration.
