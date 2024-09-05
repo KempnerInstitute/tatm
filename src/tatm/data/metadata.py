@@ -23,7 +23,7 @@ class DatasetContentType(str, Enum):
         return any(value == item.value for item in cls)
 
 
-@dataclasses.dataclass
+@dataclasses.dataclass(kw_only=True)
 class DatasetMetadata:
     """Generic Dataset Metadata Class holding information about a dataset.
 
@@ -97,6 +97,15 @@ class DatasetMetadata:
             parent_dir = pathlib.Path(yaml_path).resolve().parent
             metadata["dataset_path"] = str(parent_dir)
         return cls(**metadata)
+    
+    def __str__(self):
+        return self.as_json()
+
+
+@dataclasses.dataclass(kw_only=True)
+class TokenizedDatasetMetadata(DatasetMetadata):
+    tokenizer: str
+    
 
 
 def create_metadata_interactive():
