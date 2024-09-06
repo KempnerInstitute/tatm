@@ -1,6 +1,7 @@
 import click
 
 from tatm.cli.data import data
+from tatm.cli.run import run
 from tatm.cli.tokenizer import tokenize
 
 
@@ -11,6 +12,7 @@ def cli():
 
 cli.add_command(data)
 cli.add_command(tokenize)
+cli.add_command(run)
 
 
 if __name__ == "__main__":

@@ -13,6 +13,7 @@ datasets = "^2.21.0"
 tokenizers = "^0.20.0"
 ray = {extras = ["default"], version = "^2.34.0"}
 pyyaml = "^6.0.2"
+omegaconf = "^2.3.0"
 
 [tool.poetry.scripts]
 tatm = "tatm:cli"
@@ -48,6 +49,7 @@ optional = true
 [tool.poetry.group.docs.dependencies]
 sphinx = "^8.0.2"
 myst-parser = "^4.0.0"
+sphinx-rtd-theme = {git = "ssh://git@github.com/readthedocs/sphinx_rtd_theme.git", rev = "3.0.0rc1"}
 
 [build-system]
 requires = ["poetry-core"]
