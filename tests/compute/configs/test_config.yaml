@@ -1,0 +1,9 @@
+environment:
+  modules:
+   - python
+   - mpi
+  conda_env: test_env
+
+slurm:
+  account: kempner_dev
+  partition: debug

@@ -13,7 +13,7 @@ class TatmDataset(ABC):
     """Generic dataset class, provides interface to access multiple types of datasets.
 
     Args:
-        ABC (_type_): _description_
+        metadata: Metadata object.
     """
 
     def __init__(self, metadata: DatasetMetadata):
@@ -26,7 +26,7 @@ class TatmDataset(ABC):
         """Create a dataset object from metadata.
 
         Args:
-            metadata (DatasetMetadata): Metadata object.
+            metadata: Metadata object.
 
         Returns:
             TatmDataset: Dataset object.
@@ -44,7 +44,7 @@ class TatmTextDataset(TatmDataset):
     """Text dataset class, provides interface to access text datasets.
 
     Args:
-        TatmDataset (_type_): _description_
+        metadata: Metadata object.
     """
 
     @classmethod
@@ -52,7 +52,7 @@ class TatmTextDataset(TatmDataset):
         """Create a TatumTextDataset object from metadata.
 
         Args:
-            metadata (DatasetMetadata): Metadata object.
+            metadata: Metadata object.
 
         Returns:
             TatumTextDataset: Text dataset object.
@@ -65,7 +65,7 @@ class TatmTextDataset(TatmDataset):
         """Initialize the dataset.
 
         Args:
-            corpus (str, optional): Corpus to load. Defaults to None.
+            corpus: Corpus to load. Defaults to None.
         """
         self.dataset = datasets.load_dataset(
             self.metadata.dataset_path, streaming=True
@@ -85,7 +85,7 @@ def get_dataset(identifier: Union[str, DatasetMetadata]) -> TatmDataset:
     """Get a dataset object from an identifier.
 
     Args:
-        identifier (Union[str, DatasetMetadata]): Identifier for the dataset.
+        identifier : Identifier for the dataset.
 
     Returns:
         TatmDataset: Dataset object.
@@ -100,7 +100,7 @@ def _dataset_from_path(path: str) -> TatmDataset:
     """Create a dataset object from a path.
 
     Args:
-        path (str): Path to the dataset.
+        path: Path to the dataset.
 
     Returns:
         TatmDataset: Dataset object.
@@ -125,7 +125,7 @@ def _dataset_from_metadata(metadata: DatasetMetadata) -> TatmDataset:
     """Create a dataset object from metadata.
 
     Args:
-        metadata (DatasetMetadata): Metadata object.
+        metadata: Metadata object.
 
     Returns:
         TatmDataset: Dataset object.

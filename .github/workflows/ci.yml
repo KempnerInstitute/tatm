@@ -1,7 +1,6 @@
 name: Package Testing
 on:
     - push
-    - pull_request
 
 jobs:
     TestPackage:

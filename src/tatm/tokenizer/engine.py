@@ -13,6 +13,7 @@ import ray
 import tokenizers
 
 from tatm.data import DatasetMetadata, get_dataset
+from tatm.utils import configure_logging
 
 LOGGER = logging.getLogger(__name__)
 
@@ -30,6 +31,7 @@ class DataServer:
         data: List[Union[str, DatasetMetadata]],
         seed: int = 2130,
         max_queue_size: int = 1024,
+        log_level: str = logging.INFO,
     ):
         self.data = data
         self.datasets = [get_dataset(d) for d in data]
@@ -38,6 +40,12 @@ class DataServer:
         self.initialized = False
         self.initialize()
         self.shutdown_flag = False
+        configure_logging(log_level)
+        self.debug_mode = log_level == logging.DEBUG
+        if self.debug_mode:
+            LOGGER.warning(
+                "Running in debug mode. Note that this may impact performance as the queue interaction pattern changes to allow us to inspect the queue."
+            )
 
     def initialize(self):
         self.dataset_iters = [iter(dataset) for dataset in self.datasets]
@@ -71,7 +79,16 @@ class DataServer:
             if example is None:
                 LOGGER.info("No more examples to fetch.")
                 break
-            self.queue.put(example)
+            if not self.debug_mode:
+                self.queue.put(example)
+            else:
+                while True:
+                    try:
+                        self.queue.put(example, block=False)
+                        break
+                    except queue.Full:
+                        LOGGER.debug("DataServer queue is full")
+                        time.sleep(0.1)
 
         while True:
             # Ensure that all workers receive a termination signal
@@ -83,7 +100,15 @@ class DataServer:
                 break
 
     def next_item(self):
-        return self.queue.get()
+        if not self.debug_mode:
+            return self.queue.get()
+        else:
+            while True:
+                try:
+                    return self.queue.get(block=False)
+                except queue.Empty:
+                    LOGGER.debug("DataServer queue is empty")
+                    time.sleep(0.1)
 
     def shutdown(self):
         self.shutdown_flag = True
@@ -98,6 +123,7 @@ class TokenWriter:
         max_file_size: int = 1024 * 1024 * 1024,
         max_queue_size: int = 1024,
         dtype: str = "uint16",
+        log_level: str = logging.INFO,
     ):
         self.file_prefix = file_prefix
         self.max_file_size = max_file_size
@@ -108,6 +134,12 @@ class TokenWriter:
         self.num_written = 0
         self.shutdown = False
         self.queue = Queue(maxsize=max_queue_size)
+        configure_logging(log_level)
+        self.debug_mode = log_level == logging.DEBUG
+        if self.debug_mode:
+            LOGGER.warning(
+                "Running in debug mode. Note that this may impact performance as the queue interaction pattern changes to allow us to inspect the queue."
+            )
 
     def create_new_file(self):
         self.current_array = np.memmap(
@@ -126,7 +158,28 @@ class TokenWriter:
             self.file_id += 1
 
     def put(self, data: np.ndarray):
-        self.queue.put(data)
+        if not self.debug_mode:
+            self.queue.put(data)
+            return
+        else:
+            while True:
+                try:
+                    self.queue.put(data, block=False)
+                    break
+                except queue.Full:
+                    LOGGER.debug("TokenWriter queue is full")
+                    time.sleep(0.1)
+
+    def get(self):
+        if not self.debug_mode:
+            return self.queue.get()
+        else:
+            while True:
+                try:
+                    return self.queue.get(block=False)
+                except queue.Empty:
+                    LOGGER.debug("TokenWriter queue is empty")
+                    time.sleep(0.1)
 
     def write(self, data: np.ndarray):
         if self.current_array is None:
@@ -138,13 +191,19 @@ class TokenWriter:
         self.position += len(data)
         self.num_written += 1
         if self.num_written % 1000 == 0:
-            LOGGER.info(
-                f"Written {self.num_written} items to {self.file_prefix}_{self.file_id}.bin"
-            )
+            if self.num_written % 10000 == 0:
+                LOGGER.info(
+                    f"Written {self.num_written} items to {self.file_prefix}_{self.file_id}.bin"
+                )
+            else:
+                LOGGER.debug(
+                    f"Written {self.num_written} items to {self.file_prefix}_{self.file_id}.bin"
+                )
 
     def run(self):
         while not self.shutdown:
-            data = self.queue.get()
+            data = self.get()
+
             if data is None:
                 LOGGER.info("Received shutdown signal.")
                 break
@@ -167,6 +226,7 @@ class TokenizerWorker:
         server: DataServer,
         writer: TokenWriter,
         reset_threshold: int = 10000,
+        log_level: str = logging.INFO,
     ):
         self.server = server
         self.writer = writer
@@ -174,19 +234,20 @@ class TokenizerWorker:
         self.tokenizer = tokenizers.Tokenizer.from_pretrained(tokenizer)
         self.reset_threshold = reset_threshold
         self.documents_tokenized = 0
+        configure_logging(log_level)
+        self.debug_mode = log_level == logging.DEBUG
+        if self.debug_mode:
+            LOGGER.warning(
+                "Running in debug mode. Note that this may impact performance as the queue interaction pattern changes to allow us to inspect the queue."
+            )
 
     def process_example(self):
-        if ray.is_initialized():
-            example: ExampleMessage = ray.get(self.server.next_item.remote())
-        else:
-            example: ExampleMessage = self.server.next_item()
+        example: ExampleMessage = ray.get(self.server.next_item.remote())
         if example is None:
             return False
         tokens = self.tokenizer.encode(example.data[example.content_field]).ids
-        if ray.is_initialized():
-            ray.get(self.writer.put.remote(np.array(tokens)))
-        else:
-            self.writer.put(np.array(tokens))
+
+        ray.get(self.writer.put.remote(np.array(tokens)))
         return True
 
     def run(self):
@@ -205,25 +266,56 @@ class TokenizerWorker:
         self.tokenizer = tokenizers.Tokenizer.from_pretrained(self.tokenizer_name)
 
 
-class Engine:
+class TokenizationEngine:
     def __init__(
-        self, data: List[Union[str, DatasetMetadata]], tokenizer: str, file_prefix: str
+        self,
+        data: List[Union[str, DatasetMetadata]],
+        tokenizer: str,
+        file_prefix: str,
+        log_level: str = logging.INFO,
     ):
         self.data = data
         self.tokenizer = tokenizer
         self.file_prefix = file_prefix
+        self.log_level = log_level
 
-    def run_with_ray(self, num_workers=2):
+    def run_with_ray(self, num_workers: int = None):
         if not ray.is_initialized():
             raise RuntimeError(
                 "Ray is not initialized. Please initialize Ray before running the engine."
             )
-        server = DataServer.options(max_concurrency=num_workers + 1).remote(self.data)
+        num_cpus = ray.cluster_resources()["CPU"]
+
+        if not num_workers:
+            num_workers = int(num_cpus) - 2
+        if num_workers < 1:
+            raise ValueError(
+                "Number of workers must be greater than 0. Note that at least 3 CPUs must be available to ray if the number of workers is not being specified explicitly."
+            )
+        if num_workers > int(num_cpus) - 2:
+            LOGGER.warning(
+                f"Number of workers specified ({num_workers}) exceeds available CPUs ({num_cpus}). Setting number of workers to {int(num_cpus) - 2} to allow for reader and writer processes."
+            )
+            num_workers = int(num_cpus) - 2
+        if num_workers < num_cpus - 2:
+            LOGGER.warning(
+                f"Number of workers specified ({num_workers}) is less than available CPUs ({num_cpus}). This may result in suboptimal performance."
+            )
+
+        LOGGER.info(
+            f"Tokenizing data with 1 reader process, 1 writer process, and {num_workers} worker processes."
+        )
+        server = DataServer.options(max_concurrency=num_workers + 1).remote(
+            self.data, log_level=self.log_level
+        )
         writer = TokenWriter.options(max_concurrency=num_workers + 1).remote(
-            self.file_prefix
+            self.file_prefix,
+            log_level=self.log_level,
         )
         workers = [
-            TokenizerWorker.remote(self.tokenizer, server, writer)
+            TokenizerWorker.remote(
+                self.tokenizer, server, writer, log_level=self.log_level
+            )
             for _ in range(num_workers)
         ]
         s = server.run.remote()

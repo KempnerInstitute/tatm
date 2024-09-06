@@ -1,0 +1,3 @@
+slurm:
+  partition: test
+  slurm_bin_dir: /usr/local/bin/
