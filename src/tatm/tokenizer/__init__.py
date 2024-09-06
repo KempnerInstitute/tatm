@@ -1,3 +1,3 @@
-from tatm.tokenizer.engine import Engine
+from tatm.tokenizer.engine import TokenizationEngine
 
-__all__ = ["Engine"]
+__all__ = ["TokenizationEngine"]

@@ -7,7 +7,7 @@ import ray.util.state
 import tokenizers
 
 import tatm.data
-from tatm.tokenizer import Engine
+from tatm.tokenizer import TokenizationEngine
 
 
 def test_ray_run(tmp_path):
@@ -18,7 +18,9 @@ def test_ray_run(tmp_path):
     tokenizer = tokenizers.Tokenizer.from_pretrained("t5-base")
 
     # Create an instance of the Engine
-    engine = Engine(["tests/data/json_dataset"], "t5-base", str(tmp_path / "test"))
+    engine = TokenizationEngine(
+        ["tests/data/json_dataset"], "t5-base", str(tmp_path / "test")
+    )
 
     # Run the engine with some input
     engine.run_with_ray(num_workers=1)
@@ -48,7 +50,9 @@ def test_ray_no_specified_workers(tmp_path):
     tokenizer = tokenizers.Tokenizer.from_pretrained("t5-base")
 
     # Create an instance of the Engine
-    engine = Engine(["tests/data/json_dataset"], "t5-base", str(tmp_path / "test"))
+    engine = TokenizationEngine(
+        ["tests/data/json_dataset"], "t5-base", str(tmp_path / "test")
+    )
 
     # Run the engine with some input
     engine.run_with_ray(num_workers=None)
@@ -77,7 +81,9 @@ def test_ray_too_many_workers(tmp_path):
     tokenizer = tokenizers.Tokenizer.from_pretrained("t5-base")
 
     # Create an instance of the Engine
-    engine = Engine(["tests/data/json_dataset"], "t5-base", str(tmp_path / "test"))
+    engine = TokenizationEngine(
+        ["tests/data/json_dataset"], "t5-base", str(tmp_path / "test")
+    )
 
     # Run the engine with some input
     engine.run_with_ray(num_workers=16)
@@ -108,7 +114,7 @@ def test_ray_run_in_debug_mode(tmp_path):
     tokenizer = tokenizers.Tokenizer.from_pretrained("t5-base")
 
     # Create an instance of the Engine
-    engine = Engine(
+    engine = TokenizationEngine(
         ["tests/data/json_dataset"],
         "t5-base",
         str(tmp_path / "test"),

@@ -7,7 +7,7 @@ import tatm.compute.run
 from tatm.config import load_config
 
 
-def parse_config_opts(opts: List[str], validate=True) -> Tuple[List[str]]:
+def parse_config_opts(opts: List[str], validate=True) -> Tuple[List[str], List[str]]:
     """Parse passed in configuration options. Determine if they are files or overrides.
     Assumes that if a string contains an `=` it is an override.
 

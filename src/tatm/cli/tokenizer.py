@@ -5,13 +5,17 @@ import pathlib
 import click
 import ray
 
-from tatm.tokenizer import Engine
+from tatm.cli.utils import configure_cli_logging
+from tatm.tokenizer import TokenizationEngine
 
 
 @click.command()
 @click.argument("datasets", nargs=-1)
 @click.option(
-    "--num-workers", default=None, help="Number of workers to use for tokenization"
+    "--num-workers",
+    default=None,
+    help="Number of workers to use for tokenization",
+    type=int,
 )
 @click.option(
     "--tokenizer", default="t5-base", help="Tokenizer to use for tokenization"
@@ -41,11 +45,11 @@ def tokenize(datasets, num_workers, tokenizer, output_dir, file_prefix, verbose)
         log_level = logging.DEBUG
     else:
         log_level = logging.INFO
-    logging.getLogger("tatm").setLevel(log_level)
+    configure_cli_logging(log_level)
     os.makedirs(output_dir, exist_ok=True)
 
     ray.init()
-    e = Engine(
+    e = TokenizationEngine(
         datasets,
         tokenizer,
         str(pathlib.Path(output_dir) / file_prefix),

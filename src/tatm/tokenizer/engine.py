@@ -266,7 +266,7 @@ class TokenizerWorker:
         self.tokenizer = tokenizers.Tokenizer.from_pretrained(self.tokenizer_name)
 
 
-class Engine:
+class TokenizationEngine:
     def __init__(
         self,
         data: List[Union[str, DatasetMetadata]],
@@ -279,14 +279,14 @@ class Engine:
         self.file_prefix = file_prefix
         self.log_level = log_level
 
-    def run_with_ray(self, num_workers=None):
+    def run_with_ray(self, num_workers: int = None):
         if not ray.is_initialized():
             raise RuntimeError(
                 "Ray is not initialized. Please initialize Ray before running the engine."
             )
         num_cpus = ray.cluster_resources()["CPU"]
 
-        if num_workers is None:
+        if not num_workers:
             num_workers = int(num_cpus) - 2
         if num_workers < 1:
             raise ValueError(
