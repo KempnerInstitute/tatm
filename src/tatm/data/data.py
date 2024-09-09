@@ -1,11 +1,11 @@
 """Module holding classes for handling curatad data available
-within the Tatm Data Garden. 
+within the Tatm Data Garden.
 
 A note on terminology:
 We use "Data" to refer to curated data available w/in the Kempner testbed collection
 while we use "Dataset" to refer to structures used to present data in a format that
 can be used by external modeling systems (e.g. PyTorch, JAX, etc.). This distinction
-is entirely arbitrary but is intended to help separate functionality and to 
+is entirely arbitrary but is intended to help separate functionality and to
 match function with pytorch naming conventions.
 """
 

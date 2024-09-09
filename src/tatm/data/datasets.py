@@ -5,6 +5,7 @@ to be consumed by modelling frameworks such as pytorch, JAX, etc.
 
 from abc import ABC, abstractmethod
 
+
 class TatmDataset(ABC):
     """Abstract base class for TATM datasets."""
 
@@ -17,6 +18,3 @@ class TatmDataset(ABC):
     def __getitem__(self, idx):
         """Get the token at the given index."""
         pass
-
-
-        

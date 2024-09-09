@@ -97,7 +97,7 @@ class DataMetadata:
             parent_dir = pathlib.Path(yaml_path).resolve().parent
             metadata["dataset_path"] = str(parent_dir)
         return cls(**metadata)
-    
+
     def __str__(self):
         return self.as_json()
 
@@ -105,7 +105,6 @@ class DataMetadata:
 @dataclasses.dataclass(kw_only=True)
 class TokenizedDataMetadata(DataMetadata):
     tokenizer: str
-    
 
 
 def create_metadata_interactive():
