@@ -1,7 +1,7 @@
 content_field: text
 corpuses: []
 data_content: text
-dataset_path: tests/data/json_dataset
+dataset_path: tests/data/json_data
 date_downloaded: '2021-01-01'
 description: A test json dataset intended for use in testing.
 download_source: http://example.com

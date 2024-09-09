@@ -14,12 +14,12 @@ def test_ray_run(tmp_path):
     """Integration test for the Engine class with Ray."""
     # Initialize Ray
     ray.init(num_cpus=4, ignore_reinit_error=True)
-    dataset = tatm.data.get_dataset("tests/data/json_dataset")
+    dataset = tatm.data.get_data("tests/data/json_data")
     tokenizer = tokenizers.Tokenizer.from_pretrained("t5-base")
 
     # Create an instance of the Engine
     engine = TokenizationEngine(
-        ["tests/data/json_dataset"], "t5-base", str(tmp_path / "test")
+        ["tests/data/json_data"], "t5-base", str(tmp_path / "test")
     )
 
     # Run the engine with some input
@@ -45,13 +45,13 @@ def test_ray_run(tmp_path):
 def test_ray_no_specified_workers(tmp_path):
     """Integration test for the Engine class with Ray testing that number of worker logic setting is correct."""
     # Initialize Ray
-    ray.init(num_cpus=4, ignore_reinit_error=True)
-    dataset = tatm.data.get_dataset("tests/data/json_dataset")
+    ray.init(num_cpus=3, ignore_reinit_error=True)
+    dataset = tatm.data.get_data("tests/data/json_data")
     tokenizer = tokenizers.Tokenizer.from_pretrained("t5-base")
 
     # Create an instance of the Engine
     engine = TokenizationEngine(
-        ["tests/data/json_dataset"], "t5-base", str(tmp_path / "test")
+        ["tests/data/json_data"], "t5-base", str(tmp_path / "test")
     )
 
     # Run the engine with some input
@@ -62,7 +62,7 @@ def test_ray_no_specified_workers(tmp_path):
     tokenized = tokenizer.encode(first_example[dataset.metadata.content_field]).ids
 
     actors = ray.util.state.list_actors()
-    assert len(actors) == 4  # Ensure 4 workers are created
+    assert len(actors) == 3  # Ensure 4 workers are created
     assert (
         len([x for x in actors if x.state == "ALIVE"]) == 0
     )  # Ensure all actors are cleaned up
@@ -76,13 +76,13 @@ def test_ray_no_specified_workers(tmp_path):
 
 def test_ray_too_many_workers(tmp_path):
     # Initialize Ray
-    ray.init(num_cpus=4, ignore_reinit_error=True)
-    dataset = tatm.data.get_dataset("tests/data/json_dataset")
+    ray.init(num_cpus=3, ignore_reinit_error=True)
+    dataset = tatm.data.get_data("tests/data/json_data")
     tokenizer = tokenizers.Tokenizer.from_pretrained("t5-base")
 
     # Create an instance of the Engine
     engine = TokenizationEngine(
-        ["tests/data/json_dataset"], "t5-base", str(tmp_path / "test")
+        ["tests/data/json_data"], "t5-base", str(tmp_path / "test")
     )
 
     # Run the engine with some input
@@ -93,7 +93,7 @@ def test_ray_too_many_workers(tmp_path):
     tokenized = tokenizer.encode(first_example[dataset.metadata.content_field]).ids
 
     actors = ray.util.state.list_actors()
-    assert len(actors) == 4  # Ensure 4 workers are created
+    assert len(actors) == 3  # Ensure 4 workers are created
     assert (
         len([x for x in actors if x.state == "ALIVE"]) == 0
     )  # Ensure all actors are cleaned up
@@ -110,12 +110,12 @@ def test_ray_run_in_debug_mode(tmp_path):
     # Initialize Ray
     ray.init(num_cpus=4, ignore_reinit_error=True)
 
-    dataset = tatm.data.get_dataset("tests/data/json_dataset")
+    dataset = tatm.data.get_data("tests/data/json_data")
     tokenizer = tokenizers.Tokenizer.from_pretrained("t5-base")
 
     # Create an instance of the Engine
     engine = TokenizationEngine(
-        ["tests/data/json_dataset"],
+        ["tests/data/json_data"],
         "t5-base",
         str(tmp_path / "test"),
         log_level=logging.DEBUG,
