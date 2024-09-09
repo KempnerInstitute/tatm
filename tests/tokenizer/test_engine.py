@@ -1,5 +1,6 @@
 import gc
 import logging
+import time
 
 import numpy as np
 import ray
@@ -24,6 +25,7 @@ def test_ray_run(tmp_path):
 
     # Run the engine with some input
     engine.run_with_ray(num_workers=1)
+    time.sleep(1)  # Wait for the workers to finish
     gc.collect()
 
     first_example = next(iter(dataset))
@@ -56,6 +58,7 @@ def test_ray_no_specified_workers(tmp_path):
 
     # Run the engine with some input
     engine.run_with_ray(num_workers=None)
+    time.sleep(1)
     gc.collect()
 
     first_example = next(iter(dataset))
@@ -87,6 +90,7 @@ def test_ray_too_many_workers(tmp_path):
 
     # Run the engine with some input
     engine.run_with_ray(num_workers=16)
+    time.sleep(1)
     gc.collect()
 
     first_example = next(iter(dataset))
@@ -123,6 +127,7 @@ def test_ray_run_in_debug_mode(tmp_path):
 
     # Run the engine with some input
     engine.run_with_ray(num_workers=1)
+    time.sleep(1)
     gc.collect()
 
     first_example = next(iter(dataset))
