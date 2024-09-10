@@ -98,6 +98,7 @@ def test_interactive_creation(monkeypatch, tmp_path):
                 "corpus1",
                 "corpus2",
                 "",
+                "",
             ]
         )
         monkeypatch.setattr("builtins.input", lambda _: next(responses))
@@ -114,3 +115,53 @@ def test_interactive_creation(monkeypatch, tmp_path):
         assert metadata.data_content == DataContentType.TEXT
         assert metadata.content_field == "text"
         assert metadata.corpuses == ["corpus1", "corpus2"]
+        assert metadata.tokenized_info is None
+
+
+def test_tokenized_interactive_creation(monkeypatch, tmp_path):
+
+    output_types = ["", "json", "yaml"]
+    content_types = ["", "text"]
+    for output_type, content_type in [
+        (o, c) for o in output_types for c in content_types
+    ]:
+        responses = iter(
+            [
+                output_type,
+                tmp_path / f"metadata_test.{output_type if output_type else 'json'}",
+                "test",
+                "./",
+                "A test metadata file.",
+                "2021-01-01",
+                "http://example.com",
+                content_type,
+                "text",
+                "corpus1",
+                "corpus2",
+                "",
+                "y",
+                "test_tokenizer",
+                "tokenized",
+                "",
+                "uint8",
+            ]
+        )
+        monkeypatch.setattr("builtins.input", lambda _: next(responses))
+        create_metadata_interactive()
+        if output_type in ["", "json"]:
+            metadata = DataMetadata.from_json(tmp_path / "metadata_test.json")
+        else:
+            metadata = DataMetadata.from_yaml(tmp_path / "metadata_test.yaml")
+        assert metadata.name == "test"
+        assert metadata.dataset_path == "./"
+        assert metadata.description == "A test metadata file."
+        assert metadata.date_downloaded == "2021-01-01"
+        assert metadata.download_source == "http://example.com"
+        assert metadata.data_content == DataContentType.TEXT
+        assert metadata.content_field == "text"
+        assert metadata.corpuses == ["corpus1", "corpus2"]
+        assert metadata.tokenized_info is not None
+        assert metadata.tokenized_info.tokenizer == "test_tokenizer"
+        assert metadata.tokenized_info.file_prefix == "tokenized"
+        assert metadata.tokenized_info.dtype == "uint8"
+        assert metadata.tokenized_info.file_extension == "bin"

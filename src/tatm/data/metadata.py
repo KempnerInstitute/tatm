@@ -9,6 +9,14 @@ from typing import List
 import yaml
 
 
+@dataclasses.dataclass(kw_only=True)
+class TokenizedDataMetadata:
+    tokenizer: str
+    file_prefix: str
+    dtype: str = "uint16"
+    file_extension: str = "bin"
+
+
 class DataContentType(str, Enum):
     """Enum class for dataset content"""
 
@@ -41,10 +49,14 @@ class DataMetadata:
     corpuses: List[str] = dataclasses.field(
         default_factory=list
     )  #: List of corpuses in the dataset.
+    tokenized_info: TokenizedDataMetadata = None
 
     def __post_init__(self):
         self._validate()
         self.data_content = DataContentType(self.data_content)
+
+        if isinstance(self.tokenized_info, dict):
+            self.tokenized_info = TokenizedDataMetadata(**self.tokenized_info)
 
     def _validate(self):
         if not DataContentType.has_value(self.data_content):
@@ -102,11 +114,6 @@ class DataMetadata:
         return self.as_json()
 
 
-@dataclasses.dataclass(kw_only=True)
-class TokenizedDataMetadata(DataMetadata):
-    tokenizer: str
-
-
 def create_metadata_interactive():
     """Construct a Metadata object interactively."""
 
@@ -158,6 +165,19 @@ def create_metadata_interactive():
             break
         corpuses.append(corpus)
 
+    while True:
+        tokenized = input("Is the dataset tokenized? (y/n) [n]:")
+        if not tokenized:
+            tokenized = "n"
+        if tokenized not in ["y", "n"]:
+            print("Invalid input. Please enter 'y' or 'n'.")
+            continue
+        break
+    if tokenized == "y":
+        tokenized_info = _create_tokenized_metadata_interactive()
+    else:
+        tokenized_info = None
+
     metadata = DataMetadata(
         name=name,
         dataset_path=dataset_path,
@@ -167,9 +187,42 @@ def create_metadata_interactive():
         data_content=DataContentType(data_content),
         content_field=content_field,
         corpuses=corpuses,
+        tokenized_info=tokenized_info,
     )
 
     if output_format == "json":
         metadata.to_json(output_path)
     else:
         metadata.to_yaml(output_path)
+
+
+def _create_tokenized_metadata_interactive() -> TokenizedDataMetadata:
+    """Contruct a TokenizedDataMetadata object interactively. Intended to be called
+    within create_metadata_interactive.
+
+    Returns:
+        TokenizedDataMetadata: Tokenized metadata object.
+    """
+
+    tokenizer = input("Tokenizer Name or Path to JSON [t5-base]: ")
+    if not tokenizer:
+        tokenizer = "t5-base"
+
+    file_prefix = input("Token File Prefix [tokenized]: ")
+    if not file_prefix:
+        file_prefix = "tokenized"
+
+    file_extension = input("Token File Extension [bin]: ")
+    if not file_extension:
+        file_extension = "bin"
+
+    dtype = input("Token Data Type [uint16]: ")
+    if not dtype:
+        dtype = "uint16"
+
+    return TokenizedDataMetadata(
+        tokenizer=tokenizer,
+        file_prefix=file_prefix,
+        dtype=dtype,
+        file_extension=file_extension,
+    )
