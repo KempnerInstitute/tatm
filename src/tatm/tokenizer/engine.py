@@ -12,7 +12,7 @@ import numpy as np
 import ray
 import tokenizers
 
-from tatm.data import DatasetMetadata, get_dataset
+from tatm.data import DataMetadata, get_data
 from tatm.utils import configure_logging
 
 LOGGER = logging.getLogger(__name__)
@@ -28,13 +28,13 @@ class ExampleMessage:
 class DataServer:
     def __init__(
         self,
-        data: List[Union[str, DatasetMetadata]],
+        data: List[Union[str, DataMetadata]],
         seed: int = 2130,
         max_queue_size: int = 1024,
         log_level: str = logging.INFO,
     ):
         self.data = data
-        self.datasets = [get_dataset(d) for d in data]
+        self.datasets = [get_data(d) for d in data]
         self.seed = seed
         self.max_queue_size = max_queue_size
         self.initialized = False
@@ -269,7 +269,7 @@ class TokenizerWorker:
 class TokenizationEngine:
     def __init__(
         self,
-        data: List[Union[str, DatasetMetadata]],
+        data: List[Union[str, DataMetadata]],
         tokenizer: str,
         file_prefix: str,
         log_level: str = logging.INFO,

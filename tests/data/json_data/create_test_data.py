@@ -1,6 +1,6 @@
 import json
 
-from tatm.data import DatasetMetadata
+from tatm.data import DataMetadata
 
 lines = [
     "hello world",
@@ -17,10 +17,10 @@ def main():
         for line in lines:
             f.write(json.dumps({"text": line}) + "\n")
 
-    metadata = DatasetMetadata(
+    metadata = DataMetadata(
         name="test",
-        dataset_path="tests/data/test_json_dataset",
-        description="A test json dataset intended for use in testing.",
+        dataset_path="tests/data/test_json_data",
+        description="A test json data set intended for use in testing.",
         date_downloaded="2021-01-01",
         download_source="http://example.com",
         data_content="text",
