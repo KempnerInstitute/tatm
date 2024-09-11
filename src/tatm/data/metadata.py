@@ -9,7 +9,7 @@ from typing import List
 import yaml
 
 
-class DatasetContentType(str, Enum):
+class DataContentType(str, Enum):
     """Enum class for dataset content"""
 
     TEXT = "text"
@@ -23,8 +23,8 @@ class DatasetContentType(str, Enum):
         return any(value == item.value for item in cls)
 
 
-@dataclasses.dataclass
-class DatasetMetadata:
+@dataclasses.dataclass(kw_only=True)
+class DataMetadata:
     """Generic Dataset Metadata Class holding information about a dataset.
 
     Raises:
@@ -36,7 +36,7 @@ class DatasetMetadata:
     description: str  #: Description of the dataset.
     date_downloaded: str  #: Date the dataset was downloaded.
     download_source: str  #: Source of the dataset.
-    data_content: DatasetContentType  #: Type of data in the dataset.
+    data_content: DataContentType  #: Type of data in the dataset.
     content_field: str = "text"  #: Field in the dataset that contains the content.
     corpuses: List[str] = dataclasses.field(
         default_factory=list
@@ -44,10 +44,10 @@ class DatasetMetadata:
 
     def __post_init__(self):
         self._validate()
-        self.data_content = DatasetContentType(self.data_content)
+        self.data_content = DataContentType(self.data_content)
 
     def _validate(self):
-        if not DatasetContentType.has_value(self.data_content):
+        if not DataContentType.has_value(self.data_content):
             raise ValueError(f"Invalid data_content value: {self.data_content}")
 
     def as_json(self):
@@ -97,6 +97,14 @@ class DatasetMetadata:
             parent_dir = pathlib.Path(yaml_path).resolve().parent
             metadata["dataset_path"] = str(parent_dir)
         return cls(**metadata)
+
+    def __str__(self):
+        return self.as_json()
+
+
+@dataclasses.dataclass(kw_only=True)
+class TokenizedDataMetadata(DataMetadata):
+    tokenizer: str
 
 
 def create_metadata_interactive():
@@ -150,13 +158,13 @@ def create_metadata_interactive():
             break
         corpuses.append(corpus)
 
-    metadata = DatasetMetadata(
+    metadata = DataMetadata(
         name=name,
         dataset_path=dataset_path,
         description=description,
         date_downloaded=date_downloaded,
         download_source=download_source,
-        data_content=DatasetContentType(data_content),
+        data_content=DataContentType(data_content),
         content_field=content_field,
         corpuses=corpuses,
     )

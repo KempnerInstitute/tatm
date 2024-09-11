@@ -1,28 +1,39 @@
+"""Module holding classes for handling curatad data available
+within the Tatm Data Garden.
+
+A note on terminology:
+We use "Data" to refer to curated data available w/in the Kempner testbed collection
+while we use "Dataset" to refer to structures used to present data in a format that
+can be used by external modeling systems (e.g. PyTorch, JAX, etc.). This distinction
+is entirely arbitrary but is intended to help separate functionality and to
+match function with pytorch naming conventions.
+"""
+
 import pathlib
 from abc import ABC, abstractmethod
 from typing import Union
 
 import datasets
 
-from tatm.data.metadata import DatasetContentType, DatasetMetadata
+from tatm.data.metadata import DataContentType, DataMetadata
 
 datasets.disable_caching()
 
 
-class TatmDataset(ABC):
+class TatmData(ABC):
     """Generic dataset class, provides interface to access multiple types of datasets.
 
     Args:
         metadata: Metadata object.
     """
 
-    def __init__(self, metadata: DatasetMetadata):
+    def __init__(self, metadata: DataMetadata):
         self.metadata = metadata
         self.initialize()
 
     @classmethod
     @abstractmethod
-    def from_metadata(cls, metadata: DatasetMetadata) -> "TatmDataset":
+    def from_metadata(cls, metadata: DataMetadata) -> "TatmData":
         """Create a dataset object from metadata.
 
         Args:
@@ -40,7 +51,7 @@ class TatmDataset(ABC):
         raise NotImplementedError("This method must be implemented in a subclass.")
 
 
-class TatmTextDataset(TatmDataset):
+class TatmTextData(TatmData):
     """Text dataset class, provides interface to access text datasets.
 
     Args:
@@ -48,7 +59,7 @@ class TatmTextDataset(TatmDataset):
     """
 
     @classmethod
-    def from_metadata(cls, metadata: DatasetMetadata) -> "TatmTextDataset":
+    def from_metadata(cls, metadata: DataMetadata) -> "TatmTextData":
         """Create a TatumTextDataset object from metadata.
 
         Args:
@@ -57,7 +68,7 @@ class TatmTextDataset(TatmDataset):
         Returns:
             TatumTextDataset: Text dataset object.
         """
-        if metadata.data_content != DatasetContentType.TEXT:
+        if metadata.data_content != DataContentType.TEXT:
             raise ValueError("Metadata does not describe a text dataset.")
         return cls(metadata)
 
@@ -81,7 +92,7 @@ class TatmTextDataset(TatmDataset):
         return next(self.data_iter)
 
 
-def get_dataset(identifier: Union[str, DatasetMetadata]) -> TatmDataset:
+def get_data(identifier: Union[str, DataMetadata]) -> TatmData:
     """Get a dataset object from an identifier.
 
     Args:
@@ -92,11 +103,11 @@ def get_dataset(identifier: Union[str, DatasetMetadata]) -> TatmDataset:
     """
     if isinstance(identifier, str):
         return _dataset_from_path(identifier)
-    elif isinstance(identifier, DatasetMetadata):
+    elif isinstance(identifier, DataMetadata):
         return _dataset_from_metadata(identifier)
 
 
-def _dataset_from_path(path: str) -> TatmDataset:
+def _dataset_from_path(path: str) -> TatmData:
     """Create a dataset object from a path.
 
     Args:
@@ -107,9 +118,9 @@ def _dataset_from_path(path: str) -> TatmDataset:
     """
     path = pathlib.Path(path)
     if (path / "metadata.yaml").exists():
-        metadata = DatasetMetadata.from_yaml(path / "metadata.yaml")
+        metadata = DataMetadata.from_yaml(path / "metadata.yaml")
     elif (path / "metadata.json").exists():
-        metadata = DatasetMetadata.from_json(path / "metadata.json")
+        metadata = DataMetadata.from_json(path / "metadata.json")
     else:
         raise ValueError(
             (
@@ -121,7 +132,7 @@ def _dataset_from_path(path: str) -> TatmDataset:
     return _dataset_from_metadata(metadata)
 
 
-def _dataset_from_metadata(metadata: DatasetMetadata) -> TatmDataset:
+def _dataset_from_metadata(metadata: DataMetadata) -> TatmData:
     """Create a dataset object from metadata.
 
     Args:
@@ -130,8 +141,8 @@ def _dataset_from_metadata(metadata: DatasetMetadata) -> TatmDataset:
     Returns:
         TatmDataset: Dataset object.
     """
-    if metadata.data_content == DatasetContentType.TEXT:
-        return TatmTextDataset.from_metadata(metadata)
+    if metadata.data_content == DataContentType.TEXT:
+        return TatmTextData.from_metadata(metadata)
     else:
         raise NotImplementedError(
             f"Data content type {metadata.data_content} is not yet supported."

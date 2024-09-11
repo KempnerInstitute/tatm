@@ -4,46 +4,46 @@ import pathlib
 import yaml
 
 from tatm.data.metadata import (
-    DatasetContentType,
-    DatasetMetadata,
+    DataContentType,
+    DataMetadata,
     create_metadata_interactive,
 )
 
 
 def test_json_load():
     filename = "tests/data/metadata_test.json"
-    metadata = DatasetMetadata.from_json(filename)
+    metadata = DataMetadata.from_json(filename)
     test_file_dir = pathlib.Path(filename).resolve().parent
     assert metadata.name == "test"
     assert metadata.dataset_path == str(test_file_dir)
     assert metadata.description == "A test metadata file."
     assert metadata.date_downloaded == "2021-01-01"
     assert metadata.download_source == "http://example.com"
-    assert metadata.data_content == DatasetContentType.TEXT
+    assert metadata.data_content == DataContentType.TEXT
     assert metadata.content_field == "text"
 
 
 def test_yaml_load():
     filename = "tests/data/metadata_test.yaml"
-    metadata = DatasetMetadata.from_yaml(filename)
+    metadata = DataMetadata.from_yaml(filename)
     test_file_dir = pathlib.Path(filename).resolve().parent
     assert metadata.name == "test"
     assert metadata.dataset_path == str(test_file_dir)
     assert metadata.description == "A test metadata file."
     assert metadata.date_downloaded == "2021-01-01"
     assert metadata.download_source == "http://example.com"
-    assert metadata.data_content == DatasetContentType.TEXT
+    assert metadata.data_content == DataContentType.TEXT
     assert metadata.content_field == "text"
 
 
 def test_json_save(tmp_path):
-    metadata = DatasetMetadata(
+    metadata = DataMetadata(
         name="test",
         dataset_path="./",
         description="A test metadata file.",
         date_downloaded="2021-01-01",
         download_source="http://example.com",
-        data_content=DatasetContentType.TEXT,
+        data_content=DataContentType.TEXT,
     )
     metadata.to_json(tmp_path / "metadata_test.json")
     json_dict = json.load(open(tmp_path / "metadata_test.json"))
@@ -57,13 +57,13 @@ def test_json_save(tmp_path):
 
 
 def test_yaml_save(tmp_path):
-    metadata = DatasetMetadata(
+    metadata = DataMetadata(
         name="test",
         dataset_path="./",
         description="A test metadata file.",
         date_downloaded="2021-01-01",
         download_source="http://example.com",
-        data_content=DatasetContentType.TEXT,
+        data_content=DataContentType.TEXT,
     )
     metadata.to_yaml(tmp_path / "metadata_test.yaml")
     with open(tmp_path / "metadata_test.yaml", "r") as f:
@@ -103,14 +103,14 @@ def test_interactive_creation(monkeypatch, tmp_path):
         monkeypatch.setattr("builtins.input", lambda _: next(responses))
         create_metadata_interactive()
         if output_type in ["", "json"]:
-            metadata = DatasetMetadata.from_json(tmp_path / "metadata_test.json")
+            metadata = DataMetadata.from_json(tmp_path / "metadata_test.json")
         else:
-            metadata = DatasetMetadata.from_yaml(tmp_path / "metadata_test.yaml")
+            metadata = DataMetadata.from_yaml(tmp_path / "metadata_test.yaml")
         assert metadata.name == "test"
         assert metadata.dataset_path == "./"
         assert metadata.description == "A test metadata file."
         assert metadata.date_downloaded == "2021-01-01"
         assert metadata.download_source == "http://example.com"
-        assert metadata.data_content == DatasetContentType.TEXT
+        assert metadata.data_content == DataContentType.TEXT
         assert metadata.content_field == "text"
         assert metadata.corpuses == ["corpus1", "corpus2"]

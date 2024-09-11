@@ -78,7 +78,7 @@ def test_data_server():
         local_mode=True, num_cpus=4, ignore_reinit_error=True
     )  # Initialize Ray in local mode for testing
     server = DataServer.options(max_concurrency=4).remote(
-        ["tests/data/json_dataset"], max_queue_size=8
+        ["tests/data/json_data"], max_queue_size=8
     )
     example = ray.get(server.get_example.remote())
     assert example.data[example.content_field] == "hello world"
@@ -89,7 +89,7 @@ def test_data_server():
 
     # Test that we run in debug mode
     server = DataServer.options(max_concurrency=4).remote(
-        ["tests/data/json_dataset"], max_queue_size=2, log_level=logging.DEBUG
+        ["tests/data/json_data"], max_queue_size=2, log_level=logging.DEBUG
     )
     example = ray.get(server.get_example.remote())
     assert example.data[example.content_field] == "hello world"
