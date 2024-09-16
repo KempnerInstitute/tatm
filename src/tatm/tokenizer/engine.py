@@ -276,8 +276,17 @@ class TokenizationEngine:
         tokenizer: str,
         output_dir: str,
         file_prefix: str,
-        log_level: str = logging.INFO,
+        log_level: int = logging.INFO,
     ):
+        """Object holding information needed to execute the tokenization process, along with methods to run it.
+
+        Args:
+            data: A list of either paths to Tatm Data collections or TatmDataMetadata objects.
+            tokenizer: The name of a Hugging Face tokenizer or path to a tokenizer file.
+            output_dir: The directory where the tokenized files will be saved.
+            file_prefix: The prefix for the tokenized files.
+            log_level: python logging level to use within Ray. Defaults to logging.INFO.
+        """
         self.data = data
         self.tokenizer = tokenizer
         self.output_dir = output_dir

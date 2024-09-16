@@ -28,12 +28,14 @@ class TatmDataset(ABC):
 
 
 def get_dataset(
-    metadata: Union[str, TatmDataMetadata], context_length: int, chunked=True
+    metadata: Union[str, TatmDataMetadata], **kwargs
 ) -> TatmDataset:
     """Get the dataset object from the metadata.
 
     Args:
         metadata: The metadata object, or a path to a metadata file or a directory containing a metadata file.
+        **kwargs: Additional arguments to pass to the dataset constructor.
+
 
     Returns:
         TatmDataset: The dataset object.
@@ -47,10 +49,10 @@ def get_dataset(
     if metadata.tokenized_info:
         return TatmMemmapDataset(
             metadata.tokenized_info.file_prefix,
-            context_length,
             metadata.tokenized_info.dtype,
-            chunked,
+            **kwargs,
         )
+    raise NotImplementedError("Metadata does not describe a model ready tatm dataset type.")
 
 
 class TokenMemMapArray:
@@ -123,6 +125,7 @@ class TatmMemmapDataset(TatmDataset):
         """Initialize the TatmTokenizedDataset.
 
         Args:
+            file_prefix: Prefix for the tokenized files, shoud be the absolute path, including the parent directory.
             context_length: The context length of the model.
             dtype: The data type of the array.
             chunked: Whether or not indices should map to chunks of context length of individual tokens.
@@ -133,6 +136,7 @@ class TatmMemmapDataset(TatmDataset):
                     full context. In our thinking, we have determined that for foundational models, the ability
                     to see tokens in their full context is less important than the time to process an epoch and
                     have chosen to use the chunked approach by default.
+            file_suffix: Suffix for the tokenized files.
         """
         self.file_prefix = file_prefix
         self.file_suffix = file_suffix

@@ -18,6 +18,16 @@ def write_metadata(
     file_extension: str = "bin",
     data_description=None,
 ) -> None:
+    """_summary_
+
+    Args:
+        tokenizer: name of a huggingface tokenizer or path to a tokenizer file
+        file_prefix: the file prefix for the tokenized files in the output directory
+        output_dir (str): the directory where the tokenized files and metadata will be saved
+        dtype: the datatype of the token IDs on disk. Defaults to "uint16".
+        file_extension: The file extension of the token array files. Defaults to "bin".
+        data_description: Dataset description to be included in the dataset metadata. Defaults to None.
+    """
     tokenizer_id = tokenizer
     tokenizer = load_tokenizer(tokenizer_id)
 
