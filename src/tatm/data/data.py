@@ -1,4 +1,4 @@
-"""Module holding classes for handling curatad data available
+"""Module holding classes for handling curated data available
 within the Tatm Data Garden.
 
 A note on terminology:
