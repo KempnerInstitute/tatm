@@ -6,6 +6,7 @@ to be consumed by modelling frameworks such as pytorch, JAX, etc.
 from abc import ABC, abstractmethod
 from glob import glob
 from pathlib import Path
+from typing import Union
 
 import numpy as np
 
@@ -26,21 +27,29 @@ class TatmDataset(ABC):
         pass
 
 
-def get_dataset(metadata: DataMetadata) -> TatmDataset:
+def get_dataset(
+    metadata: Union[str, DataMetadata], context_length: int, chunked=True
+) -> TatmDataset:
     """Get the dataset object from the metadata.
 
     Args:
-        metadata: The metadata object.
+        metadata: The metadata object, or a path to a metadata file or a directory containing a metadata file.
 
     Returns:
         TatmDataset: The dataset object.
     """
+    if isinstance(metadata, str):
+        metadata = Path(metadata)
+    if metadata.is_dir():
+        metadata = DataMetadata.from_directory(metadata)
+    elif metadata.is_file():
+        metadata = DataMetadata.from_file(metadata)
     if metadata.tokenized_info:
         return TatmMemmapDataset(
-            metadata.tokenized_info["file_prefix"],
-            metadata.tokenized_info["context_length"],
-            metadata.tokenized_info["dtype"],
-            metadata.tokenized_info["chunked"],
+            metadata.tokenized_info.file_prefix,
+            context_length,
+            metadata.tokenized_info.dtype,
+            chunked,
         )
 
 

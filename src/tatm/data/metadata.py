@@ -4,7 +4,7 @@ import json
 import os
 import pathlib
 from enum import Enum
-from typing import List
+from typing import List, Union
 
 import yaml
 
@@ -117,6 +117,37 @@ class DataMetadata:
             parent_dir = pathlib.Path(yaml_path).resolve().parent
             metadata["dataset_path"] = str(parent_dir)
         return cls(**metadata)
+
+    @classmethod
+    def from_file(cls, path: Union[str, pathlib.Path]):
+        """Load metadata from a file, either JSON or YAML."""
+        if isinstance(path, str):
+            path = pathlib.Path(path)
+        if path.suffix == ".json":
+            return cls.from_json(path)
+        elif path.suffix in [".yaml", ".yml"]:
+            return cls.from_yaml(path)
+        else:
+            raise ValueError(f"Unsupported file format: {path}")
+
+    @classmethod
+    def from_directory(cls, directory: Union[str, pathlib.Path]):
+        """Load metadata from a directory containing a metadata file named metadata.[yaml or json]."""
+        if isinstance(directory, str):
+            directory = pathlib.Path(directory)
+
+        json_path = directory / "metadata.json"
+        yaml_path = directory / "metadata.yaml"
+        yml_path = directory / "metadata.yml"
+
+        if json_path.exists():
+            return cls.from_json(json_path)
+        elif yaml_path.exists():
+            return cls.from_yaml(yaml_path)
+        elif yml_path.exists():
+            return cls.from_yaml(yml_path)
+        else:
+            raise ValueError("No metadata file found in the specified directory.")
 
     def __str__(self):
         return self.as_json()

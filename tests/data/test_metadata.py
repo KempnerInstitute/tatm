@@ -1,6 +1,7 @@
 import json
 import pathlib
 
+import pytest
 import yaml
 
 from tatm.data.metadata import (
@@ -8,6 +9,54 @@ from tatm.data.metadata import (
     DataMetadata,
     create_metadata_interactive,
 )
+
+
+@pytest.fixture
+def json_metadata(tmp_path):
+    metadata = DataMetadata(
+        name="test",
+        dataset_path=str(tmp_path),
+        description="A test metadata file.",
+        date_downloaded="2021-01-01",
+        download_source="http://example.com",
+        data_content=DataContentType.TEXT,
+        content_field="text",
+    )
+    metadata.to_json(tmp_path / "metadata.json")
+    yield (tmp_path, "metadata.json")
+    return tmp_path / "metadata.json"
+
+
+@pytest.fixture
+def yaml_metadata(tmp_path):
+    metadata = DataMetadata(
+        name="test",
+        dataset_path=str(tmp_path),
+        description="A test metadata file.",
+        date_downloaded="2021-01-01",
+        download_source="http://example.com",
+        data_content=DataContentType.TEXT,
+        content_field="text",
+    )
+    metadata.to_yaml(tmp_path / "metadata.yaml")
+    yield (tmp_path, "metadata.yaml")
+    return tmp_path / "metadata.yaml"
+
+
+@pytest.fixture
+def yml_metadata(tmp_path):
+    metadata = DataMetadata(
+        name="test",
+        dataset_path=str(tmp_path),
+        description="A test metadata file.",
+        date_downloaded="2021-01-01",
+        download_source="http://example.com",
+        data_content=DataContentType.TEXT,
+        content_field="text",
+    )
+    metadata.to_yaml(tmp_path / "metadata.yml")
+    yield (tmp_path, "metadata.yml")
+    return tmp_path / "metadata.yml"
 
 
 def test_json_load():
@@ -75,6 +124,36 @@ def test_yaml_save(tmp_path):
     assert yaml_dict["download_source"] == "http://example.com"
     assert yaml_dict["data_content"] == "text"
     assert yaml_dict["content_field"] == "text"
+
+
+def test_file_load(json_metadata, yaml_metadata, yml_metadata):
+    for metadata in [json_metadata, yaml_metadata, yml_metadata]:
+        path, filename = metadata
+        metadata = DataMetadata.from_file(path / filename)
+        assert metadata.name == "test"
+        assert metadata.dataset_path == str(path)
+        assert metadata.description == "A test metadata file."
+        assert metadata.date_downloaded == "2021-01-01"
+        assert metadata.download_source == "http://example.com"
+        assert metadata.data_content == DataContentType.TEXT
+        assert metadata.content_field == "text"
+        assert metadata.corpuses == []
+        assert metadata.tokenized_info is None
+
+
+def test_directory_load(json_metadata, yaml_metadata, yml_metadata):
+    for metadata in [json_metadata, yaml_metadata, yml_metadata]:
+        path, filename = metadata
+        metadata = DataMetadata.from_directory(str(path))
+        assert metadata.name == "test"
+        assert metadata.dataset_path == str(path)
+        assert metadata.description == "A test metadata file."
+        assert metadata.date_downloaded == "2021-01-01"
+        assert metadata.download_source == "http://example.com"
+        assert metadata.data_content == DataContentType.TEXT
+        assert metadata.content_field == "text"
+        assert metadata.corpuses == []
+        assert metadata.tokenized_info is None
 
 
 def test_interactive_creation(monkeypatch, tmp_path):
@@ -149,9 +228,9 @@ def test_tokenized_interactive_creation(monkeypatch, tmp_path):
         monkeypatch.setattr("builtins.input", lambda _: next(responses))
         create_metadata_interactive()
         if output_type in ["", "json"]:
-            metadata = DataMetadata.from_json(tmp_path / "metadata_test.json")
+            metadata = DataMetadata.from_file(tmp_path / "metadata_test.json")
         else:
-            metadata = DataMetadata.from_yaml(tmp_path / "metadata_test.yaml")
+            metadata = DataMetadata.from_file(tmp_path / "metadata_test.yaml")
         assert metadata.name == "test"
         assert metadata.dataset_path == "./"
         assert metadata.description == "A test metadata file."
