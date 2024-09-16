@@ -2,7 +2,7 @@ import numpy as np
 import pytest
 
 from tatm.data import TatmMemmapDataset
-from tatm.data.memmap_dataset import TokenMemMapArray
+from tatm.data.datasets import TokenMemMapArray
 
 
 @pytest.fixture()

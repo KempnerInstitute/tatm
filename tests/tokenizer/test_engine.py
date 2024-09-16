@@ -20,7 +20,7 @@ def test_ray_run(tmp_path):
 
     # Create an instance of the Engine
     engine = TokenizationEngine(
-        ["tests/data/json_data"], "t5-base", str(tmp_path / "test")
+        ["tests/data/json_data"], "t5-base", str(tmp_path), "test"
     )
 
     # Run the engine with some input
@@ -53,7 +53,7 @@ def test_ray_no_specified_workers(tmp_path):
 
     # Create an instance of the Engine
     engine = TokenizationEngine(
-        ["tests/data/json_data"], "t5-base", str(tmp_path / "test")
+        ["tests/data/json_data"], "t5-base", str(tmp_path), "test"
     )
 
     # Run the engine with some input
@@ -85,7 +85,7 @@ def test_ray_too_many_workers(tmp_path):
 
     # Create an instance of the Engine
     engine = TokenizationEngine(
-        ["tests/data/json_data"], "t5-base", str(tmp_path / "test")
+        ["tests/data/json_data"], "t5-base", str(tmp_path), "test"
     )
 
     # Run the engine with some input
@@ -121,7 +121,8 @@ def test_ray_run_in_debug_mode(tmp_path):
     engine = TokenizationEngine(
         ["tests/data/json_data"],
         "t5-base",
-        str(tmp_path / "test"),
+        str(tmp_path),
+        "test",
         log_level=logging.DEBUG,
     )
 

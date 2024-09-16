@@ -15,6 +15,13 @@ class TokenizedDataMetadata:
     file_prefix: str
     dtype: str = "uint16"
     file_extension: str = "bin"
+    vocab_size: int = None
+    tatm_version: str = (
+        None  #: Version of the tatm library used to create the tokenized data. Default to None to avoid breaking changes/overwriting past versions.
+    )
+    tokenizers_version: str = (
+        None  #: Version of the hf tokenizer used to create the tokenized data. Default to None to avoid breaking changes/overwriting past versions.
+    )
 
 
 class DataContentType(str, Enum):
@@ -68,7 +75,8 @@ class DataMetadata:
         Returns:
             str: Metadata as a JSON string.
         """
-        return json.dumps(dataclasses.asdict(self))
+        out = {k: v for k, v in dataclasses.asdict(self).items() if v is not None}
+        return json.dumps(out)
 
     def to_json(self, filename):
         """Write the metadata to a JSON file.
@@ -92,7 +100,7 @@ class DataMetadata:
         return cls(**metadata)
 
     def as_yaml(self):
-        out = dataclasses.asdict(self)
+        out = {k: v for k, v in dataclasses.asdict(self).items() if v is not None}
         out["data_content"] = self.data_content.value
         return yaml.dump(out)
 
