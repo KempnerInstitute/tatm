@@ -10,7 +10,7 @@ from typing import Union
 
 import numpy as np
 
-from tatm.data.metadata import DataMetadata
+from tatm.data.metadata import TatmDataMetadata
 
 
 class TatmDataset(ABC):
@@ -28,7 +28,7 @@ class TatmDataset(ABC):
 
 
 def get_dataset(
-    metadata: Union[str, DataMetadata], context_length: int, chunked=True
+    metadata: Union[str, TatmDataMetadata], context_length: int, chunked=True
 ) -> TatmDataset:
     """Get the dataset object from the metadata.
 
@@ -41,9 +41,9 @@ def get_dataset(
     if isinstance(metadata, str):
         metadata = Path(metadata)
     if metadata.is_dir():
-        metadata = DataMetadata.from_directory(metadata)
+        metadata = TatmDataMetadata.from_directory(metadata)
     elif metadata.is_file():
-        metadata = DataMetadata.from_file(metadata)
+        metadata = TatmDataMetadata.from_file(metadata)
     if metadata.tokenized_info:
         return TatmMemmapDataset(
             metadata.tokenized_info.file_prefix,

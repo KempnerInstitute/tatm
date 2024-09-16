@@ -1,9 +1,9 @@
 from tatm.data.data import TatmData, TatmTextData, get_data
 from tatm.data.datasets import TatmMemmapDataset, get_dataset
-from tatm.data.metadata import DataMetadata
+from tatm.data.metadata import TatmDataMetadata
 
 __all__ = [
-    "DataMetadata",
+    "TatmDataMetadata",
     "get_data",
     "TatmData",
     "TatmTextData",

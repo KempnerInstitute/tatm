@@ -6,14 +6,14 @@ import yaml
 
 from tatm.data.metadata import (
     DataContentType,
-    DataMetadata,
+    TatmDataMetadata,
     create_metadata_interactive,
 )
 
 
 @pytest.fixture
 def json_metadata(tmp_path):
-    metadata = DataMetadata(
+    metadata = TatmDataMetadata(
         name="test",
         dataset_path=str(tmp_path),
         description="A test metadata file.",
@@ -29,7 +29,7 @@ def json_metadata(tmp_path):
 
 @pytest.fixture
 def yaml_metadata(tmp_path):
-    metadata = DataMetadata(
+    metadata = TatmDataMetadata(
         name="test",
         dataset_path=str(tmp_path),
         description="A test metadata file.",
@@ -45,7 +45,7 @@ def yaml_metadata(tmp_path):
 
 @pytest.fixture
 def yml_metadata(tmp_path):
-    metadata = DataMetadata(
+    metadata = TatmDataMetadata(
         name="test",
         dataset_path=str(tmp_path),
         description="A test metadata file.",
@@ -61,7 +61,7 @@ def yml_metadata(tmp_path):
 
 def test_json_load():
     filename = "tests/data/metadata_test.json"
-    metadata = DataMetadata.from_json(filename)
+    metadata = TatmDataMetadata.from_json(filename)
     test_file_dir = pathlib.Path(filename).resolve().parent
     assert metadata.name == "test"
     assert metadata.dataset_path == str(test_file_dir)
@@ -74,7 +74,7 @@ def test_json_load():
 
 def test_yaml_load():
     filename = "tests/data/metadata_test.yaml"
-    metadata = DataMetadata.from_yaml(filename)
+    metadata = TatmDataMetadata.from_yaml(filename)
     test_file_dir = pathlib.Path(filename).resolve().parent
     assert metadata.name == "test"
     assert metadata.dataset_path == str(test_file_dir)
@@ -86,7 +86,7 @@ def test_yaml_load():
 
 
 def test_json_save(tmp_path):
-    metadata = DataMetadata(
+    metadata = TatmDataMetadata(
         name="test",
         dataset_path="./",
         description="A test metadata file.",
@@ -106,7 +106,7 @@ def test_json_save(tmp_path):
 
 
 def test_yaml_save(tmp_path):
-    metadata = DataMetadata(
+    metadata = TatmDataMetadata(
         name="test",
         dataset_path="./",
         description="A test metadata file.",
@@ -129,7 +129,7 @@ def test_yaml_save(tmp_path):
 def test_file_load(json_metadata, yaml_metadata, yml_metadata):
     for metadata in [json_metadata, yaml_metadata, yml_metadata]:
         path, filename = metadata
-        metadata = DataMetadata.from_file(path / filename)
+        metadata = TatmDataMetadata.from_file(path / filename)
         assert metadata.name == "test"
         assert metadata.dataset_path == str(path)
         assert metadata.description == "A test metadata file."
@@ -144,7 +144,7 @@ def test_file_load(json_metadata, yaml_metadata, yml_metadata):
 def test_directory_load(json_metadata, yaml_metadata, yml_metadata):
     for metadata in [json_metadata, yaml_metadata, yml_metadata]:
         path, filename = metadata
-        metadata = DataMetadata.from_directory(str(path))
+        metadata = TatmDataMetadata.from_directory(str(path))
         assert metadata.name == "test"
         assert metadata.dataset_path == str(path)
         assert metadata.description == "A test metadata file."
@@ -183,9 +183,9 @@ def test_interactive_creation(monkeypatch, tmp_path):
         monkeypatch.setattr("builtins.input", lambda _: next(responses))
         create_metadata_interactive()
         if output_type in ["", "json"]:
-            metadata = DataMetadata.from_json(tmp_path / "metadata_test.json")
+            metadata = TatmDataMetadata.from_json(tmp_path / "metadata_test.json")
         else:
-            metadata = DataMetadata.from_yaml(tmp_path / "metadata_test.yaml")
+            metadata = TatmDataMetadata.from_yaml(tmp_path / "metadata_test.yaml")
         assert metadata.name == "test"
         assert metadata.dataset_path == "./"
         assert metadata.description == "A test metadata file."
@@ -228,9 +228,9 @@ def test_tokenized_interactive_creation(monkeypatch, tmp_path):
         monkeypatch.setattr("builtins.input", lambda _: next(responses))
         create_metadata_interactive()
         if output_type in ["", "json"]:
-            metadata = DataMetadata.from_file(tmp_path / "metadata_test.json")
+            metadata = TatmDataMetadata.from_file(tmp_path / "metadata_test.json")
         else:
-            metadata = DataMetadata.from_file(tmp_path / "metadata_test.yaml")
+            metadata = TatmDataMetadata.from_file(tmp_path / "metadata_test.yaml")
         assert metadata.name == "test"
         assert metadata.dataset_path == "./"
         assert metadata.description == "A test metadata file."

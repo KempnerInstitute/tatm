@@ -39,7 +39,7 @@ class DataContentType(str, Enum):
 
 
 @dataclasses.dataclass(kw_only=True)
-class DataMetadata:
+class TatmDataMetadata:
     """Generic Dataset Metadata Class holding information about a dataset.
 
     Raises:
@@ -217,7 +217,7 @@ def create_metadata_interactive():
     else:
         tokenized_info = None
 
-    metadata = DataMetadata(
+    metadata = TatmDataMetadata(
         name=name,
         dataset_path=dataset_path,
         description=description,

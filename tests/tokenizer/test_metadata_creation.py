@@ -2,7 +2,7 @@ import pytest
 import tokenizers
 
 from tatm import __version__ as tatm_version
-from tatm.data.metadata import DataMetadata
+from tatm.data.metadata import TatmDataMetadata
 from tatm.tokenizer.metadata import write_metadata
 
 
@@ -23,7 +23,7 @@ def test_write_metadata(tmp_path):
     assert (tmp_path / "metadata.yaml").exists()
     # Check if the tokenizer file is created
     assert (tmp_path / "tokenizer.json").exists()
-    metadata = DataMetadata.from_yaml(tmp_path / "metadata.yaml")
+    metadata = TatmDataMetadata.from_yaml(tmp_path / "metadata.yaml")
     assert metadata.name == "tokenized"
     assert metadata.description == "Test dataset"
     assert metadata.dataset_path == str(tmp_path)
@@ -43,7 +43,7 @@ def test_write_metadata_with_file_tokenizer(file_tokenizer, tmp_path):
     assert (tmp_path / "metadata.yaml").exists()
     # Check if the tokenizer file is created
     assert (tmp_path / "tokenizer.json").exists()
-    metadata = DataMetadata.from_yaml(tmp_path / "metadata.yaml")
+    metadata = TatmDataMetadata.from_yaml(tmp_path / "metadata.yaml")
     assert metadata.name == "tokenized"
     assert metadata.description == "Tokenized dataset created using tatm"
     assert metadata.dataset_path == str(tmp_path)

@@ -3,7 +3,7 @@ from pathlib import Path
 
 from tokenizers import __version__ as tk_version
 
-from tatm.data.metadata import DataContentType, DataMetadata, TokenizedDataMetadata
+from tatm.data.metadata import DataContentType, TatmDataMetadata, TokenizedDataMetadata
 from tatm.tokenizer.utils import load_tokenizer
 from tatm.version import __version__ as tatm_version
 
@@ -33,7 +33,7 @@ def write_metadata(
     )
     if data_description is None:
         data_description = "Tokenized dataset created using tatm"
-    metadata = DataMetadata(
+    metadata = TatmDataMetadata(
         name=file_prefix,
         dataset_path=output_dir,
         description=data_description,

@@ -15,7 +15,7 @@ from typing import Union
 
 import datasets
 
-from tatm.data.metadata import DataContentType, DataMetadata
+from tatm.data.metadata import DataContentType, TatmDataMetadata
 
 datasets.disable_caching()
 
@@ -27,13 +27,13 @@ class TatmData(ABC):
         metadata: Metadata object.
     """
 
-    def __init__(self, metadata: DataMetadata):
+    def __init__(self, metadata: TatmDataMetadata):
         self.metadata = metadata
         self.initialize()
 
     @classmethod
     @abstractmethod
-    def from_metadata(cls, metadata: DataMetadata) -> "TatmData":
+    def from_metadata(cls, metadata: TatmDataMetadata) -> "TatmData":
         """Create a dataset object from metadata.
 
         Args:
@@ -59,7 +59,7 @@ class TatmTextData(TatmData):
     """
 
     @classmethod
-    def from_metadata(cls, metadata: DataMetadata) -> "TatmTextData":
+    def from_metadata(cls, metadata: TatmDataMetadata) -> "TatmTextData":
         """Create a TatumTextDataset object from metadata.
 
         Args:
@@ -92,7 +92,7 @@ class TatmTextData(TatmData):
         return next(self.data_iter)
 
 
-def get_data(identifier: Union[str, DataMetadata]) -> TatmData:
+def get_data(identifier: Union[str, TatmDataMetadata]) -> TatmData:
     """Get a dataset object from an identifier.
 
     Args:
@@ -103,7 +103,7 @@ def get_data(identifier: Union[str, DataMetadata]) -> TatmData:
     """
     if isinstance(identifier, str):
         return _dataset_from_path(identifier)
-    elif isinstance(identifier, DataMetadata):
+    elif isinstance(identifier, TatmDataMetadata):
         return _dataset_from_metadata(identifier)
 
 
@@ -118,9 +118,9 @@ def _dataset_from_path(path: str) -> TatmData:
     """
     path = pathlib.Path(path)
     if (path / "metadata.yaml").exists():
-        metadata = DataMetadata.from_yaml(path / "metadata.yaml")
+        metadata = TatmDataMetadata.from_yaml(path / "metadata.yaml")
     elif (path / "metadata.json").exists():
-        metadata = DataMetadata.from_json(path / "metadata.json")
+        metadata = TatmDataMetadata.from_json(path / "metadata.json")
     else:
         raise ValueError(
             (
@@ -132,7 +132,7 @@ def _dataset_from_path(path: str) -> TatmData:
     return _dataset_from_metadata(metadata)
 
 
-def _dataset_from_metadata(metadata: DataMetadata) -> TatmData:
+def _dataset_from_metadata(metadata: TatmDataMetadata) -> TatmData:
     """Create a dataset object from metadata.
 
     Args:
