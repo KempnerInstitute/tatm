@@ -41,7 +41,7 @@ def test_memmap_dataset(sample_dataset):
 
 
 def test_memmap_dataset_from_metadata(sample_dataset):
-    dataset = get_dataset(str(sample_dataset[0]), 100)
+    dataset = get_dataset(str(sample_dataset[0]), context_length=100)
     assert len(dataset) == 100
     assert np.all(dataset[0] == np.arange(100))
     assert np.all(dataset[20] == np.arange(100) + 2000)

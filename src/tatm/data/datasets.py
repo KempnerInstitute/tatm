@@ -27,9 +27,7 @@ class TatmDataset(ABC):
         pass
 
 
-def get_dataset(
-    metadata: Union[str, TatmDataMetadata], **kwargs
-) -> TatmDataset:
+def get_dataset(metadata: Union[str, TatmDataMetadata], **kwargs) -> TatmDataset:
     """Get the dataset object from the metadata.
 
     Args:
@@ -48,11 +46,13 @@ def get_dataset(
         metadata = TatmDataMetadata.from_file(metadata)
     if metadata.tokenized_info:
         return TatmMemmapDataset(
-            metadata.tokenized_info.file_prefix,
-            metadata.tokenized_info.dtype,
+            file_prefix=metadata.tokenized_info.file_prefix,
+            dtype=metadata.tokenized_info.dtype,
             **kwargs,
         )
-    raise NotImplementedError("Metadata does not describe a model ready tatm dataset type.")
+    raise NotImplementedError(
+        "Metadata does not describe a model ready tatm dataset type."
+    )
 
 
 class TokenMemMapArray:
