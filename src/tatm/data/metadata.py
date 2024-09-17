@@ -4,9 +4,24 @@ import json
 import os
 import pathlib
 from enum import Enum
-from typing import List
+from typing import List, Union
 
 import yaml
+
+
+@dataclasses.dataclass(kw_only=True)
+class TokenizedMetadataComponenet:
+    tokenizer: str
+    file_prefix: str
+    dtype: str = "uint16"
+    file_extension: str = "bin"
+    vocab_size: int = None
+    tatm_version: str = (
+        None  #: Version of the tatm library used to create the tokenized data. Default to None to avoid breaking changes/overwriting past versions.
+    )
+    tokenizers_version: str = (
+        None  #: Version of the hf tokenizer used to create the tokenized data. Default to None to avoid breaking changes/overwriting past versions.
+    )
 
 
 class DataContentType(str, Enum):
@@ -24,7 +39,7 @@ class DataContentType(str, Enum):
 
 
 @dataclasses.dataclass(kw_only=True)
-class DataMetadata:
+class TatmDataMetadata:
     """Generic Dataset Metadata Class holding information about a dataset.
 
     Raises:
@@ -41,10 +56,14 @@ class DataMetadata:
     corpuses: List[str] = dataclasses.field(
         default_factory=list
     )  #: List of corpuses in the dataset.
+    tokenized_info: TokenizedMetadataComponenet = None
 
     def __post_init__(self):
         self._validate()
         self.data_content = DataContentType(self.data_content)
+
+        if isinstance(self.tokenized_info, dict):
+            self.tokenized_info = TokenizedMetadataComponenet(**self.tokenized_info)
 
     def _validate(self):
         if not DataContentType.has_value(self.data_content):
@@ -56,7 +75,8 @@ class DataMetadata:
         Returns:
             str: Metadata as a JSON string.
         """
-        return json.dumps(dataclasses.asdict(self))
+        out = {k: v for k, v in dataclasses.asdict(self).items() if v is not None}
+        return json.dumps(out)
 
     def to_json(self, filename):
         """Write the metadata to a JSON file.
@@ -80,7 +100,7 @@ class DataMetadata:
         return cls(**metadata)
 
     def as_yaml(self):
-        out = dataclasses.asdict(self)
+        out = {k: v for k, v in dataclasses.asdict(self).items() if v is not None}
         out["data_content"] = self.data_content.value
         return yaml.dump(out)
 
@@ -98,13 +118,39 @@ class DataMetadata:
             metadata["dataset_path"] = str(parent_dir)
         return cls(**metadata)
 
+    @classmethod
+    def from_file(cls, path: Union[str, pathlib.Path]):
+        """Load metadata from a file, either JSON or YAML."""
+        if isinstance(path, str):
+            path = pathlib.Path(path)
+        if path.suffix == ".json":
+            return cls.from_json(path)
+        elif path.suffix in [".yaml", ".yml"]:
+            return cls.from_yaml(path)
+        else:
+            raise ValueError(f"Unsupported file format: {path}")
+
+    @classmethod
+    def from_directory(cls, directory: Union[str, pathlib.Path]):
+        """Load metadata from a directory containing a metadata file named metadata.[yaml or json]."""
+        if isinstance(directory, str):
+            directory = pathlib.Path(directory)
+
+        json_path = directory / "metadata.json"
+        yaml_path = directory / "metadata.yaml"
+        yml_path = directory / "metadata.yml"
+
+        if json_path.exists():
+            return cls.from_json(json_path)
+        elif yaml_path.exists():
+            return cls.from_yaml(yaml_path)
+        elif yml_path.exists():
+            return cls.from_yaml(yml_path)
+        else:
+            raise ValueError("No metadata file found in the specified directory.")
+
     def __str__(self):
         return self.as_json()
-
-
-@dataclasses.dataclass(kw_only=True)
-class TokenizedDataMetadata(DataMetadata):
-    tokenizer: str
 
 
 def create_metadata_interactive():
@@ -158,7 +204,20 @@ def create_metadata_interactive():
             break
         corpuses.append(corpus)
 
-    metadata = DataMetadata(
+    while True:
+        tokenized = input("Is the dataset tokenized? (y/n) [n]:")
+        if not tokenized:
+            tokenized = "n"
+        if tokenized not in ["y", "n"]:
+            print("Invalid input. Please enter 'y' or 'n'.")
+            continue
+        break
+    if tokenized == "y":
+        tokenized_info = _create_tokenized_metadata_interactive()
+    else:
+        tokenized_info = None
+
+    metadata = TatmDataMetadata(
         name=name,
         dataset_path=dataset_path,
         description=description,
@@ -167,9 +226,42 @@ def create_metadata_interactive():
         data_content=DataContentType(data_content),
         content_field=content_field,
         corpuses=corpuses,
+        tokenized_info=tokenized_info,
     )
 
     if output_format == "json":
         metadata.to_json(output_path)
     else:
         metadata.to_yaml(output_path)
+
+
+def _create_tokenized_metadata_interactive() -> TokenizedMetadataComponenet:
+    """Contruct a TokenizedDataMetadata object interactively. Intended to be called
+    within create_metadata_interactive.
+
+    Returns:
+        TokenizedDataMetadata: Tokenized metadata object.
+    """
+
+    tokenizer = input("Tokenizer Name or Path to JSON [t5-base]: ")
+    if not tokenizer:
+        tokenizer = "t5-base"
+
+    file_prefix = input("Token File Prefix [tokenized]: ")
+    if not file_prefix:
+        file_prefix = "tokenized"
+
+    file_extension = input("Token File Extension [bin]: ")
+    if not file_extension:
+        file_extension = "bin"
+
+    dtype = input("Token Data Type [uint16]: ")
+    if not dtype:
+        dtype = "uint16"
+
+    return TokenizedMetadataComponenet(
+        tokenizer=tokenizer,
+        file_prefix=file_prefix,
+        dtype=dtype,
+        file_extension=file_extension,
+    )

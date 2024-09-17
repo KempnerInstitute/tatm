@@ -6,13 +6,16 @@ import time
 from multiprocessing import (
     Queue,  # Used instead of default queue to allow for future mp based implementation
 )
+from pathlib import Path
 from typing import List, Union
 
 import numpy as np
 import ray
 import tokenizers
 
-from tatm.data import DataMetadata, get_data
+from tatm.data import TatmDataMetadata, get_data
+from tatm.tokenizer.metadata import write_metadata
+from tatm.tokenizer.utils import load_tokenizer
 from tatm.utils import configure_logging
 
 LOGGER = logging.getLogger(__name__)
@@ -28,7 +31,7 @@ class ExampleMessage:
 class DataServer:
     def __init__(
         self,
-        data: List[Union[str, DataMetadata]],
+        data: List[Union[str, TatmDataMetadata]],
         seed: int = 2130,
         max_queue_size: int = 1024,
         log_level: str = logging.INFO,
@@ -231,7 +234,7 @@ class TokenizerWorker:
         self.server = server
         self.writer = writer
         self.tokenizer_name = tokenizer
-        self.tokenizer = tokenizers.Tokenizer.from_pretrained(tokenizer)
+        self.tokenizer = load_tokenizer(tokenizer)
         self.reset_threshold = reset_threshold
         self.documents_tokenized = 0
         configure_logging(log_level)
@@ -269,13 +272,24 @@ class TokenizerWorker:
 class TokenizationEngine:
     def __init__(
         self,
-        data: List[Union[str, DataMetadata]],
+        data: List[Union[str, TatmDataMetadata]],
         tokenizer: str,
+        output_dir: str,
         file_prefix: str,
-        log_level: str = logging.INFO,
+        log_level: int = logging.INFO,
     ):
+        """Object holding information needed to execute the tokenization process, along with methods to run it.
+
+        Args:
+            data: A list of either paths to Tatm Data collections or TatmDataMetadata objects.
+            tokenizer: The name of a Hugging Face tokenizer or path to a tokenizer file.
+            output_dir: The directory where the tokenized files will be saved.
+            file_prefix: The prefix for the tokenized files.
+            log_level: python logging level to use within Ray. Defaults to logging.INFO.
+        """
         self.data = data
         self.tokenizer = tokenizer
+        self.output_dir = output_dir
         self.file_prefix = file_prefix
         self.log_level = log_level
 
@@ -305,11 +319,12 @@ class TokenizationEngine:
         LOGGER.info(
             f"Tokenizing data with 1 reader process, 1 writer process, and {num_workers} worker processes."
         )
+
         server = DataServer.options(max_concurrency=num_workers + 1).remote(
             self.data, log_level=self.log_level
         )
         writer = TokenWriter.options(max_concurrency=num_workers + 1).remote(
-            self.file_prefix,
+            str(Path(self.output_dir) / self.file_prefix),
             log_level=self.log_level,
         )
         workers = [
@@ -318,6 +333,9 @@ class TokenizationEngine:
             )
             for _ in range(num_workers)
         ]
+        write_metadata(
+            self.tokenizer, self.output_dir, self.file_prefix, dtype="uint16"
+        )
         s = server.run.remote()
         writer.run.remote()
         ray.get([worker.run.remote() for worker in workers])
