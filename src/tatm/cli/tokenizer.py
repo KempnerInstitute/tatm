@@ -1,6 +1,5 @@
 import logging
 import os
-import pathlib
 
 import click
 import ray
@@ -52,7 +51,8 @@ def tokenize(datasets, num_workers, tokenizer, output_dir, file_prefix, verbose)
     e = TokenizationEngine(
         datasets,
         tokenizer,
-        str(pathlib.Path(output_dir) / file_prefix),
+        output_dir,
+        file_prefix,
         log_level=log_level,
     )
     e.run_with_ray(num_workers)
