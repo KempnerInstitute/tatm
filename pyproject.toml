@@ -2,7 +2,7 @@
 name = "tatm"
 version = "0.1.0"
 description = ""
-authors = ["Ben Sabath <bsabath1@gmail.com>"]
+authors = ["Kempner Institute at Harvard University <kempner-research-engineering@g.harvard.edu>"]
 readme = "README.md"
 packages = [{include = "tatm", from = "src"}]
 
