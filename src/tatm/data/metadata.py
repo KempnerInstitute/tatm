@@ -10,7 +10,7 @@ import yaml
 
 
 @dataclasses.dataclass(kw_only=True)
-class TokenizedDataMetadata:
+class TokenizedMetadataComponenet:
     tokenizer: str
     file_prefix: str
     dtype: str = "uint16"
@@ -56,14 +56,14 @@ class TatmDataMetadata:
     corpuses: List[str] = dataclasses.field(
         default_factory=list
     )  #: List of corpuses in the dataset.
-    tokenized_info: TokenizedDataMetadata = None
+    tokenized_info: TokenizedMetadataComponenet = None
 
     def __post_init__(self):
         self._validate()
         self.data_content = DataContentType(self.data_content)
 
         if isinstance(self.tokenized_info, dict):
-            self.tokenized_info = TokenizedDataMetadata(**self.tokenized_info)
+            self.tokenized_info = TokenizedMetadataComponenet(**self.tokenized_info)
 
     def _validate(self):
         if not DataContentType.has_value(self.data_content):
@@ -235,7 +235,7 @@ def create_metadata_interactive():
         metadata.to_yaml(output_path)
 
 
-def _create_tokenized_metadata_interactive() -> TokenizedDataMetadata:
+def _create_tokenized_metadata_interactive() -> TokenizedMetadataComponenet:
     """Contruct a TokenizedDataMetadata object interactively. Intended to be called
     within create_metadata_interactive.
 
@@ -259,7 +259,7 @@ def _create_tokenized_metadata_interactive() -> TokenizedDataMetadata:
     if not dtype:
         dtype = "uint16"
 
-    return TokenizedDataMetadata(
+    return TokenizedMetadataComponenet(
         tokenizer=tokenizer,
         file_prefix=file_prefix,
         dtype=dtype,

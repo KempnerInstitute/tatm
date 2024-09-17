@@ -3,7 +3,11 @@ from pathlib import Path
 
 from tokenizers import __version__ as tk_version
 
-from tatm.data.metadata import DataContentType, TatmDataMetadata, TokenizedDataMetadata
+from tatm.data.metadata import (
+    DataContentType,
+    TatmDataMetadata,
+    TokenizedMetadataComponenet,
+)
 from tatm.tokenizer.utils import load_tokenizer
 from tatm.version import __version__ as tatm_version
 
@@ -32,7 +36,7 @@ def write_metadata(
     tokenizer = load_tokenizer(tokenizer_id)
 
     tokenizer.save(str(Path(output_dir) / "tokenizer.json"))
-    tokenizer_metadata = TokenizedDataMetadata(
+    tokenizer_metadata = TokenizedMetadataComponenet(
         tokenizer=tokenizer_id,
         file_prefix=str(Path(output_dir).resolve() / file_prefix),
         dtype=dtype,
