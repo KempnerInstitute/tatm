@@ -15,7 +15,7 @@ def sample_dataset(tmp_path):
         data[:] = i * 1000 + np.arange(1000)
         data.flush()
         del data
-    write_metadata("t5-base", "test", str(tmp_path))
+    write_metadata("t5-base", str(tmp_path), "test")
     yield (tmp_path, "test")
 
     for i in range(10):

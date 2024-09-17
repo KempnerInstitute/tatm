@@ -12,8 +12,8 @@ LOGGER = logging.getLogger(__name__)
 
 def write_metadata(
     tokenizer: str,
-    file_prefix: str,
     output_dir: str,
+    file_prefix: str,
     dtype: str = "uint16",
     file_extension: str = "bin",
     data_description=None,
@@ -22,8 +22,8 @@ def write_metadata(
 
     Args:
         tokenizer: name of a huggingface tokenizer or path to a tokenizer file
-        file_prefix: the file prefix for the tokenized files in the output directory
         output_dir: the directory where the tokenized files and metadata will be saved
+        file_prefix: the file prefix for the tokenized files in the output directory
         dtype: the datatype of the token IDs on disk. Defaults to "uint16".
         file_extension: The file extension of the token array files. Defaults to "bin".
         data_description: Dataset description to be included in the dataset metadata. Defaults to None.

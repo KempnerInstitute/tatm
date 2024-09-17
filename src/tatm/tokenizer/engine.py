@@ -334,7 +334,7 @@ class TokenizationEngine:
             for _ in range(num_workers)
         ]
         write_metadata(
-            self.tokenizer, self.file_prefix, self.output_dir, dtype="uint16"
+            self.tokenizer, self.output_dir, self.file_prefix, dtype="uint16"
         )
         s = server.run.remote()
         writer.run.remote()

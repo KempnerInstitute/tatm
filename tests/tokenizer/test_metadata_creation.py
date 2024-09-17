@@ -17,7 +17,7 @@ def file_tokenizer(tmp_path):
 
 def test_write_metadata(tmp_path):
     write_metadata(
-        "t5-base", "tokenized", str(tmp_path), data_description="Test dataset"
+        "t5-base", str(tmp_path), "tokenized", data_description="Test dataset"
     )
     # Check if the metadata file is created
     assert (tmp_path / "metadata.yaml").exists()
@@ -38,7 +38,11 @@ def test_write_metadata(tmp_path):
 
 
 def test_write_metadata_with_file_tokenizer(file_tokenizer, tmp_path):
-    write_metadata(str(file_tokenizer), "tokenized", str(tmp_path))
+    write_metadata(
+        str(file_tokenizer),
+        str(tmp_path),
+        "tokenized",
+    )
     # Check if the metadata file is created
     assert (tmp_path / "metadata.yaml").exists()
     # Check if the tokenizer file is created
