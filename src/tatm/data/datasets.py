@@ -4,6 +4,7 @@ to be consumed by modelling frameworks such as pytorch, JAX, etc.
 """
 
 from abc import ABC, abstractmethod
+from dataclasses import dataclass
 from glob import glob
 from pathlib import Path
 from typing import Union
@@ -111,6 +112,22 @@ class TokenMemMapArray:
             return self.array[idx : idx + self.context_length]
 
 
+@dataclass
+class TatmMemmapDatasetItem:
+    """Class for representing a single item in the TatmMemmapDataset.
+    Includes __getitem__ method for dictlike access to the tokenized data."""
+
+    token_ids: np.ndarray
+    document_ids: np.ndarray
+
+    def __getitem__(self, item):
+        """Dict like access to attributes."""
+        try:
+            return getattr(self, item)
+        except AttributeError:
+            raise KeyError(f"{item} not found in dataset item.")
+
+
 class TatmMemmapDataset(TatmDataset):
     """Class for presenting tatm tokenized datasets to modelling frameworks."""
 
@@ -121,6 +138,7 @@ class TatmMemmapDataset(TatmDataset):
         dtype: str = "uint16",
         chunked: bool = True,
         file_suffix: str = "bin",
+        eos_token: int = 1,
     ):
         """Initialize the TatmTokenizedDataset.
 
@@ -161,7 +179,7 @@ class TatmMemmapDataset(TatmDataset):
             start_idx += len(i)
 
     def __len__(self):
-        """Get the number of tokens in the dataset."""
+        """Get the number of examples in the dataset."""
         return self.file_list[-1][0] + len(self.file_list[-1][1])
 
     def __getitem__(self, idx: int):
@@ -173,8 +191,12 @@ class TatmMemmapDataset(TatmDataset):
         raise IndexError("Index out of bounds.")
 
     def _process_item(self, item):
-        """Process the item. Currently a no-op."""
-        return item
+        """Process the item. Construct item response."""
+        out = TatmMemmapDatasetItem(
+            token_ids=item,
+            document_ids=_get_document_ids(item),
+        )
+        return out
 
     def num_files(self):
         """Get the number of files in the dataset."""
@@ -183,3 +205,15 @@ class TatmMemmapDataset(TatmDataset):
     def num_tokens(self):
         """Get the number of tokens in the dataset."""
         return sum([i.num_tokens for _, i in self.file_list])
+
+
+def _get_document_ids(tokens: np.ndarray, eos_token: int = 1) -> np.ndarray:
+    """Get document ids from token ids."""
+    document_ids = np.zeros_like(tokens, dtype=np.uint16)
+    current_doc_id = 0
+    for i in range(len(tokens)):
+        document_ids[i] = current_doc_id
+        if tokens[i] == eos_token:
+            current_doc_id += 1
+
+    return document_ids
