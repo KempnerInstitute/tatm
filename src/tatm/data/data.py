@@ -27,9 +27,9 @@ class TatmData(ABC):
         metadata: Metadata object.
     """
 
-    def __init__(self, metadata: TatmDataMetadata):
+    def __init__(self, metadata: TatmDataMetadata, *args, **kwargs):
         self.metadata = metadata
-        self.initialize()
+        self.initialize(*args, **kwargs)
 
     @classmethod
     @abstractmethod
@@ -59,7 +59,7 @@ class TatmTextData(TatmData):
     """
 
     @classmethod
-    def from_metadata(cls, metadata: TatmDataMetadata) -> "TatmTextData":
+    def from_metadata(cls, metadata: TatmDataMetadata, corpus=None, split="train") -> "TatmTextData":
         """Create a TatumTextDataset object from metadata.
 
         Args:
@@ -70,7 +70,7 @@ class TatmTextData(TatmData):
         """
         if metadata.data_content != DataContentType.TEXT:
             raise ValueError("Metadata does not describe a text dataset.")
-        return cls(metadata)
+        return cls(metadata, corpus=corpus, split=split)
 
     def initialize(self, corpus: str = None, split: str = "train"):
         """Initialize the dataset.
@@ -79,7 +79,8 @@ class TatmTextData(TatmData):
             corpus: Corpus to load. Defaults to None.
         """
         self.dataset = datasets.load_dataset(
-            self.metadata.dataset_path, streaming=True
+            self.metadata.dataset_path, name=corpus,
+            streaming=True
         )[split]
 
     def __iter__(self):
@@ -102,12 +103,18 @@ def get_data(identifier: Union[str, TatmDataMetadata]) -> TatmData:
         TatmDataset: Dataset object.
     """
     if isinstance(identifier, str):
-        return _dataset_from_path(identifier)
+        split_identifier = identifier.split(":")
+        identifier = split_identifier[0]
+        if len(split_identifier) > 1:
+            corpus = split_identifier[1]
+        else:
+            corpus = None
+        return _dataset_from_path(identifier, corpus=corpus)
     elif isinstance(identifier, TatmDataMetadata):
-        return _dataset_from_metadata(identifier)
+        return _dataset_from_metadata(identifier, corpus=corpus)
 
 
-def _dataset_from_path(path: str) -> TatmData:
+def _dataset_from_path(path: str, corpus = None) -> TatmData:
     """Create a dataset object from a path.
 
     Args:
@@ -129,10 +136,10 @@ def _dataset_from_path(path: str) -> TatmData:
             )
         )
     metadata.dataset_path = str(path)
-    return _dataset_from_metadata(metadata)
+    return _dataset_from_metadata(metadata, corpus=corpus)
 
 
-def _dataset_from_metadata(metadata: TatmDataMetadata) -> TatmData:
+def _dataset_from_metadata(metadata: TatmDataMetadata, corpus = None) -> TatmData:
     """Create a dataset object from metadata.
 
     Args:
@@ -142,7 +149,7 @@ def _dataset_from_metadata(metadata: TatmDataMetadata) -> TatmData:
         TatmDataset: Dataset object.
     """
     if metadata.data_content == DataContentType.TEXT:
-        return TatmTextData.from_metadata(metadata)
+        return TatmTextData.from_metadata(metadata, corpus=corpus)
     else:
         raise NotImplementedError(
             f"Data content type {metadata.data_content} is not yet supported."
