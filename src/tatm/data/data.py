@@ -81,7 +81,10 @@ class TatmTextData(TatmData):
             corpus: Corpus to load. Defaults to None.
         """
         self.dataset = datasets.load_dataset(
-            self.metadata.dataset_path, name=corpus, streaming=True
+            self.metadata.dataset_path,
+            name=corpus,
+            streaming=True,
+            trust_remote_code=True,
         )[split]
 
     def __iter__(self):
