@@ -59,7 +59,9 @@ class TatmTextData(TatmData):
     """
 
     @classmethod
-    def from_metadata(cls, metadata: TatmDataMetadata, corpus=None, split="train") -> "TatmTextData":
+    def from_metadata(
+        cls, metadata: TatmDataMetadata, corpus=None, split="train"
+    ) -> "TatmTextData":
         """Create a TatumTextDataset object from metadata.
 
         Args:
@@ -79,8 +81,7 @@ class TatmTextData(TatmData):
             corpus: Corpus to load. Defaults to None.
         """
         self.dataset = datasets.load_dataset(
-            self.metadata.dataset_path, name=corpus,
-            streaming=True
+            self.metadata.dataset_path, name=corpus, streaming=True
         )[split]
 
     def __iter__(self):
@@ -114,7 +115,7 @@ def get_data(identifier: Union[str, TatmDataMetadata]) -> TatmData:
         return _dataset_from_metadata(identifier, corpus=corpus)
 
 
-def _dataset_from_path(path: str, corpus = None) -> TatmData:
+def _dataset_from_path(path: str, corpus=None) -> TatmData:
     """Create a dataset object from a path.
 
     Args:
@@ -139,7 +140,7 @@ def _dataset_from_path(path: str, corpus = None) -> TatmData:
     return _dataset_from_metadata(metadata, corpus=corpus)
 
 
-def _dataset_from_metadata(metadata: TatmDataMetadata, corpus = None) -> TatmData:
+def _dataset_from_metadata(metadata: TatmDataMetadata, corpus=None) -> TatmData:
     """Create a dataset object from metadata.
 
     Args:
