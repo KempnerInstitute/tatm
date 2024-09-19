@@ -34,8 +34,8 @@ def test_memmap_dataset(sample_dataset):
         str(sample_dataset[0] / sample_dataset[1]), 100, "uint16"
     )
     assert len(dataset) == 100
-    assert np.all(dataset[0] == np.arange(100))
-    assert np.all(dataset[20] == np.arange(100) + 2000)
+    assert np.all(dataset[0]["token_ids"] == np.arange(100))
+    assert np.all(dataset[20]["token_ids"] == np.arange(100) + 2000)
     assert dataset.num_files() == 10
     assert dataset.num_tokens() == 100 * 100
 
@@ -43,7 +43,7 @@ def test_memmap_dataset(sample_dataset):
 def test_memmap_dataset_from_metadata(sample_dataset):
     dataset = get_dataset(str(sample_dataset[0]), context_length=100)
     assert len(dataset) == 100
-    assert np.all(dataset[0] == np.arange(100))
-    assert np.all(dataset[20] == np.arange(100) + 2000)
+    assert np.all(dataset[0]["token_ids"] == np.arange(100))
+    assert np.all(dataset[20]["token_ids"] == np.arange(100) + 2000)
     assert dataset.num_files() == 10
     assert dataset.num_tokens() == 100 * 100
