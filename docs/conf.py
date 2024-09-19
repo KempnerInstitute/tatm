@@ -7,8 +7,8 @@
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#project-information
 
 project = 'tatm'
-copyright = '2024, Ben Sabath'
-author = 'Ben Sabath'
+copyright = '2024, Kempner Institute at Harvard University'
+author = 'Kempner Institute at Harvard University Research and Engineering Team'
 
 # -- General configuration ---------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#general-configuration
