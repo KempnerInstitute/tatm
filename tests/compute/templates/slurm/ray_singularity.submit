@@ -21,12 +21,12 @@ head_node_ip=$(srun --nodes=1 --ntasks=1 -w "$head_node" hostname --ip-address)
 echo "Head node: $head_node"
 echo "Head node ip: $head_node_ip"
 echo "Head port: $head_port"
-export head_addr="$head_node_ip:$head_port"
-echo "Head address: $head_addr"
+export RAY_HEAD_ADDR="$head_node_ip:$head_port"
+echo "Head address: $RAY_HEAD_ADDR"
 
 echo "Starting Ray head on $head_node"
-srun -N 1 -n 1 -w "$head_node" singularity exec test.sif ray start --head --node-ip-address="$head_node_ip" \
-    --port=$head_port --num-cpus $SLURM_CPUS_PER_TASK --num-gpus $RAY_NUM_GPUS --min-worker-port 20001 --max-worker-port 30000 --block &
+srun -N 1 -n 1 -w "$head_node" singularity exec test.sif ray start --head --node-ip-address="$head_node_ip" --temp-dir /tmp/$USER/$SLURM_JOB_ID/ray \
+    --port=$head_port --num-cpus $SLURM_CPUS_PER_TASK --num-gpus $SLURM_GPUS_PER_NODE --min-worker-port 20001 --max-worker-port 30000 --block &
 
 # wait for head node to start
 sleep 5
@@ -36,8 +36,8 @@ worker_num=$((SLURM_NNODES - 1))
 for (( i = 1; i <= worker_num; i++ )); do
     node=${nodes_array[$i]}
     echo "Starting Ray worker on $node"
-    srun -N 1 -n 1 -w "$node" singularity exec test.sif ray start --address="$head_addr" \
-        --num-cpus $SLURM_CPUS_PER_TASK --num-gpus $RAY_NUM_GPUS --min-worker-port 20001 --max-worker-port 30000 --block &
+    srun -N 1 -n 1 -w "$node" singularity exec test.sif ray start --address="$RAY_HEAD_ADDR" \
+        --num-cpus $SLURM_CPUS_PER_TASK --num-gpus $SLURM_GPUS_PER_NODE --min-worker-port 20001 --max-worker-port 30000 --block &
     sleep 5
 done
 
