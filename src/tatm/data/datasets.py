@@ -155,12 +155,14 @@ class TatmMemmapDataset(TatmDataset):
                     to see tokens in their full context is less important than the time to process an epoch and
                     have chosen to use the chunked approach by default.
             file_suffix: Suffix for the tokenized files.
+            eos_token: The end of sequence token ID.
         """
         self.file_prefix = file_prefix
         self.file_suffix = file_suffix
         self.context_length = context_length
         self.dtype = dtype
         self.chunked = chunked
+        self.eos_token = eos_token
         self._construct_file_list()
 
     def _construct_file_list(self):
@@ -194,7 +196,7 @@ class TatmMemmapDataset(TatmDataset):
         """Process the item. Construct item response."""
         out = TatmMemmapDatasetItem(
             token_ids=item,
-            document_ids=_get_document_ids(item),
+            document_ids=_get_document_ids(item, eos_token=self.eos_token),
         )
         return out
 
