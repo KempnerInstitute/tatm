@@ -6,6 +6,12 @@
 
 
 
+if [[ -z $SLURM_GPUS_PER_NODE ]]; then
+    RAY_NUM_GPUS=0
+else
+    RAY_NUM_GPUS=$SLURM_GPUS_PER_NODE
+fi
+
 # choose available port on the head node
 head_port=`comm -23 <(seq 15000 20000 | sort) <(ss -Htan | awk '{print $4}' | cut -d':' -f2 | sort -u) | shuf | head -n 1`
 nodes=`scontrol show hostnames $SLURM_JOB_NODELIST`
@@ -20,7 +26,7 @@ echo "Head address: $head_addr"
 
 echo "Starting Ray head on $head_node"
 srun -N 1 -n 1 -w "$head_node" singularity exec test.sif ray start --head --node-ip-address="$head_node_ip" \
-    --port=$head_port --num-cpus $SLURM_CPUS_PER_TASK --num-gpus $SLURM_GPUS_PER_NODE --min-worker-port 20001 --max-worker-port 30000 --block &
+    --port=$head_port --num-cpus $SLURM_CPUS_PER_TASK --num-gpus $RAY_NUM_GPUS --min-worker-port 20001 --max-worker-port 30000 --block &
 
 # wait for head node to start
 sleep 5
@@ -31,7 +37,7 @@ for (( i = 1; i <= worker_num; i++ )); do
     node=${nodes_array[$i]}
     echo "Starting Ray worker on $node"
     srun -N 1 -n 1 -w "$node" singularity exec test.sif ray start --address="$head_addr" \
-        --num-cpus $SLURM_CPUS_PER_TASK --num-gpus $SLURM_GPUS_PER_NODE --min-worker-port 20001 --max-worker-port 30000 --block &
+        --num-cpus $SLURM_CPUS_PER_TASK --num-gpus $RAY_NUM_GPUS --min-worker-port 20001 --max-worker-port 30000 --block &
     sleep 5
 done
 
