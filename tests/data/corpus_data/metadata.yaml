@@ -1,0 +1,10 @@
+content_field: text
+corpuses:
+- primary
+- secondary
+data_content: text
+dataset_path: tests/data/corpus_data
+date_downloaded: '2021-01-01'
+description: A test corpus data set intended for use in testing.
+download_source: http://example.com
+name: test_corpus_data
