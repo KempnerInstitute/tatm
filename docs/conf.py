@@ -8,7 +8,7 @@
 
 project = 'tatm'
 copyright = '2024, Kempner Institute at Harvard University'
-author = 'Kempenr Institute at Harvard University Research and Engineering Team'
+author = 'Kempner Institute at Harvard University Research and Engineering Team'
 
 # -- General configuration ---------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#general-configuration
