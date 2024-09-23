@@ -46,11 +46,7 @@ def tokenize(datasets, num_workers, tokenizer, output_dir, file_prefix, verbose)
         log_level = logging.INFO
     configure_cli_logging(log_level)
     os.makedirs(output_dir, exist_ok=True)
-    ray_addr = os.getenv("RAY_HEAD_ADDR")
-    if ray_addr:
-        ray.init(address=ray_addr, ignore_reinit_error=True)
-    else:
-        ray.init()
+    ray.init(ignore_reinit_error=True) # Looks to RAY_ADDRESS env var for connection to remote cluster, or starts a local cluster
 
     e = TokenizationEngine(
         datasets,
