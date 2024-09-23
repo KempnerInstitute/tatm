@@ -41,6 +41,6 @@ for (( i = 1; i <= worker_num; i++ )); do
     sleep 5
 done
 
-export RAY_ADDRESS="ray://$RAY_HEAD_ADDR"
+export RAY_ADDRESS="$RAY_HEAD_ADDR"
 
 ${SINGULARITY_WRAP} ${TATM_CMD}
