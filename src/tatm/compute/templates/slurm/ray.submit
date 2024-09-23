@@ -6,10 +6,10 @@ ${MODULES}
 
 ${CONDA_ACTIVATE}${VENV_ACTIVATE}
 
-if [[ -z $SLURM_GPUS_PER_NODE ]]; then
+if [[ -z $SLURM_GPUS_ON_NODE ]]; then
     RAY_NUM_GPUS=0
 else
-    RAY_NUM_GPUS=$SLURM_GPUS_PER_NODE
+    RAY_NUM_GPUS=$SLURM_GPUS_ON_NODE
 fi
 
 # choose available port on the head node
