@@ -49,6 +49,7 @@ def get_dataset(metadata: Union[str, TatmDataMetadata], **kwargs) -> TatmDataset
         return TatmMemmapDataset(
             file_prefix=metadata.tokenized_info.file_prefix,
             dtype=metadata.tokenized_info.dtype,
+            vocab_size=metadata.tokenized_info.vocab_size,
             **kwargs,
         )
     raise NotImplementedError(
@@ -139,6 +140,7 @@ class TatmMemmapDataset(TatmDataset):
         chunked: bool = True,
         file_suffix: str = "bin",
         eos_token: int = 1,
+        vocab_size: int = None,
     ):
         """Initialize the TatmTokenizedDataset.
 
@@ -156,6 +158,7 @@ class TatmMemmapDataset(TatmDataset):
                     have chosen to use the chunked approach by default.
             file_suffix: Suffix for the tokenized files.
             eos_token: The end of sequence token ID.
+            vocab_size (optional): The vocabulary size of the tokenizer used to create the dataset.
         """
         self.file_prefix = file_prefix
         self.file_suffix = file_suffix
@@ -163,6 +166,7 @@ class TatmMemmapDataset(TatmDataset):
         self.dtype = dtype
         self.chunked = chunked
         self.eos_token = eos_token
+        self.vocab_size = vocab_size
         self._construct_file_list()
 
     def _construct_file_list(self):
