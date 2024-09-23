@@ -139,7 +139,6 @@ def _dataset_from_path(path: str, corpus=None) -> TatmData:
                 "The metadata file must be named 'metadata.yaml' or 'metadata.json'."
             )
         )
-    metadata.dataset_path = str(path)
     return _dataset_from_metadata(metadata, corpus=corpus)
 
 
