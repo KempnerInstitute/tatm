@@ -226,10 +226,6 @@ def _get_document_ids(tokens: np.ndarray, eos_token: int = 1) -> np.ndarray:
 
 def _create_document_mask(doc_ids: np.ndarray) -> np.ndarray:
     """Create a document based attention mask from document ids."""
-    document_equal = np.zeros(shape=(len(doc_ids), len(doc_ids))) + np.equal.outer(
-        doc_ids, doc_ids
-    )
-    out = np.zeros_like(document_equal) + np.logical_and(
-        document_equal, np.tri(len(doc_ids))
-    )
+    document_equal = np.equal.outer(doc_ids, doc_ids)
+    out = np.logical_and(document_equal, np.tri(len(doc_ids)))
     return out
