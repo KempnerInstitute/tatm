@@ -119,6 +119,7 @@ class TatmMemmapDatasetItem:
 
     token_ids: np.ndarray
     document_ids: np.ndarray
+    document_mask: np.ndarray
 
     def __getitem__(self, item):
         """Dict like access to attributes."""
@@ -194,9 +195,11 @@ class TatmMemmapDataset(TatmDataset):
 
     def _process_item(self, item):
         """Process the item. Construct item response."""
+        doc_ids = _get_document_ids(item, eos_token=self.eos_token)
         out = TatmMemmapDatasetItem(
             token_ids=item,
-            document_ids=_get_document_ids(item, eos_token=self.eos_token),
+            document_ids=doc_ids,
+            document_mask=_create_document_mask(doc_ids),
         )
         return out
 
@@ -219,3 +222,10 @@ def _get_document_ids(tokens: np.ndarray, eos_token: int = 1) -> np.ndarray:
             current_doc_id += 1
 
     return document_ids
+
+
+def _create_document_mask(doc_ids: np.ndarray) -> np.ndarray:
+    """Create a document based attention mask from document ids."""
+    document_equal = np.equal.outer(doc_ids, doc_ids)
+    out = np.logical_and(document_equal, np.tri(len(doc_ids)))
+    return out
