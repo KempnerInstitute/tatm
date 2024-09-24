@@ -105,9 +105,9 @@ class TokenMemMapArray:
     def __getitem__(self, idx):
         """Get the token at the given index."""
         if self.chunked:
-            return self.array[
-                idx * self.context_length : (idx + 1) * self.context_length
-            ]
+            return np.array(
+                self.array[idx * self.context_length : (idx + 1) * self.context_length]
+            )
         else:
             return self.array[idx : idx + self.context_length]
 
