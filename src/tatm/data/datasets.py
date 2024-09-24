@@ -140,7 +140,7 @@ class TatmMemmapDataset(TatmDataset):
         chunked: bool = True,
         file_suffix: str = "bin",
         eos_token: int = 1,
-        vocab_size: int = None,
+        vocab_size: Union[int, None] = None,
     ):
         """Initialize the TatmTokenizedDataset.
 
