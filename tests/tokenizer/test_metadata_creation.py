@@ -1,9 +1,12 @@
+from importlib.metadata import version
+
 import pytest
 import tokenizers
 
-from tatm import __version__ as tatm_version
 from tatm.data.metadata import TatmDataMetadata
 from tatm.tokenizer.metadata import write_metadata
+
+tatm_version = version("tatm")
 
 
 @pytest.fixture
