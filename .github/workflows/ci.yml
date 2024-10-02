@@ -17,16 +17,19 @@ jobs:
               run: |
                   pip install poetry
             - name: restore cached virtual environment
+              id: get-env
               uses: actions/cache/restore@v4
               with:
                 key: venv-${{ runner.os }}-${{ steps.setup_python.outputs.python-version }}-${{ hashFiles('poetry.lock') }}
                 path: .venv
             - name: Install test dependencies
+              if:  steps.get-env.outputs.cache-hit != 'true'
               run: |
                   python -m venv .venv
                   source .venv/bin/activate
                   poetry install --with test
             - name: cache virtual environment
+              if: steps.get-env.outputs.cache-hit != 'true'
               uses: actions/cache/save@v4
               with:
                 key: venv-${{ runner.os }}-${{ steps.setup_python.outputs.python-version }}-${{ hashFiles('poetry.lock') }}
