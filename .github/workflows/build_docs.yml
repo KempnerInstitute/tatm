@@ -31,7 +31,9 @@ jobs:
                     poetry install --with docs
             - name: build docs
               run: |
-                    cd docs && make html
+                    source .venv/bin/activate
+                    which sphinx-build
+                    make build-docs
             - name: deploy docs
               if: github.head_ref == 'dev'
               uses: peaceiris/actions-gh-pages@v3
