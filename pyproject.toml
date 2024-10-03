@@ -51,7 +51,7 @@ optional = true
 [tool.poetry.group.docs.dependencies]
 sphinx = "^8.0.2"
 myst-parser = "^4.0.0"
-sphinx-rtd-theme = {git = "ssh://git@github.com/readthedocs/sphinx_rtd_theme.git", rev = "3.0.0rc1"}
+sphinx_rtd_theme = {git = "https://github.com/readthedocs/sphinx_rtd_theme.git", rev = "3.0.0rc1"}
 
 [build-system]
 requires = ["poetry-core"]
