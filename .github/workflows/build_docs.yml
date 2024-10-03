@@ -1,0 +1,40 @@
+name: Build Docs
+
+on:
+    push:
+        branches-ignore:
+            - main
+
+jobs:
+    build_docs:
+        runs-on: ubuntu-latest
+        steps:
+            - name: Checkout repository
+              uses: actions/checkout@v4
+            - name: Set up Python
+              id: setup_python
+              uses: actions/setup-python@v3
+              with:
+                  python-version: "3.10"
+            - name: Set up Poetry
+              run: |
+                  pip install poetry
+            - name: restore cached virtual environment
+              uses: actions/cache/restore@v4
+              with:
+                key: venv-${{ runner.os }}-${{ steps.setup_python.outputs.python-version }}-${{ hashFiles('poetry.lock') }}
+                path: .venv
+            - name: Install docs dependencies
+              run: |
+                    python -m venv .venv
+                    source .venv/bin/activate
+                    poetry install --with docs
+            - name: build docs
+              run: |
+                    make build-docs
+            - name: deploy docs
+              if: github.head_ref == 'dev'
+              uses: peaceiris/actions-gh-pages@v3
+              with:
+                  github_token: ${{ secrets.GITHUB_TOKEN }}
+                  publish_dir: ./docs/build/html
