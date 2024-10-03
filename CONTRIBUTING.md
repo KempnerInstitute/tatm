@@ -43,3 +43,13 @@ We use `sphinx` for building the documentation. We use the builtin `autodoc` and
 ```bash
 make docs
 ```
+
+## Release practices
+
+In this repo, we use github actions to manage package versioning and releases. The version of the package is determined by the version in the `pyproject.toml` file which is maintained by our use of `poetry`. 
+
+All PRs from `dev` to `main` should represent a new release of the package. In order to ensure that, we use the github workflow at `.github/workflows/deploy.yml` to handle changing the semantic version number and to create a new tag/new release on github. 
+
+When you are ready to release a new version of the package, you should create a PR from `dev` to `main`. On a PR from `dev` to `main` you should label the PR with one of 3 labels (bump:major, bump:minor, or bump:patch). On labeling, a workflow will be triggered that will look to the repos existing tags and from those determine what the next semantic version should be. This workflow will also make a commit to `dev` bumping the version number accordingly.
+
+On merging that PR to `main`, the workflow will again be triggered, this time looking to see if the PR being merged was labeled, and creating a tag associated with the new version. The workflow will also use poetry to build a python wheel and create a release including the zipped source code and the built wheel.
