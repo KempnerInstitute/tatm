@@ -1,7 +1,6 @@
 import logging
+from importlib.metadata import version
 from pathlib import Path
-
-from tokenizers import __version__ as tk_version
 
 from tatm.data.metadata import (
     DataContentType,
@@ -9,7 +8,6 @@ from tatm.data.metadata import (
     TokenizedMetadataComponenet,
 )
 from tatm.tokenizer.utils import load_tokenizer
-from tatm.version import __version__ as tatm_version
 
 LOGGER = logging.getLogger(__name__)
 
@@ -42,8 +40,8 @@ def write_metadata(
         dtype=dtype,
         file_extension=file_extension,
         vocab_size=tokenizer.get_vocab_size(),
-        tatm_version=tatm_version,
-        tokenizers_version=tk_version,
+        tatm_version=version("tatm"),
+        tokenizers_version=version("tokenizers"),
     )
     if data_description is None:
         data_description = "Tokenized dataset created using tatm"
