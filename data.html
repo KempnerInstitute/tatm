@@ -1,0 +1,405 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="./">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>tatm Data Module &mdash; tatm  documentation</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=66b59bf7" />
+
+  
+      <script src="_static/jquery.js?v=5d32c60e"></script>
+      <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="_static/documentation_options.js?v=5929fcd5"></script>
+      <script src="_static/doctools.js?v=9a2dae69"></script>
+      <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Configuring tatm" href="config.html" />
+    <link rel="prev" title="tatm CLI" href="cli.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="index.html" class="icon icon-home">
+            tatm
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="cli.html"><code class="docutils literal notranslate"><span class="pre">tatm</span></code> CLI</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#"><code class="docutils literal notranslate"><span class="pre">tatm</span></code> Data Module</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#tatm.data.TatmData"><code class="docutils literal notranslate"><span class="pre">TatmData</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#tatm.data.TatmData.from_metadata"><code class="docutils literal notranslate"><span class="pre">TatmData.from_metadata()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#tatm.data.TatmData.initialize"><code class="docutils literal notranslate"><span class="pre">TatmData.initialize()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#tatm.data.TatmDataMetadata"><code class="docutils literal notranslate"><span class="pre">TatmDataMetadata</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#tatm.data.TatmDataMetadata.as_json"><code class="docutils literal notranslate"><span class="pre">TatmDataMetadata.as_json()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#tatm.data.TatmDataMetadata.as_yaml"><code class="docutils literal notranslate"><span class="pre">TatmDataMetadata.as_yaml()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#tatm.data.TatmDataMetadata.content_field"><code class="docutils literal notranslate"><span class="pre">TatmDataMetadata.content_field</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#tatm.data.TatmDataMetadata.corpuses"><code class="docutils literal notranslate"><span class="pre">TatmDataMetadata.corpuses</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#tatm.data.TatmDataMetadata.data_content"><code class="docutils literal notranslate"><span class="pre">TatmDataMetadata.data_content</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#tatm.data.TatmDataMetadata.dataset_path"><code class="docutils literal notranslate"><span class="pre">TatmDataMetadata.dataset_path</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#tatm.data.TatmDataMetadata.date_downloaded"><code class="docutils literal notranslate"><span class="pre">TatmDataMetadata.date_downloaded</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#tatm.data.TatmDataMetadata.description"><code class="docutils literal notranslate"><span class="pre">TatmDataMetadata.description</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#tatm.data.TatmDataMetadata.download_source"><code class="docutils literal notranslate"><span class="pre">TatmDataMetadata.download_source</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#tatm.data.TatmDataMetadata.from_directory"><code class="docutils literal notranslate"><span class="pre">TatmDataMetadata.from_directory()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#tatm.data.TatmDataMetadata.from_file"><code class="docutils literal notranslate"><span class="pre">TatmDataMetadata.from_file()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#tatm.data.TatmDataMetadata.from_json"><code class="docutils literal notranslate"><span class="pre">TatmDataMetadata.from_json()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#tatm.data.TatmDataMetadata.from_yaml"><code class="docutils literal notranslate"><span class="pre">TatmDataMetadata.from_yaml()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#tatm.data.TatmDataMetadata.name"><code class="docutils literal notranslate"><span class="pre">TatmDataMetadata.name</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#tatm.data.TatmDataMetadata.to_json"><code class="docutils literal notranslate"><span class="pre">TatmDataMetadata.to_json()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#tatm.data.TatmDataMetadata.to_yaml"><code class="docutils literal notranslate"><span class="pre">TatmDataMetadata.to_yaml()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#tatm.data.TatmDataMetadata.tokenized_info"><code class="docutils literal notranslate"><span class="pre">TatmDataMetadata.tokenized_info</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#tatm.data.TatmMemmapDataset"><code class="docutils literal notranslate"><span class="pre">TatmMemmapDataset</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#tatm.data.TatmMemmapDataset.num_files"><code class="docutils literal notranslate"><span class="pre">TatmMemmapDataset.num_files()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#tatm.data.TatmMemmapDataset.num_tokens"><code class="docutils literal notranslate"><span class="pre">TatmMemmapDataset.num_tokens()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#tatm.data.TatmTextData"><code class="docutils literal notranslate"><span class="pre">TatmTextData</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#tatm.data.TatmTextData.from_metadata"><code class="docutils literal notranslate"><span class="pre">TatmTextData.from_metadata()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#tatm.data.TatmTextData.initialize"><code class="docutils literal notranslate"><span class="pre">TatmTextData.initialize()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#tatm.data.get_data"><code class="docutils literal notranslate"><span class="pre">get_data()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#tatm.data.get_dataset"><code class="docutils literal notranslate"><span class="pre">get_dataset()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="config.html">Configuring <code class="docutils literal notranslate"><span class="pre">tatm</span></code></a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">tatm</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active"><code class="docutils literal notranslate"><span class="pre">tatm</span></code> Data Module</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/data.md.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="tatm-data-module">
+<h1><code class="docutils literal notranslate"><span class="pre">tatm</span></code> Data Module<a class="headerlink" href="#tatm-data-module" title="Link to this heading"></a></h1>
+<p>The <code class="docutils literal notranslate"><span class="pre">tatm.data</span></code> module provides a set of tools for accessing and manipulating data. The module is designed to be modular and extensible, allowing for easy integration of new datasets and data processing tools.</p>
+<dl class="py class" id="module-tatm.data">
+<dt class="sig sig-object py" id="tatm.data.TatmData">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">tatm.data.</span></span><span class="sig-name descname"><span class="pre">TatmData</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">metadata</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#tatm.data.TatmDataMetadata" title="tatm.data.metadata.TatmDataMetadata"><span class="pre">TatmDataMetadata</span></a></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#tatm.data.TatmData" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">ABC</span></code></p>
+<p>Generic dataset class, provides interface to access multiple types of datasets.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>metadata</strong> – Metadata object.</p>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="tatm.data.TatmData.from_metadata">
+<em class="property"><span class="pre">abstract</span><span class="w"> </span><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">from_metadata</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">metadata</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#tatm.data.TatmDataMetadata" title="tatm.data.metadata.TatmDataMetadata"><span class="pre">TatmDataMetadata</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#tatm.data.TatmData" title="tatm.data.data.TatmData"><span class="pre">TatmData</span></a></span></span><a class="headerlink" href="#tatm.data.TatmData.from_metadata" title="Link to this definition"></a></dt>
+<dd><p>Create a dataset object from metadata.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>metadata</strong> – Metadata object.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Dataset object.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>TatmDataset</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="tatm.data.TatmData.initialize">
+<em class="property"><span class="pre">abstract</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">initialize</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#tatm.data.TatmData.initialize" title="Link to this definition"></a></dt>
+<dd><p>Initialize the dataset.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="tatm.data.TatmDataMetadata">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">tatm.data.</span></span><span class="sig-name descname"><span class="pre">TatmDataMetadata</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name:</span> <span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dataset_path:</span> <span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">description:</span> <span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">date_downloaded:</span> <span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">download_source:</span> <span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">data_content:</span> <span class="pre">~tatm.data.metadata.DataContentType</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">content_field:</span> <span class="pre">str</span> <span class="pre">=</span> <span class="pre">'text'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">corpuses:</span> <span class="pre">~typing.List[str]</span> <span class="pre">=</span> <span class="pre">&lt;factory&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tokenized_info:</span> <span class="pre">~tatm.data.metadata.TokenizedMetadataComponenet</span> <span class="pre">|</span> <span class="pre">None</span> <span class="pre">=</span> <span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#tatm.data.TatmDataMetadata" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Generic Dataset Metadata Class holding information about a dataset.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Raises<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>ValueError</strong> – Raises a ValueError if the data_content value is invalid.</p>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="tatm.data.TatmDataMetadata.as_json">
+<span class="sig-name descname"><span class="pre">as_json</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#tatm.data.TatmDataMetadata.as_json" title="Link to this definition"></a></dt>
+<dd><p>Return the metadata as a JSON string.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Metadata as a JSON string.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="tatm.data.TatmDataMetadata.as_yaml">
+<span class="sig-name descname"><span class="pre">as_yaml</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#tatm.data.TatmDataMetadata.as_yaml" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="tatm.data.TatmDataMetadata.content_field">
+<span class="sig-name descname"><span class="pre">content_field</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'text'</span></em><a class="headerlink" href="#tatm.data.TatmDataMetadata.content_field" title="Link to this definition"></a></dt>
+<dd><p>Field in the dataset that contains the content.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="tatm.data.TatmDataMetadata.corpuses">
+<span class="sig-name descname"><span class="pre">corpuses</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#tatm.data.TatmDataMetadata.corpuses" title="Link to this definition"></a></dt>
+<dd><p>List of corpuses in the dataset.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="tatm.data.TatmDataMetadata.data_content">
+<span class="sig-name descname"><span class="pre">data_content</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">DataContentType</span></em><a class="headerlink" href="#tatm.data.TatmDataMetadata.data_content" title="Link to this definition"></a></dt>
+<dd><p>Type of data in the dataset.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="tatm.data.TatmDataMetadata.dataset_path">
+<span class="sig-name descname"><span class="pre">dataset_path</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><a class="headerlink" href="#tatm.data.TatmDataMetadata.dataset_path" title="Link to this definition"></a></dt>
+<dd><p>Path to the dataset.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="tatm.data.TatmDataMetadata.date_downloaded">
+<span class="sig-name descname"><span class="pre">date_downloaded</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><a class="headerlink" href="#tatm.data.TatmDataMetadata.date_downloaded" title="Link to this definition"></a></dt>
+<dd><p>Date the dataset was downloaded.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="tatm.data.TatmDataMetadata.description">
+<span class="sig-name descname"><span class="pre">description</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><a class="headerlink" href="#tatm.data.TatmDataMetadata.description" title="Link to this definition"></a></dt>
+<dd><p>Description of the dataset.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="tatm.data.TatmDataMetadata.download_source">
+<span class="sig-name descname"><span class="pre">download_source</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><a class="headerlink" href="#tatm.data.TatmDataMetadata.download_source" title="Link to this definition"></a></dt>
+<dd><p>Source of the dataset.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="tatm.data.TatmDataMetadata.from_directory">
+<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">from_directory</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">directory</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">Path</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#tatm.data.TatmDataMetadata.from_directory" title="Link to this definition"></a></dt>
+<dd><p>Load metadata from a directory containing a metadata file named metadata.[yaml or json].</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="tatm.data.TatmDataMetadata.from_file">
+<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">from_file</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">Path</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#tatm.data.TatmDataMetadata.from_file" title="Link to this definition"></a></dt>
+<dd><p>Load metadata from a file, either JSON or YAML.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="tatm.data.TatmDataMetadata.from_json">
+<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">from_json</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">json_path</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#tatm.data.TatmDataMetadata.from_json" title="Link to this definition"></a></dt>
+<dd><p>Create a Metadata object from a JSON file.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="tatm.data.TatmDataMetadata.from_yaml">
+<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">from_yaml</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">yaml_path</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#tatm.data.TatmDataMetadata.from_yaml" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="tatm.data.TatmDataMetadata.name">
+<span class="sig-name descname"><span class="pre">name</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><a class="headerlink" href="#tatm.data.TatmDataMetadata.name" title="Link to this definition"></a></dt>
+<dd><p>Name of the dataset.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="tatm.data.TatmDataMetadata.to_json">
+<span class="sig-name descname"><span class="pre">to_json</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filename</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#tatm.data.TatmDataMetadata.to_json" title="Link to this definition"></a></dt>
+<dd><p>Write the metadata to a JSON file.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>filename</strong> (<em>str</em>) – The path of the file to write the metadata to.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="tatm.data.TatmDataMetadata.to_yaml">
+<span class="sig-name descname"><span class="pre">to_yaml</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filename</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#tatm.data.TatmDataMetadata.to_yaml" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="tatm.data.TatmDataMetadata.tokenized_info">
+<span class="sig-name descname"><span class="pre">tokenized_info</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">TokenizedMetadataComponenet</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#tatm.data.TatmDataMetadata.tokenized_info" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="tatm.data.TatmMemmapDataset">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">tatm.data.</span></span><span class="sig-name descname"><span class="pre">TatmMemmapDataset</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">file_prefix</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">context_length</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dtype</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'uint16'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">chunked</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">file_suffix</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'bin'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">eos_token</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">vocab_size</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#tatm.data.TatmMemmapDataset" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">TatmDataset</span></code></p>
+<p>Class for presenting tatm tokenized datasets to modelling frameworks.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="tatm.data.TatmMemmapDataset.num_files">
+<span class="sig-name descname"><span class="pre">num_files</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#tatm.data.TatmMemmapDataset.num_files" title="Link to this definition"></a></dt>
+<dd><p>Get the number of files in the dataset.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="tatm.data.TatmMemmapDataset.num_tokens">
+<span class="sig-name descname"><span class="pre">num_tokens</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#tatm.data.TatmMemmapDataset.num_tokens" title="Link to this definition"></a></dt>
+<dd><p>Get the number of tokens in the dataset.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="tatm.data.TatmTextData">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">tatm.data.</span></span><span class="sig-name descname"><span class="pre">TatmTextData</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">metadata</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#tatm.data.TatmDataMetadata" title="tatm.data.metadata.TatmDataMetadata"><span class="pre">TatmDataMetadata</span></a></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#tatm.data.TatmTextData" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#tatm.data.TatmData" title="tatm.data.data.TatmData"><code class="xref py py-class docutils literal notranslate"><span class="pre">TatmData</span></code></a></p>
+<p>Text dataset class, provides interface to access text datasets.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>metadata</strong> – Metadata object.</p>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="tatm.data.TatmTextData.from_metadata">
+<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">from_metadata</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">metadata</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#tatm.data.TatmDataMetadata" title="tatm.data.metadata.TatmDataMetadata"><span class="pre">TatmDataMetadata</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">corpus</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">split</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'train'</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#tatm.data.TatmTextData" title="tatm.data.data.TatmTextData"><span class="pre">TatmTextData</span></a></span></span><a class="headerlink" href="#tatm.data.TatmTextData.from_metadata" title="Link to this definition"></a></dt>
+<dd><p>Create a TatumTextDataset object from metadata.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>metadata</strong> – Metadata object.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Text dataset object.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>TatumTextDataset</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="tatm.data.TatmTextData.initialize">
+<span class="sig-name descname"><span class="pre">initialize</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">corpus</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">split</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'train'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#tatm.data.TatmTextData.initialize" title="Link to this definition"></a></dt>
+<dd><p>Initialize the dataset.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>corpus</strong> – Corpus to load. Defaults to None.</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="tatm.data.get_data">
+<span class="sig-prename descclassname"><span class="pre">tatm.data.</span></span><span class="sig-name descname"><span class="pre">get_data</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">identifier</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference internal" href="#tatm.data.TatmDataMetadata" title="tatm.data.metadata.TatmDataMetadata"><span class="pre">TatmDataMetadata</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#tatm.data.TatmData" title="tatm.data.data.TatmData"><span class="pre">TatmData</span></a></span></span><a class="headerlink" href="#tatm.data.get_data" title="Link to this definition"></a></dt>
+<dd><p>Get a dataset object from an identifier.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>identifier</strong> – Identifier for the dataset.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Dataset object.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>TatmDataset</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="tatm.data.get_dataset">
+<span class="sig-prename descclassname"><span class="pre">tatm.data.</span></span><span class="sig-name descname"><span class="pre">get_dataset</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">metadata</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference internal" href="#tatm.data.TatmDataMetadata" title="tatm.data.metadata.TatmDataMetadata"><span class="pre">TatmDataMetadata</span></a></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">TatmDataset</span></span></span><a class="headerlink" href="#tatm.data.get_dataset" title="Link to this definition"></a></dt>
+<dd><p>Get the dataset object from the metadata.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>metadata</strong> – The metadata object, or a path to a metadata file or a directory containing a metadata file.</p></li>
+<li><p><strong>**kwargs</strong> – Additional arguments to pass to the dataset constructor.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The dataset object.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>TatmDataset</p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="cli.html" class="btn btn-neutral float-left" title="tatm CLI" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="config.html" class="btn btn-neutral float-right" title="Configuring tatm" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2024, Kempner Institute at Harvard University.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

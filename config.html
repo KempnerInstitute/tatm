@@ -1,0 +1,233 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="./">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Configuring tatm &mdash; tatm  documentation</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=66b59bf7" />
+
+  
+      <script src="_static/jquery.js?v=5d32c60e"></script>
+      <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="_static/documentation_options.js?v=5929fcd5"></script>
+      <script src="_static/doctools.js?v=9a2dae69"></script>
+      <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="prev" title="tatm Data Module" href="data.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="index.html" class="icon icon-home">
+            tatm
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="cli.html"><code class="docutils literal notranslate"><span class="pre">tatm</span></code> CLI</a></li>
+<li class="toctree-l1"><a class="reference internal" href="data.html"><code class="docutils literal notranslate"><span class="pre">tatm</span></code> Data Module</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Configuring <code class="docutils literal notranslate"><span class="pre">tatm</span></code></a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#tatm.config.EnvironmentConfig"><code class="docutils literal notranslate"><span class="pre">EnvironmentConfig</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#tatm.config.EnvironmentConfig.conda_env"><code class="docutils literal notranslate"><span class="pre">EnvironmentConfig.conda_env</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#tatm.config.EnvironmentConfig.modules"><code class="docutils literal notranslate"><span class="pre">EnvironmentConfig.modules</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#tatm.config.EnvironmentConfig.singularity_image"><code class="docutils literal notranslate"><span class="pre">EnvironmentConfig.singularity_image</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#tatm.config.EnvironmentConfig.venv"><code class="docutils literal notranslate"><span class="pre">EnvironmentConfig.venv</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#tatm.config.SlurmConfig"><code class="docutils literal notranslate"><span class="pre">SlurmConfig</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#tatm.config.SlurmConfig.account"><code class="docutils literal notranslate"><span class="pre">SlurmConfig.account</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#tatm.config.SlurmConfig.partition"><code class="docutils literal notranslate"><span class="pre">SlurmConfig.partition</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#tatm.config.SlurmConfig.qos"><code class="docutils literal notranslate"><span class="pre">SlurmConfig.qos</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#tatm.config.SlurmConfig.slurm_bin_dir"><code class="docutils literal notranslate"><span class="pre">SlurmConfig.slurm_bin_dir</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#tatm.config.TatmConfig"><code class="docutils literal notranslate"><span class="pre">TatmConfig</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#tatm.config.TatmConfig.backend"><code class="docutils literal notranslate"><span class="pre">TatmConfig.backend</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#tatm.config.TatmConfig.environment"><code class="docutils literal notranslate"><span class="pre">TatmConfig.environment</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#tatm.config.TatmConfig.slurm"><code class="docutils literal notranslate"><span class="pre">TatmConfig.slurm</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#tatm.config.load_config"><code class="docutils literal notranslate"><span class="pre">load_config()</span></code></a></li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">tatm</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Configuring <code class="docutils literal notranslate"><span class="pre">tatm</span></code></li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/config.md.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="module-tatm.config">
+<span id="configuring-tatm"></span><h1>Configuring <code class="docutils literal notranslate"><span class="pre">tatm</span></code><a class="headerlink" href="#module-tatm.config" title="Link to this heading"></a></h1>
+<dl class="py class">
+<dt class="sig sig-object py" id="tatm.config.EnvironmentConfig">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">tatm.config.</span></span><span class="sig-name descname"><span class="pre">EnvironmentConfig</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">modules</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">conda_env</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">venv</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">singularity_image</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#tatm.config.EnvironmentConfig" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Environment configuration for compute jobs.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="tatm.config.EnvironmentConfig.conda_env">
+<span class="sig-name descname"><span class="pre">conda_env</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#tatm.config.EnvironmentConfig.conda_env" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="tatm.config.EnvironmentConfig.modules">
+<span class="sig-name descname"><span class="pre">modules</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#tatm.config.EnvironmentConfig.modules" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="tatm.config.EnvironmentConfig.singularity_image">
+<span class="sig-name descname"><span class="pre">singularity_image</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#tatm.config.EnvironmentConfig.singularity_image" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="tatm.config.EnvironmentConfig.venv">
+<span class="sig-name descname"><span class="pre">venv</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#tatm.config.EnvironmentConfig.venv" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="tatm.config.SlurmConfig">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">tatm.config.</span></span><span class="sig-name descname"><span class="pre">SlurmConfig</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">partition</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'???'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">account</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'???'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">qos</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">slurm_bin_dir</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'/usr/bin/'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#tatm.config.SlurmConfig" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Cluster specific configuration for Slurm.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="tatm.config.SlurmConfig.account">
+<span class="sig-name descname"><span class="pre">account</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'???'</span></em><a class="headerlink" href="#tatm.config.SlurmConfig.account" title="Link to this definition"></a></dt>
+<dd><p>Account to charge jobs to.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="tatm.config.SlurmConfig.partition">
+<span class="sig-name descname"><span class="pre">partition</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'???'</span></em><a class="headerlink" href="#tatm.config.SlurmConfig.partition" title="Link to this definition"></a></dt>
+<dd><p>Partition to submit jobs to.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="tatm.config.SlurmConfig.qos">
+<span class="sig-name descname"><span class="pre">qos</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#tatm.config.SlurmConfig.qos" title="Link to this definition"></a></dt>
+<dd><p>Quality of Service to use for the job.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="tatm.config.SlurmConfig.slurm_bin_dir">
+<span class="sig-name descname"><span class="pre">slurm_bin_dir</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'/usr/bin/'</span></em><a class="headerlink" href="#tatm.config.SlurmConfig.slurm_bin_dir" title="Link to this definition"></a></dt>
+<dd><p>Directory containing the Slurm binaries.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="tatm.config.TatmConfig">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">tatm.config.</span></span><span class="sig-name descname"><span class="pre">TatmConfig</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">backend:</span> <span class="pre">tatm.compute.job.Backend</span> <span class="pre">=</span> <span class="pre">&lt;Backend.slurm:</span> <span class="pre">'slurm'&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">slurm:</span> <span class="pre">tatm.config.SlurmConfig</span> <span class="pre">=</span> <span class="pre">&lt;factory&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">environment:</span> <span class="pre">tatm.config.EnvironmentConfig</span> <span class="pre">=</span> <span class="pre">&lt;factory&gt;</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#tatm.config.TatmConfig" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="tatm.config.TatmConfig.backend">
+<span class="sig-name descname"><span class="pre">backend</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Backend</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'slurm'</span></em><a class="headerlink" href="#tatm.config.TatmConfig.backend" title="Link to this definition"></a></dt>
+<dd><p>Backend to use for compute jobs.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="tatm.config.TatmConfig.environment">
+<span class="sig-name descname"><span class="pre">environment</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="#tatm.config.EnvironmentConfig" title="tatm.config.EnvironmentConfig"><span class="pre">EnvironmentConfig</span></a></em><a class="headerlink" href="#tatm.config.TatmConfig.environment" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="tatm.config.TatmConfig.slurm">
+<span class="sig-name descname"><span class="pre">slurm</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="#tatm.config.SlurmConfig" title="tatm.config.SlurmConfig"><span class="pre">SlurmConfig</span></a></em><a class="headerlink" href="#tatm.config.TatmConfig.slurm" title="Link to this definition"></a></dt>
+<dd><p>Slurm specific configuration.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="tatm.config.load_config">
+<span class="sig-prename descclassname"><span class="pre">tatm.config.</span></span><span class="sig-name descname"><span class="pre">load_config</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">config_paths</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">overrides</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#tatm.config.TatmConfig" title="tatm.config.TatmConfig"><span class="pre">TatmConfig</span></a></span></span><a class="headerlink" href="#tatm.config.load_config" title="Link to this definition"></a></dt>
+<dd><p>Load the configuration from the provided paths.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>config_paths</strong> – List of paths to load the configuration from.</p></li>
+<li><p><strong>overrides</strong> – List of overrides to apply to the configuration</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Loaded configuration.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="#tatm.config.TatmConfig" title="tatm.config.TatmConfig">TatmConfig</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="data.html" class="btn btn-neutral float-left" title="tatm Data Module" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2024, Kempner Institute at Harvard University.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
