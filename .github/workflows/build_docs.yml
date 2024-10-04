@@ -38,7 +38,7 @@ jobs:
                     which sphinx-build
                     make build-docs
             - name: deploy docs
-              if: github.head_ref == 'dev'
+              if: github.ref == 'refs/heads/dev'
               uses: peaceiris/actions-gh-pages@v3
               with:
                   github_token: ${{ secrets.GITHUB_TOKEN }}
