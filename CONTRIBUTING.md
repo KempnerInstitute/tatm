@@ -57,3 +57,7 @@ On merging that PR to `main`, the workflow will again be triggered, this time lo
 ### Hotfixes
 
 If a hotfix is needed, you should create a branch from `main` with a name begining with `hotfix/` and then create a PR from that branch to `main`. The PR should be labeled with `bump:patch`. In addition to the standard behavior, the workflow will also create a new PR from the hotfix branch to `dev` to ensure that the hotfix is also included in the next release.
+
+### Automated versioning
+
+The versioning is handled by the `haya14busa/action-bumpr` action. This action uses existing tags to determine the next version number. The action will look at the tags in the repo and determine the next version based on the highest tag. If the highest tag is `v1.2.3` then the next version will be `v1.2.4`. If the highest tag is `v1.2.3` and the PR is labeled with `bump:minor` then the next version will be `v1.3.0`. If the highest tag is `v1.2.3` and the PR is labeled with `bump:major` then the next version will be `v2.0.0`. If you make a mistake with your labeling, you can remove the label and apply the proper label and the workflow will rerun and update the code with the proper version number. If you don't want to update the version number, you can remove the label, put will have to make a manual commit to `dev` to update the version number to the previous version.
