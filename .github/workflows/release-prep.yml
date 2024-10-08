@@ -38,3 +38,4 @@ jobs:
             GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           run: |
               gh pr create --base dev --head ${{ github.head_ref }} --title "Hotfix ${{ steps.bumpr.outputs.next_version }}" --body "Hotfix ${{ steps.bumpr.outputs.next_version }}"
+              
