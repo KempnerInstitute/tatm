@@ -61,3 +61,7 @@ If a hotfix is needed, you should create a branch from `main` with a name begini
 ### Automated versioning
 
 The versioning is handled by the `haya14busa/action-bumpr` action. This action uses existing tags to determine the next version number. The action will look at the tags in the repo and determine the next version based on the highest tag. If the highest tag is `v1.2.3` then the next version will be `v1.2.4`. If the highest tag is `v1.2.3` and the PR is labeled with `bump:minor` then the next version will be `v1.3.0`. If the highest tag is `v1.2.3` and the PR is labeled with `bump:major` then the next version will be `v2.0.0`. If you make a mistake with your labeling, you can remove the label and apply the proper label and the workflow will rerun and update the code with the proper version number. If you don't want to update the version number, you can remove the label, put will have to make a manual commit to `dev` to update the version number to the previous version.
+
+## Merging
+
+When merging a feature branch into dev we recommend using the "Squash and merge" option. This will allow you to create a single commit on `dev` that represents the new feature while allowing you to commit as you want when developing your feature. However when merging in a release branch to `main` we recommend using the "Rebase" option. This will allow you to maintain a more informative git history on `main` while still allowing you to maintain a clean history on `dev`.
