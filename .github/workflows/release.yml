@@ -1,19 +1,13 @@
-name: deploy
+name: release
 on:
   push:
     branches:
       - main
     tags:
       - 'v*.*.*'
-  pull_request:
-    branches:
-      - main
-    types:
-      - labeled
 
 jobs:
   release:
-    if: github.event.action != 'labeled'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
