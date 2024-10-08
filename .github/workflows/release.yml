@@ -57,4 +57,3 @@ jobs:
           draft: false
           prerelease: false
           files: dist/*
-          
