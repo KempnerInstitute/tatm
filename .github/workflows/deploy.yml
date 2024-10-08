@@ -63,9 +63,9 @@ jobs:
           draft: false
           prerelease: false
           files: dist/*
-
+      
   release-check:
-    if: github.event.action == 'labeled'
+    if: github.event.action == 'labeled' && (github.head_ref == 'dev' || contains(github.head_ref, 'hotfix'))
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -89,3 +89,9 @@ jobs:
             git add pyproject.toml
             git commit -m "bump version to $new_version"
             git push origin HEAD:${{ github.head_ref}}
+      - name: Hotfix PR to dev
+        if: contains(github.head_ref, 'hotfix')
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+            gh pr create --base dev --head ${{ github.head_ref }} --title "Hotfix ${{ steps.bumpr.outputs.next_version }}" --body "Hotfix ${{ steps.bumpr.outputs.next_version }}"

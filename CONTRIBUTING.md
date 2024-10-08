@@ -53,3 +53,7 @@ All PRs from `dev` to `main` should represent a new release of the package. In o
 When you are ready to release a new version of the package, you should create a PR from `dev` to `main`. On a PR from `dev` to `main` you should label the PR with one of 3 labels (bump:major, bump:minor, or bump:patch). On labeling, a workflow will be triggered that will look to the repos existing tags and from those determine what the next semantic version should be. This workflow will also make a commit to `dev` bumping the version number accordingly.
 
 On merging that PR to `main`, the workflow will again be triggered, this time looking to see if the PR being merged was labeled, and creating a tag associated with the new version. The workflow will also use poetry to build a python wheel and create a release including the zipped source code and the built wheel.
+
+### Hotfixes
+
+If a hotfix is needed, you should create a branch from `main` with a name begining with `hotfix/` and then create a PR from that branch to `main`. The PR should be labeled with `bump:patch`. In addition to the standard behavior, the workflow will also create a new PR from the hotfix branch to `dev` to ensure that the hotfix is also included in the next release.
