@@ -64,4 +64,34 @@ jobs:
           prerelease: false
           files: dist/*
       
-  
+  release-check:
+    if: github.event.action == 'labeled' && (github.head_ref == 'dev' || contains(github.head_ref, 'hotfix'))
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Post bumpr status comment
+        id: bumpr
+        uses: haya14busa/action-bumpr@v1
+      - name: Set up Python
+        id: setup_python
+        uses: actions/setup-python@v3
+        with:
+            python-version: "3.10"
+      - name: Set up Poetry
+        run: |
+            pip install poetry
+      - name: bump package version
+        run: |
+            new_version=`echo ${{ steps.bumpr.outputs.next_version }} | sed 's/^v//'`
+            poetry version $new_version
+            git config --local user.email ""
+            git config --local user.name "github-actions[bot]"
+            git add pyproject.toml
+            git commit -m "bump version to $new_version"
+            git push origin HEAD:${{ github.head_ref}}
+      - name: Hotfix PR to dev
+        if: contains(github.head_ref, 'hotfix')
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+            gh pr create --base dev --head ${{ github.head_ref }} --title "Hotfix ${{ steps.bumpr.outputs.next_version }}" --body "Hotfix ${{ steps.bumpr.outputs.next_version }}"
