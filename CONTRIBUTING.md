@@ -43,3 +43,25 @@ We use `sphinx` for building the documentation. We use the builtin `autodoc` and
 ```bash
 make docs
 ```
+
+## Release practices
+
+In this repo, we use github actions to manage package versioning and releases. The version of the package is determined by the version in the `pyproject.toml` file which is maintained by our use of `poetry`. 
+
+All PRs from `dev` to `main` should represent a new release of the package. In order to ensure that, we use the github workflow at `.github/workflows/deploy.yml` to handle changing the semantic version number and to create a new tag/new release on github. 
+
+When you are ready to release a new version of the package, you should create a PR from `dev` to `main`. On a PR from `dev` to `main` you should label the PR with one of 3 labels (bump:major, bump:minor, or bump:patch). On labeling, a workflow will be triggered that will look to the repos existing tags and from those determine what the next semantic version should be. This workflow will also make a commit to `dev` bumping the version number accordingly.
+
+On merging that PR to `main`, the workflow will again be triggered, this time looking to see if the PR being merged was labeled, and creating a tag associated with the new version. The workflow will also use poetry to build a python wheel and create a release including the zipped source code and the built wheel.
+
+### Hotfixes
+
+If a hotfix is needed, you should create a branch from `main` with a name begining with `hotfix/` and then create a PR from that branch to `main`. The PR should be labeled with `bump:patch`. In addition to the standard behavior, the workflow will also create a new PR from the hotfix branch to `dev` to ensure that the hotfix is also included in the next release.
+
+### Automated versioning
+
+The versioning is handled by the `haya14busa/action-bumpr` action. This action uses existing tags to determine the next version number. The action will look at the tags in the repo and determine the next version based on the highest tag. If the highest tag is `v1.2.3` then the next version will be `v1.2.4`. If the highest tag is `v1.2.3` and the PR is labeled with `bump:minor` then the next version will be `v1.3.0`. If the highest tag is `v1.2.3` and the PR is labeled with `bump:major` then the next version will be `v2.0.0`. If you make a mistake with your labeling, you can remove the label and apply the proper label and the workflow will rerun and update the code with the proper version number. If you don't want to update the version number, you can remove the label, put will have to make a manual commit to `dev` to update the version number to the previous version.
+
+## Merging
+
+When merging a feature branch into dev we recommend using the "Squash and merge" option. This will allow you to create a single commit on `dev` that represents the new feature while allowing you to commit as you want when developing your feature. However when merging in a release branch to `main` we recommend using the "Rebase" option. This will allow you to maintain a more informative git history on `main` while still allowing you to maintain a clean history on `dev`.

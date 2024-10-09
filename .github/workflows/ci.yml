@@ -17,16 +17,19 @@ jobs:
               run: |
                   pip install poetry
             - name: restore cached virtual environment
+              id: get-env
               uses: actions/cache/restore@v4
               with:
                 key: venv-${{ runner.os }}-${{ steps.setup_python.outputs.python-version }}-${{ hashFiles('poetry.lock') }}
                 path: .venv
             - name: Install test dependencies
+              if:  steps.get-env.outputs.cache-hit != 'true'
               run: |
                   python -m venv .venv
                   source .venv/bin/activate
                   poetry install --with test
             - name: cache virtual environment
+              if: steps.get-env.outputs.cache-hit != 'true'
               uses: actions/cache/save@v4
               with:
                 key: venv-${{ runner.os }}-${{ steps.setup_python.outputs.python-version }}-${{ hashFiles('poetry.lock') }}
@@ -39,4 +42,19 @@ jobs:
             - name: Run tests
               run: |
                   poetry run pytest --cov=src/tatm --cov-fail-under=85 tests
-
+    BuildWheel:
+        runs-on: ubuntu-latest
+        steps:
+            - name: Checkout repository
+              uses: actions/checkout@v4
+            - name: Set up Python
+              id: setup_python
+              uses: actions/setup-python@v3
+              with:
+                  python-version: "3.10"
+            - name: Set up Poetry
+              run: |
+                  pip install poetry
+            - name: build
+              run: |
+                  poetry build
