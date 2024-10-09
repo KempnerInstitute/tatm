@@ -32,6 +32,7 @@ pytest-cov = "^5.0.0"
 sphinx = "^8.0.2"
 myst-parser = "^4.0.0"
 isort = "^5.13.2"
+sphinx_rtd_theme = "^3.0.1"
 
 
 [tool.poetry.group.test]
@@ -51,7 +52,7 @@ optional = true
 [tool.poetry.group.docs.dependencies]
 sphinx = "^8.0.2"
 myst-parser = "^4.0.0"
-sphinx_rtd_theme = {url = "https://github.com/readthedocs/sphinx_rtd_theme/archive/refs/tags/3.0.0rc1.tar.gz"}
+sphinx_rtd_theme = "^3.0.1"
 
 [build-system]
 requires = ["poetry-core"]
