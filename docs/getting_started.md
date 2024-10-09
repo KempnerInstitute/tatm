@@ -29,5 +29,5 @@ For a specific past version of `tatm`, replace `main` or `dev` with the desired 
 
 #### Installing from PyPI
 
-THe package is not yet available on PyPI. Stay tuned for updates!
+The package is not yet available on PyPI. Stay tuned for updates!
 
