@@ -1,6 +1,4 @@
-# `tatm` Kempner AI Testbed Library
-
-`tatm` (**T**ransformer **A**ssistive **T**estbed **M**odule) is a Python library that provides a set of tools to assist in the development of transformer-based (and other architecture) models for research within the Kempner institute. It will provide an interface for accessing and manipulating data, training models, and evaluating models. The library is designed to be modular and extensible, allowing for easy integration of new models, datasets, and training frameworks.
+# Getting Started
 
 ## Installation
 
@@ -32,3 +30,4 @@ For a specific past version of `tatm`, replace `main` or `dev` with the desired 
 #### Installing from PyPI
 
 THe package is not yet available on PyPI. Stay tuned for updates!
+
