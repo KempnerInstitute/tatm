@@ -14,7 +14,11 @@ of new models, datasets, and training frameworks.
 ```{toctree}
 :maxdepth: 2
 :caption: Contents:
+<<<<<<< HEAD
 getting_started.md
+=======
+text_dataset.md
+>>>>>>> 63e6541 (initial user story work)
 cli.md
 data.md
 config.md
