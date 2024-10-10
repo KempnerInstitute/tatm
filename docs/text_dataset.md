@@ -76,8 +76,43 @@ custom huggingface dataset script.
 tatm run --conf $PWD/tatm_config.yaml -N 4 -c 40 tokenize --output-dir $PWD/tokenized_redpj_arxiv /n/holylfs06/LABS/kempner_shared/Everyone/testbed/text/redpajama-v1:arxiv
 ```
 
+This will submit a slurm job creating the Ray cluster and then execute the `tokenize` command which will utilize the Ray cluster to tokenize the dataset located at `/n/holylfs06/LABS/kempner_shared/Everyone/testbed/text/redpajama-v1:arxiv` and output the tokenized data to the directory `tokenized_redpj_arxiv` in the current working directory. Note that this will also create a metadata file associated with the tokenized data that can be used to load the tokenized data into a PyTorch model for training. THis metadata file will be located in the output directory and will be named `metadata.json`. It will also include
+information about the tokenizer used to tokenize the data, including the tokenizer's vocabulary and the tokenizer's configuration, as well as the version of Huggingface `tokenizers` and `tatm` used to tokenize the data.
+
 ## Loading Tokenized Data with `tatm` for use with PyTorch
 
 Once you have tokenized your data, you can load it into a PyTorch dataset using the `tatm` library. The `tatm` library
 provides a pytorch compatible dataset class that can be used to load tokenized data into a PyTorch model for training
-(`tatm.data.TatmMemmapDataset`).
+([`tatm.data.TatmMemmapDataset`](tatm.data.TatmMemmapDataset)). You can then load the dataset into a PyTorch `DataLoader` and use it to train your
+model. The `TatmMemmapDataset` implements the appropriate `__getitem__` and `__len__` methods to be compatible with PyTorch's
+`Dataset` API and should support integration with the Pytorch DistrubutedSampler for distributed training.
+
+For an example of what it would look like to load a tokenized dataset into a PyTorch model for training, see the example below:
+
+```python
+from tatm.data import get_dataset
+arxiv_dataset = get_dataset("./tokenized_redpj_arxiv", context_length=1024)
+len(arxiv_dataset) # number of examples in set
+# 35651584
+arxiv_dataset.num_tokens()
+# 36507222016
+arxiv_dataset.num_files()
+# 34
+arxiv_dataset.vocab_size
+# 32100
+arxiv_dataset[3]
+# TatmMemmapDatasetItem(token_ids=array([    7,    16,     8, ..., 14780,     8,  2537], dtype=uint16), document_ids=array([0, 0, 0, ..., 1, 1, 1], dtype=uint16), document_mask=array([[ True, False, False, ..., False, False, False],
+#        [ True,  True, False, ..., False, False, False],
+#        [ True,  True,  True, ..., False, False, False],
+#        ...,
+#        [False, False, False, ...,  True, False, False],
+#        [False, False, False, ...,  True,  True, False],
+#        [False, False, False, ...,  True,  True,  True]]))
+```
+
+Fields in the `TatmMemmapDatasetItem` object include:
+- `token_ids`: The tokenized text data
+- `document_ids`: The document ids for each token. We use example packing to ease the processing of the data in the LLM. To support document masking, we include the document ids for each token in the dataset.
+- `document_mask`: A boolean attention mask that can be used for causal masking of the data. This mask is used to mask out tokens that are not part of the same document as the current token, as well as tokens that should not be considered in the attention calculation for a given token.
+
+For more information on how to use the [`tatm.data.TatmMemmapDataset`](tatm.data.TatmMemmapDataset) class, see the [Data](tatm.data.TatmMemmapDataset) documentation.
