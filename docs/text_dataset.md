@@ -67,7 +67,9 @@ to tokenize the dataset located at `/n/holylfs06/LABS/kempner_shared/Everyone/te
 in the current working directory. Note that the data at `/n/holylfs06/LABS/kempner_shared/Everyone/testbed/text/redpajama-v1` has already been prepared with a metadata file. The colon `:` specifies the `arxiv` corpus within the dataset. The handling of sub-corpora, implemented by the huggingface dataset script, is dataset-specific and may not be supported by all datasets.
 
 ```bash
-tatm run --conf $PWD/tatm_config.yaml -N 4 -c 40 tokenize --output-dir $PWD/tokenized_redpj_arxiv /n/holylfs06/LABS/kempner_shared/Everyone/testbed/text/redpajama-v1:arxiv
+tatm run --conf $PWD/tatm_config.yaml -N 4 -c 40 tokenize \
+  --output-dir $PWD/tokenized_redpj_arxiv \
+  /n/holylfs06/LABS/kempner_shared/Everyone/testbed/text/redpajama-v1:arxiv
 ```
 
 This will submit a slurm job creating the Ray cluster.  The `tokenize` command will utilize the Ray cluster to tokenize the dataset located at `/n/holylfs06/LABS/kempner_shared/Everyone/testbed/text/redpajama-v1:arxiv` and output the tokenized data to the directory `tokenized_redpj_arxiv` in the current working directory.  This will also create a metadata file associated with the tokenized data that can be used to load the tokenized data into a PyTorch model for training. The metadata file, `metadata.json`,will be located in the output directory. It will also include
@@ -95,7 +97,10 @@ arxiv_dataset.num_files()
 arxiv_dataset.vocab_size
 # 32100
 arxiv_dataset[3]
-# TatmMemmapDatasetItem(token_ids=array([    7,    16,     8, ..., 14780,     8,  2537], dtype=uint16), document_ids=array([0, 0, 0, ..., 1, 1, 1], dtype=uint16), document_mask=array([[ True, False, False, ..., False, False, False],
+# TatmMemmapDatasetItem(
+#    token_ids=array([    7,    16,     8, ..., 14780,     8,  2537], dtype=uint16), 
+#    document_ids=array([0, 0, 0, ..., 1, 1, 1], dtype=uint16), 
+#    document_mask=array([[ True, False, False, ..., False, False, False],
 #        [ True,  True, False, ..., False, False, False],
 #        [ True,  True,  True, ..., False, False, False],
 #        ...,
