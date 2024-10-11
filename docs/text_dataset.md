@@ -86,6 +86,10 @@ model. The `TatmMemmapDataset` implements the appropriate `__getitem__` and `__l
 In the example code below, a tokenized dataset is loaded into a PyTorch model for training.
 
 ```python
+import numpy as np
+import torch
+from torch.utils.data import DataLoader
+
 from tatm.data import get_dataset
 arxiv_dataset = get_dataset("./tokenized_redpj_arxiv", context_length=1024)
 len(arxiv_dataset) # number of examples in set
@@ -107,6 +111,57 @@ arxiv_dataset[3]
 #        [False, False, False, ...,  True, False, False],
 #        [False, False, False, ...,  True,  True, False],
 #        [False, False, False, ...,  True,  True,  True]]))
+
+def collate_fn(batch):
+    out = {
+        "token_ids": torch.tensor(np.array([item.token_ids for item in batch])),
+        "document_ids": torch.tensor(np.array([item.document_ids for item in batch])),
+        "document_mask": torch.tensor(np.array([item.document_mask for item in batch])),
+    }
+    return out
+
+dataloader = DataLoader(arxiv_dataset, batch_size=4, collate_fn=collate_fn)
+print(next(iter(dataloader)))
+# {'token_ids': tensor([[    3,     2, 14309,  ...,  1644,  4179,    16],
+#         [ 3731,  3229,     2,  ...,    15,     2,     3],
+#         [    2, 14309,     2,  ...,   356,     5, 22218],
+#         [    7,    16,     8,  ..., 14780,     8,  2537]], dtype=torch.uint16), 
+#    'document_ids': tensor([[0, 0, 0,  ..., 0, 0, 0],
+#         [0, 0, 0,  ..., 0, 0, 0],
+#         [0, 0, 0,  ..., 0, 0, 0],
+#         [0, 0, 0,  ..., 1, 1, 1]], dtype=torch.uint16), 
+#    'document_mask': tensor([[[ True, False, False,  ..., False, False, False],
+#          [ True,  True, False,  ..., False, False, False],
+#          [ True,  True,  True,  ..., False, False, False],
+#          ...,
+#          [ True,  True,  True,  ...,  True, False, False],
+#          [ True,  True,  True,  ...,  True,  True, False],
+#          [ True,  True,  True,  ...,  True,  True,  True]],
+
+#         [[ True, False, False,  ..., False, False, False],
+#          [ True,  True, False,  ..., False, False, False],
+#          [ True,  True,  True,  ..., False, False, False],
+#          ...,
+#          [ True,  True,  True,  ...,  True, False, False],
+#          [ True,  True,  True,  ...,  True,  True, False],
+#          [ True,  True,  True,  ...,  True,  True,  True]],
+
+#         [[ True, False, False,  ..., False, False, False],
+#          [ True,  True, False,  ..., False, False, False],
+#          [ True,  True,  True,  ..., False, False, False],
+#          ...,
+#          [ True,  True,  True,  ...,  True, False, False],
+#          [ True,  True,  True,  ...,  True,  True, False],
+#          [ True,  True,  True,  ...,  True,  True,  True]],
+
+#         [[ True, False, False,  ..., False, False, False],
+#          [ True,  True, False,  ..., False, False, False],
+#          [ True,  True,  True,  ..., False, False, False],
+#          ...,
+#          [False, False, False,  ...,  True, False, False],
+#          [False, False, False,  ...,  True,  True, False],
+#          [False, False, False,  ...,  True,  True,  True]]])}
+
 ```
 
 Fields in the `TatmMemmapDatasetItem` object include:
