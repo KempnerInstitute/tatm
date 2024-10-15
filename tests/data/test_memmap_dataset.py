@@ -28,6 +28,9 @@ def test_memmap_array(sample_dataset):
     assert len(memmap_array) == 10
     assert np.all(memmap_array[0] == np.arange(100))
 
+    memmap_array_not_divisible = TokenMemMapArray(test_file, 9, "uint16", True)
+    assert len(memmap_array_not_divisible) == 112
+
 
 def test_memmap_dataset(sample_dataset):
     dataset = TatmMemmapDataset(
