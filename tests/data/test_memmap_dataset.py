@@ -32,7 +32,7 @@ def test_memmap_array(sample_dataset):
     assert len(memmap_array_not_divisible) == 112
     assert len(memmap_array_not_divisible[111]) == 9
     assert np.all(
-        memmap_array_not_divisible[111][1:] == np.array([0, 0, 0, 0, 0, 0, 0, 0])
+        memmap_array_not_divisible[111] == np.array([999, 0, 0, 0, 0, 0, 0, 0, 0])
     )
 
 
