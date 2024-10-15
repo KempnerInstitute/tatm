@@ -75,6 +75,8 @@ tatm run --conf $PWD/tatm_config.yaml -N 4 -c 40 tokenize \
 This will submit a slurm job creating the Ray cluster.  The `tokenize` command will utilize the Ray cluster to tokenize the dataset located at `/n/holylfs06/LABS/kempner_shared/Everyone/testbed/text/redpajama-v1:arxiv` and output the tokenized data to the directory `tokenized_redpj_arxiv` in the current working directory.  This will also create a metadata file associated with the tokenized data that can be used to load the tokenized data into a PyTorch model for training. The metadata file, `metadata.json`,will be located in the output directory. It will also include
 information about the tokenizer, including the tokenizer's vocabulary and configuration, as well as the version of Huggingface `tokenizers` and `tatm` used to tokenize the data.
 
+By default the `tokenize` command uses the `t5-base` tokenizer from Huggingface. You can specify a different tokenizer to use with the `--tokenizer` flag. You can either pass the name of a tokenizer available from HuggingFace or pass the path to a huggingface compatible tokenizer json file.
+
 ## Loading Tokenized Data with `tatm` for use with PyTorch
 
 Once you have tokenized your data, you can load it into a PyTorch dataset using the `tatm` library. The `tatm` library
