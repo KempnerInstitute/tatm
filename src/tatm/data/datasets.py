@@ -109,7 +109,7 @@ class TokenMemMapArray:
     def __getitem__(self, idx):
         """
         Get the token or chunk at the given index.
-        
+
         The last chunk will be right-padded if there are
         not enough tokens left to fill it.
         """
