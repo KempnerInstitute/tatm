@@ -72,10 +72,20 @@ tatm run --conf $PWD/tatm_config.yaml -N 4 -c 40 tokenize \
   /n/holylfs06/LABS/kempner_shared/Everyone/testbed/text/redpajama-v1:arxiv
 ```
 
-This will submit a slurm job creating the Ray cluster.  The `tokenize` command will utilize the Ray cluster to tokenize the dataset located at `/n/holylfs06/LABS/kempner_shared/Everyone/testbed/text/redpajama-v1:arxiv` and output the tokenized data to the directory `tokenized_redpj_arxiv` in the current working directory.  This will also create a metadata file associated with the tokenized data that can be used to load the tokenized data into a PyTorch model for training. The metadata file, `metadata.json`,will be located in the output directory. It will also include
+This will submit a slurm job creating the Ray cluster.  The `tokenize` command will utilize the Ray cluster to tokenize `arxiv` corpus the dataset located at `/n/holylfs06/LABS/kempner_shared/Everyone/testbed/text/redpajama-v1` and output the tokenized data to the directory `tokenized_redpj_arxiv` in the current working directory.  This will also create a metadata file associated with the tokenized data that can be used to load the tokenized data into a PyTorch model for training. The metadata file, `metadata.json`,will be located in the output directory. It will also include
 information about the tokenizer, including the tokenizer's vocabulary and configuration, as well as the version of Huggingface `tokenizers` and `tatm` used to tokenize the data.
 
 By default the `tokenize` command uses the `t5-base` tokenizer from Huggingface. You can specify a different tokenizer to use with the `--tokenizer` flag. You can either pass the name of a tokenizer available from HuggingFace or pass the path to a huggingface compatible tokenizer json file.
+
+### Finding and Selecting Data available within the Testbed
+
+The Kempner AI Testbed provides access to a variety of datasets that can be used for training and evaluation of LLMs. We are in the ongoing process of curating and preparing these datasets for use with the `tatm` library.
+In a future release, we will make available a metadata service that will enable users to search for and access datasets available within the testbed, as well as allowing users to easily get information on what corpuses and
+tokenized versions are available for a given dataset. For now, for specific dataset questions please reach out to the Kempner Research and Engineering team.
+
+For now, a list of available corpora for a dataset can be found in the metadata for prepared datasets. Note that a corpus tends to be a 1:1 mapping to the "name" concept within a Huggingface dataset. The handling of corpora is implemented by the huggingface dataset script, is dataset-specific and may not be supported by all datasets.
+
+For specifying a corpus of a given dataset the current syntax is `<DATASET_PATH>[:<CORPUS_NAME>]`. The `:` is used to specify the corpus name. If no corpus is specified, the default corpus will be used.
 
 ## Loading Tokenized Data with `tatm` for use with PyTorch
 
