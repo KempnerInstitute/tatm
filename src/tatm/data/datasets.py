@@ -99,7 +99,10 @@ class TokenMemMapArray:
     def __len__(self):
         """Get the number of tokens in the array."""
         if self.chunked:
-            return self.num_tokens // self.context_length
+            chunks = self.num_tokens // self.context_length
+            if self.num_tokens % self.context_length != 0:
+                chunks += 1
+            return chunks
         else:
             return self.num_tokens
 
