@@ -30,6 +30,10 @@ def test_memmap_array(sample_dataset):
 
     memmap_array_not_divisible = TokenMemMapArray(test_file, 9, "uint16", True)
     assert len(memmap_array_not_divisible) == 112
+    assert len(memmap_array_not_divisible[111]) == 9
+    assert np.all(
+        memmap_array_not_divisible[111] == np.array([999, 0, 0, 0, 0, 0, 0, 0, 0])
+    )
 
 
 def test_memmap_dataset(sample_dataset):
