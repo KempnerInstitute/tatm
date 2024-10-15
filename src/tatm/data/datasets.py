@@ -97,7 +97,7 @@ class TokenMemMapArray:
         )
 
     def __len__(self):
-        """Get the number of tokens in the array."""
+        """Get the number of tokens or chunks in the array."""
         if self.chunked:
             chunks = self.num_tokens // self.context_length
             if self.num_tokens % self.context_length != 0:
@@ -107,7 +107,12 @@ class TokenMemMapArray:
             return self.num_tokens
 
     def __getitem__(self, idx):
-        """Get the token at the given index."""
+        """
+        Get the token or chunk at the given index.
+        
+        The last chunk will be right-padded if there are
+        not enough tokens left to fill it.
+        """
         if self.chunked:
             chunk = self.array[
                 idx * self.context_length : (idx + 1) * self.context_length
