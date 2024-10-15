@@ -10,6 +10,7 @@ from pathlib import Path
 from typing import Optional, Union
 
 import numpy as np
+import torch
 
 from tatm.data.metadata import TatmDataMetadata
 
@@ -247,6 +248,25 @@ class TatmMemmapDataset(TatmDataset):
     def num_tokens(self):
         """Get the number of tokens in the dataset."""
         return sum([i.num_tokens for _, i in self.file_list])
+
+    @staticmethod
+    def torch_collate_fn(batch) -> dict[str, torch.Tensor]:
+        """Collate function for torch DataLoader. Assumes that all items in the batch are of the same type."""
+        out = {}
+        token_ids = torch.stack([torch.from_numpy(i.token_ids) for i in batch])
+        out["token_ids"] = token_ids
+        if batch[0].document_ids is not None:
+            document_ids = torch.stack(
+                [torch.from_numpy(i.document_ids) for i in batch]
+            )
+            out["document_ids"] = document_ids
+        if batch[0].document_mask is not None:
+            document_masks = torch.stack(
+                [torch.from_numpy(i.document_mask) for i in batch]
+            )
+            out["document_masks"] = document_masks
+
+        return out
 
 
 def _get_document_ids(tokens: np.ndarray, eos_token: int = 1) -> np.ndarray:
