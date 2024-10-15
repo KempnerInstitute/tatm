@@ -116,20 +116,12 @@ arxiv_dataset[3]
 # Note that the output will vary depending on the dataset and the tokenization process as the order documents are tokenized may vary.
 # TatmMemmapDatasetItem(
 #    token_ids=array([    7,    16,     8, ..., 14780,     8,  2537], dtype=uint16), 
-#    document_ids=array([0, 0, 0, ..., 1, 1, 1], dtype=uint16), 
-#    document_mask=array([[ True, False, False, ..., False, False, False],
-#        [ True,  True, False, ..., False, False, False],
-#        [ True,  True,  True, ..., False, False, False],
-#        ...,
-#        [False, False, False, ...,  True, False, False],
-#        [False, False, False, ...,  True,  True, False],
-#        [False, False, False, ...,  True,  True,  True]]))
+#    document_ids=array([0, 0, 0, ..., 1, 1, 1], dtype=uint16)
 
 def collate_fn(batch):
     out = {
         "token_ids": torch.tensor(np.array([item.token_ids for item in batch])),
-        "document_ids": torch.tensor(np.array([item.document_ids for item in batch])),
-        "document_mask": torch.tensor(np.array([item.document_mask for item in batch])),
+        "document_ids": torch.tensor(np.array([item.document_ids for item in batch]))
     }
     return out
 
@@ -142,38 +134,7 @@ print(next(iter(dataloader)))
 #    'document_ids': tensor([[0, 0, 0,  ..., 0, 0, 0],
 #         [0, 0, 0,  ..., 0, 0, 0],
 #         [0, 0, 0,  ..., 0, 0, 0],
-#         [0, 0, 0,  ..., 1, 1, 1]], dtype=torch.uint16), 
-#    'document_mask': tensor([[[ True, False, False,  ..., False, False, False],
-#          [ True,  True, False,  ..., False, False, False],
-#          [ True,  True,  True,  ..., False, False, False],
-#          ...,
-#          [ True,  True,  True,  ...,  True, False, False],
-#          [ True,  True,  True,  ...,  True,  True, False],
-#          [ True,  True,  True,  ...,  True,  True,  True]],
-
-#         [[ True, False, False,  ..., False, False, False],
-#          [ True,  True, False,  ..., False, False, False],
-#          [ True,  True,  True,  ..., False, False, False],
-#          ...,
-#          [ True,  True,  True,  ...,  True, False, False],
-#          [ True,  True,  True,  ...,  True,  True, False],
-#          [ True,  True,  True,  ...,  True,  True,  True]],
-
-#         [[ True, False, False,  ..., False, False, False],
-#          [ True,  True, False,  ..., False, False, False],
-#          [ True,  True,  True,  ..., False, False, False],
-#          ...,
-#          [ True,  True,  True,  ...,  True, False, False],
-#          [ True,  True,  True,  ...,  True,  True, False],
-#          [ True,  True,  True,  ...,  True,  True,  True]],
-
-#         [[ True, False, False,  ..., False, False, False],
-#          [ True,  True, False,  ..., False, False, False],
-#          [ True,  True,  True,  ..., False, False, False],
-#          ...,
-#          [False, False, False,  ...,  True, False, False],
-#          [False, False, False,  ...,  True,  True, False],
-#          [False, False, False,  ...,  True,  True,  True]]])}
+#         [0, 0, 0,  ..., 1, 1, 1]], dtype=torch.uint16)}
 
 ```
 
@@ -181,8 +142,8 @@ Fields in the `TatmMemmapDatasetItem` object include:
 
 - `token_ids`: The tokenized text data
 
-- `document_ids`: The document ids for each token. We use example packing to ease the processing of the data in the LLM. To support document masking, we include the document ids for each token in the dataset.
+- `document_ids` (Optional): The document ids for each token. We use example packing to ease the processing of the data in the LLM. To support document masking, we include the document ids for each token in the dataset. Included by default to support document masking.
 
-- `document_mask`: A boolean attention mask that can be used for causal data masking. This masks tokens that are not part of the same document as the current token, as well as tokens that should not be considered in a given token's attention calculation.
+- `document_mask` (Optional): A boolean attention mask that can be used for causal data masking. This masks tokens that are not part of the same document as the current token, as well as tokens that should not be considered in a given token's attention calculation. Excluded by default for performance reasons.
 
 For more information on how to use the [`tatm.data.TatmMemmapDataset`](tatm.data.TatmMemmapDataset) class, see the [Data](tatm.data.TatmMemmapDataset) documentation.
