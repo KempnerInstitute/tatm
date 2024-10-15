@@ -59,3 +59,25 @@ def test_memmap_dataset_from_metadata(sample_dataset):
     assert not isinstance(dataset[0]["document_ids"], np.memmap)
     assert dataset.num_files() == 10
     assert dataset.num_tokens() == 100 * 100
+
+def test_memmap_dataset_docid_options(sample_dataset):
+    # Test that the dataset doc id options raise errors when they should
+    with pytest.raises(ValueError):
+        _ = TatmMemmapDataset(
+            str(sample_dataset[0] / sample_dataset[1]), 100, "uint16", chunked=False, create_doc_ids=False, create_doc_mask=True
+        )
+
+    dataset = TatmMemmapDataset(
+        str(sample_dataset[0] / sample_dataset[1]), 100, "uint16", chunked=True, create_doc_ids=True, create_doc_mask=True
+    )
+    assert len(dataset) == 100
+    assert np.all(dataset[0]["token_ids"] == np.arange(100))
+    assert np.all(dataset[20]["token_ids"] == np.arange(100) + 2000)
+    assert isinstance(dataset[0]["token_ids"], np.ndarray)
+    assert not isinstance(dataset[0]["token_ids"], np.memmap)
+    assert isinstance(dataset[0]["document_ids"], np.ndarray)
+    assert not isinstance(dataset[0]["document_ids"], np.memmap)
+    assert len(dataset[0]["document_ids"]) == 100
+    assert isinstance(dataset[0]["document_mask"], np.ndarray)
+    assert not isinstance(dataset[0]["document_mask"], np.memmap)
+    assert dataset[0]["document_mask"].shape == (100, 100)
