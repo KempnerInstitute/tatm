@@ -83,7 +83,7 @@ provides a PyTorch compatible dataset class that can be used to load tokenized d
 model. The `TatmMemmapDataset` implements the appropriate `__getitem__` and `__len__` methods to be compatible with PyTorch's
 `Dataset` API and supports integration with the Pytorch DistrubutedSampler for distributed training.
 
-In the example code below, a tokenized dataset is loaded into a PyTorch model for training.
+In the example code below, we show how to create a PyTorch dataloader with a tokenized dataset for use with a model.
 
 ```python
 import numpy as np
@@ -101,6 +101,7 @@ arxiv_dataset.num_files()
 arxiv_dataset.vocab_size
 # 32100
 arxiv_dataset[3]
+# Note that the output will vary depending on the dataset and the tokenization process as the order documents are tokenized may vary.
 # TatmMemmapDatasetItem(
 #    token_ids=array([    7,    16,     8, ..., 14780,     8,  2537], dtype=uint16), 
 #    document_ids=array([0, 0, 0, ..., 1, 1, 1], dtype=uint16), 
