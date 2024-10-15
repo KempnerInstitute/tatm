@@ -1,5 +1,12 @@
+import pytest
+
 from tatm.compute.job import Environment
-from tatm.compute.slurm import SlurmJob, _slurm_create_ray_job, _submit_job_command
+from tatm.compute.slurm import (
+    SlurmJob,
+    _slurm_create_ray_job,
+    _submit_job_command,
+    submit_job,
+)
 
 
 def test_slurm_create_ray_job(tmp_path):
@@ -93,3 +100,25 @@ def test_submit_command():
             print(f"Expected: {expected_command[i]}")
             print(f"Got: {command[i]}")
             assert command[i] == expected_command[i]
+
+
+def test_submission_error():
+
+    job = SlurmJob(
+        partition="partition",
+        account="account",
+        nodes=2,
+        cpus_per_task=4,
+        time_limit="1-00:00:00",
+        memory="10G",
+        gpus_per_node=1,
+        constraints="h100",
+        qos="high",
+        job_name="test_job",
+        log_file="test.out",
+        error_file="test.err",
+    )
+
+    job_file_path = "test_job_file"
+    with pytest.raises(ValueError):
+        submit_job(job, job_file_path)

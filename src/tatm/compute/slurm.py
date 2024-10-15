@@ -1,3 +1,4 @@
+import logging
 import string
 import subprocess
 from dataclasses import dataclass
@@ -5,6 +6,8 @@ from pathlib import Path
 from typing import List, Union
 
 from tatm.compute.job import Job
+
+LOGGER = logging.getLogger(__name__)
 
 
 @dataclass(kw_only=True)
@@ -139,5 +142,15 @@ def submit_job(
     command = _submit_job_command(job, job_file_path)
     if not submit:
         return command
-    result = subprocess.run(command, check=True, capture_output=True)
+    try:
+        result = subprocess.run(command, check=True, capture_output=True)
+    except subprocess.CalledProcessError as e:
+        LOGGER.error(
+            f"Error submitting job: {e}\nstdout: {e.stdout}\nstderr: {e.stderr}"
+        )
+        raise ValueError(f"Error submitting job: {e.stderr}")
+    except FileNotFoundError as e:
+        LOGGER.error(f"Error submitting job: {e.filename} not found.")
+        raise ValueError(f"Error submitting job: {e.filename} not found.")
+
     return result
