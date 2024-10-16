@@ -1,0 +1,246 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="./">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Loading Text Data for LLM Training &mdash; tatm  documentation</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=e59714d7" />
+
+  
+      <script src="_static/jquery.js?v=5d32c60e"></script>
+      <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="_static/documentation_options.js?v=5929fcd5"></script>
+      <script src="_static/doctools.js?v=9a2dae69"></script>
+      <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="tatm CLI" href="cli.html" />
+    <link rel="prev" title="Getting Started" href="getting_started.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="index.html" class="icon icon-home">
+            tatm
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="getting_started.html">Getting Started</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Loading Text Data for LLM Training</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#preparing-raw-data-for-use-with-tatm">Preparing Raw Data for use with <code class="docutils literal notranslate"><span class="pre">tatm</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#tokenizing-raw-text-data-with-tatm">Tokenizing Raw Text Data with <code class="docutils literal notranslate"><span class="pre">tatm</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#setting-up-your-tatm-configuration-file">Setting up your <code class="docutils literal notranslate"><span class="pre">tatm</span></code> Configuration File</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#running-the-tokenization-process">Running the tokenization process</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#finding-and-selecting-data-available-within-the-testbed">Finding and Selecting Data available within the Testbed</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#loading-tokenized-data-with-tatm-for-use-with-pytorch">Loading Tokenized Data with <code class="docutils literal notranslate"><span class="pre">tatm</span></code> for use with PyTorch</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="cli.html"><code class="docutils literal notranslate"><span class="pre">tatm</span></code> CLI</a></li>
+<li class="toctree-l1"><a class="reference internal" href="data.html"><code class="docutils literal notranslate"><span class="pre">tatm</span></code> Data Module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="config.html">Configuring <code class="docutils literal notranslate"><span class="pre">tatm</span></code></a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">tatm</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Loading Text Data for LLM Training</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/text_dataset.md.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="loading-text-data-for-llm-training">
+<h1>Loading Text Data for LLM Training<a class="headerlink" href="#loading-text-data-for-llm-training" title="Link to this heading"></a></h1>
+<section id="preparing-raw-data-for-use-with-tatm">
+<h2>Preparing Raw Data for use with <code class="docutils literal notranslate"><span class="pre">tatm</span></code><a class="headerlink" href="#preparing-raw-data-for-use-with-tatm" title="Link to this heading"></a></h2>
+<p>The <code class="docutils literal notranslate"><span class="pre">tatm</span></code> library provides tools for LLM and AI/ML training frameworks to access and use data stored on disk. In order for <code class="docutils literal notranslate"><span class="pre">tatm</span></code> to work with your data, you will need to
+create a metadata file that describes the data and how it is stored.</p>
+<p>The <code class="docutils literal notranslate"><span class="pre">tatm</span></code> library provides an interactive CLI tool that can help you create this metadata file. To use this tool,
+run the following command from the directory where your data is stored:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>tatm<span class="w"> </span>data<span class="w"> </span>create-metadata
+</pre></div>
+</div>
+<p>The CLI tool will prompt you for information about your data, such as the name of the dataset, the path to the
+raw data files, and the format of the data. The tool will then create a metadata file that describes the data
+and how it is stored on disk. The <code class="docutils literal notranslate"><span class="pre">tatm</span></code> library uses this metadata file to load and process the data.</p>
+<p><code class="docutils literal notranslate"><span class="pre">tatm</span></code> assumes that your data is stored in a format that the huggingface <code class="docutils literal notranslate"><span class="pre">datasets</span></code> library can load.
+If your data is not in a format supported by <code class="docutils literal notranslate"><span class="pre">datasets</span></code>, you should create a custom dataset script that can load your data.
+More details on how to structure data for use with <code class="docutils literal notranslate"><span class="pre">datasets</span></code> can be found <a class="reference external" href="https://huggingface.co/docs/datasets/en/loading">here</a>.</p>
+</section>
+<section id="tokenizing-raw-text-data-with-tatm">
+<h2>Tokenizing Raw Text Data with <code class="docutils literal notranslate"><span class="pre">tatm</span></code><a class="headerlink" href="#tokenizing-raw-text-data-with-tatm" title="Link to this heading"></a></h2>
+<p>To train a LLM on text data, you must first convert the raw text data into
+tokenized data that the LLM can interpret. The <code class="docutils literal notranslate"><span class="pre">tatm</span></code> library includes functionality for creating
+arrays of tokens on disk that can be fed directly into a LLM training framework.</p>
+<p><code class="docutils literal notranslate"><span class="pre">tatm</span></code> runs using a <code class="docutils literal notranslate"><span class="pre">ray</span></code> based backend that can parallelize the tokenization across multiple CPUs and multiple nodes,
+enabling large datasets to be tokenized quickly and efficiently. <code class="docutils literal notranslate"><span class="pre">tatm</span></code> also includes functionality (<code class="docutils literal notranslate"><span class="pre">tatm</span> <span class="pre">run</span></code>) for
+interfacing with SLURM to submit tokenization jobs to a cluster with the proper settings and configuration.</p>
+<section id="setting-up-your-tatm-configuration-file">
+<h3>Setting up your <code class="docutils literal notranslate"><span class="pre">tatm</span></code> Configuration File<a class="headerlink" href="#setting-up-your-tatm-configuration-file" title="Link to this heading"></a></h3>
+<p>To interface with SLURM and define your compute environment, <code class="docutils literal notranslate"><span class="pre">tatm</span></code> utilizes a configuration file that defines the SLURM partition, account, and other tokenization process settings.  The file is passed to the <code class="docutils literal notranslate"><span class="pre">tatm</span> <span class="pre">run</span></code> command.</p>
+<p>Below is an example configuration file with tatm installed in a conda environment named <code class="docutils literal notranslate"><span class="pre">tatm_conda</span></code>:</p>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="c1"># Filename: $PWD/tatm_config.yaml</span>
+<span class="nt">environment</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">modules</span><span class="p">:</span>
+<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">python/3.10.13-fasrc01</span><span class="w"> </span><span class="c1"># maps to python/3.10.13-fasrc01</span>
+<span class="w">    </span><span class="nt">conda_env</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">tatm_conda</span><span class="w"> </span><span class="c1"># Name of the conda environment to use, also works with full paths to the conda environment</span>
+<span class="nt">slurm</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">partition</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">example</span><span class="w"> </span><span class="c1"># SLURM partition to use for the job</span>
+<span class="w">    </span><span class="nt">account</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">example</span><span class="w"> </span><span class="c1"># SLURM account to use for the job</span>
+</pre></div>
+</div>
+<p>For full details on how to configure <code class="docutils literal notranslate"><span class="pre">tatm</span></code>, see the <a class="reference internal" href="config.html"><span class="std std-doc">Configuring <code class="docutils literal notranslate"><span class="pre">tatm</span></code></span></a> documentation.</p>
+</section>
+<section id="running-the-tokenization-process">
+<h3>Running the tokenization process<a class="headerlink" href="#running-the-tokenization-process" title="Link to this heading"></a></h3>
+<p>To run the tokenizer on SLURM, use the the command <code class="docutils literal notranslate"><span class="pre">tatm</span> <span class="pre">run</span></code> with the <code class="docutils literal notranslate"><span class="pre">tokenize</span></code> subcommand and the
+appropriate arguments/options. <code class="docutils literal notranslate"><span class="pre">tatm</span></code> will create a submission script based on the configuration file and run time options,
+wrap the <code class="docutils literal notranslate"><span class="pre">ray</span></code> based tokenization process in a SLURM job, and submit the job to the cluster. The options available
+to the <code class="docutils literal notranslate"><span class="pre">tatm</span> <span class="pre">run</span></code> command are documented in the <a class="reference internal" href="cli.html"><span class="std std-doc">CLI</span></a> documentation and mirror the flags available to the <code class="docutils literal notranslate"><span class="pre">sbatch</span></code> command.</p>
+<p>To review the submission script before submitting the job, use the <code class="docutils literal notranslate"><span class="pre">--no-submit</span></code> flag to prevent the job from being submitted.
+The submission script will be created in the current working directory and will be named <code class="docutils literal notranslate"><span class="pre">tatm_tokenize.submit</span></code>. The executed <code class="docutils literal notranslate"><span class="pre">sbatch</span></code> command will output to the console.</p>
+<p>The tokenization script uses a Ray backend to spin up multiple CPU based tokenization workers and process examples into sequences of tokens in parallel. By default, the number of
+workers is determined automatically by the resources available to the Ray cluster. You can specify the a different number of workers to use with the <code class="docutils literal notranslate"><span class="pre">--num-workers</span></code> flag.</p>
+<p>The command below shows an example <code class="docutils literal notranslate"><span class="pre">tatm</span> <span class="pre">run</span></code> command to tokenize a dataset. It creates a 4 node ray cluster with 40 CPUs per node
+to tokenize the dataset located at <code class="docutils literal notranslate"><span class="pre">/n/holylfs06/LABS/kempner_shared/Everyone/testbed/text/redpajama-v1:arxiv</span></code> and outputs the tokenized data to a directory named <code class="docutils literal notranslate"><span class="pre">tokenized_redpj_arxiv1</span></code>
+in the current working directory. Note that the data at <code class="docutils literal notranslate"><span class="pre">/n/holylfs06/LABS/kempner_shared/Everyone/testbed/text/redpajama-v1</span></code> has already been prepared with a metadata file. The colon <code class="docutils literal notranslate"><span class="pre">:</span></code> specifies the <code class="docutils literal notranslate"><span class="pre">arxiv</span></code> corpus within the dataset. The handling of sub-corpora, implemented by the huggingface dataset script, is dataset-specific and may not be supported by all datasets.</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>tatm<span class="w"> </span>run<span class="w"> </span>--conf<span class="w"> </span><span class="nv">$PWD</span>/tatm_config.yaml<span class="w"> </span>-N<span class="w"> </span><span class="m">4</span><span class="w"> </span>-c<span class="w"> </span><span class="m">40</span><span class="w"> </span>tokenize<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--output-dir<span class="w"> </span><span class="nv">$PWD</span>/tokenized_redpj_arxiv<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>/n/holylfs06/LABS/kempner_shared/Everyone/testbed/text/redpajama-v1:arxiv
+</pre></div>
+</div>
+<p>This will submit a slurm job creating the Ray cluster.  The <code class="docutils literal notranslate"><span class="pre">tokenize</span></code> command will utilize the Ray cluster to tokenize <code class="docutils literal notranslate"><span class="pre">arxiv</span></code> corpus the dataset located at <code class="docutils literal notranslate"><span class="pre">/n/holylfs06/LABS/kempner_shared/Everyone/testbed/text/redpajama-v1</span></code> and output the tokenized data to the directory <code class="docutils literal notranslate"><span class="pre">tokenized_redpj_arxiv</span></code> in the current working directory.  This will also create a metadata file associated with the tokenized data that can be used to load the tokenized data into a PyTorch model for training. The metadata file, <code class="docutils literal notranslate"><span class="pre">metadata.json</span></code>,will be located in the output directory. It will also include
+information about the tokenizer, including the tokenizer’s vocabulary and configuration, as well as the version of Huggingface <code class="docutils literal notranslate"><span class="pre">tokenizers</span></code> and <code class="docutils literal notranslate"><span class="pre">tatm</span></code> used to tokenize the data.</p>
+<p>By default the <code class="docutils literal notranslate"><span class="pre">tokenize</span></code> command uses the <code class="docutils literal notranslate"><span class="pre">t5-base</span></code> tokenizer from Huggingface. You can specify a different tokenizer to use with the <code class="docutils literal notranslate"><span class="pre">--tokenizer</span></code> flag. You can either pass the name of a tokenizer available from HuggingFace or pass the path to a huggingface compatible tokenizer json file.</p>
+</section>
+<section id="finding-and-selecting-data-available-within-the-testbed">
+<h3>Finding and Selecting Data available within the Testbed<a class="headerlink" href="#finding-and-selecting-data-available-within-the-testbed" title="Link to this heading"></a></h3>
+<p>The Kempner AI Testbed provides access to a variety of datasets that can be used for training and evaluation of LLMs. We are in the ongoing process of curating and preparing these datasets for use with the <code class="docutils literal notranslate"><span class="pre">tatm</span></code> library.
+In a future release, we will make available a metadata service that will enable users to search for and access datasets available within the testbed, as well as allowing users to easily get information on what corpuses and
+tokenized versions are available for a given dataset. For now, for specific dataset questions please reach out to the Kempner Research and Engineering team.</p>
+<p>For now, a list of available corpora for a dataset can be found in the metadata for prepared datasets. Note that a corpus tends to be a 1:1 mapping to the “name” concept within a Huggingface dataset. The handling of corpora is implemented by the huggingface dataset script, is dataset-specific and may not be supported by all datasets.</p>
+<p>For specifying a corpus of a given dataset the current syntax is <code class="docutils literal notranslate"><span class="pre">&lt;DATASET_PATH&gt;[:&lt;CORPUS_NAME&gt;]</span></code>. The <code class="docutils literal notranslate"><span class="pre">:</span></code> is used to specify the corpus name. If no corpus is specified, the default corpus will be used.</p>
+</section>
+</section>
+<section id="loading-tokenized-data-with-tatm-for-use-with-pytorch">
+<h2>Loading Tokenized Data with <code class="docutils literal notranslate"><span class="pre">tatm</span></code> for use with PyTorch<a class="headerlink" href="#loading-tokenized-data-with-tatm-for-use-with-pytorch" title="Link to this heading"></a></h2>
+<p>Once you have tokenized your data, you can load it into a PyTorch dataset using the <code class="docutils literal notranslate"><span class="pre">tatm</span></code> library. The <code class="docutils literal notranslate"><span class="pre">tatm</span></code> library
+provides a PyTorch compatible dataset class that can be used to load tokenized data into a PyTorch model for training
+(<a class="reference internal" href="data.html#tatm.data.TatmMemmapDataset" title="tatm.data.TatmMemmapDataset"><span class="xref myst py py-class"><code class="docutils literal notranslate"><span class="pre">tatm.data.TatmMemmapDataset</span></code></span></a>). You can then load the dataset into a PyTorch <code class="docutils literal notranslate"><span class="pre">DataLoader</span></code> and use it to train your
+model. The <code class="docutils literal notranslate"><span class="pre">TatmMemmapDataset</span></code> implements the appropriate <code class="docutils literal notranslate"><span class="pre">__getitem__</span></code> and <code class="docutils literal notranslate"><span class="pre">__len__</span></code> methods to be compatible with PyTorch’s
+<code class="docutils literal notranslate"><span class="pre">Dataset</span></code> API and supports integration with the Pytorch DistrubutedSampler for distributed training.</p>
+<p>In the example code below, we show how to create a PyTorch dataloader with a tokenized dataset for use with a model.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">torch</span>
+<span class="kn">from</span> <span class="nn">torch.utils.data</span> <span class="kn">import</span> <span class="n">DataLoader</span>
+
+<span class="kn">from</span> <span class="nn">tatm.data</span> <span class="kn">import</span> <span class="n">get_dataset</span><span class="p">,</span> <span class="n">torch_collate_fn</span>
+<span class="n">arxiv_dataset</span> <span class="o">=</span> <span class="n">get_dataset</span><span class="p">(</span><span class="s2">&quot;./tokenized_redpj_arxiv&quot;</span><span class="p">,</span> <span class="n">context_length</span><span class="o">=</span><span class="mi">1024</span><span class="p">)</span>
+<span class="nb">len</span><span class="p">(</span><span class="n">arxiv_dataset</span><span class="p">)</span> <span class="c1"># number of examples in set</span>
+<span class="c1"># 35651584</span>
+<span class="n">arxiv_dataset</span><span class="o">.</span><span class="n">num_tokens</span><span class="p">()</span>
+<span class="c1"># 36507222016</span>
+<span class="n">arxiv_dataset</span><span class="o">.</span><span class="n">num_files</span><span class="p">()</span>
+<span class="c1"># 34</span>
+<span class="n">arxiv_dataset</span><span class="o">.</span><span class="n">vocab_size</span>
+<span class="c1"># 32100</span>
+<span class="n">arxiv_dataset</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span>
+<span class="c1"># Note that the output will vary depending on the dataset and the tokenization process as the order documents are tokenized may vary.</span>
+<span class="c1"># TatmMemmapDatasetItem(</span>
+<span class="c1">#    token_ids=array([    7,    16,     8, ..., 14780,     8,  2537], dtype=uint16), </span>
+<span class="c1">#    document_ids=array([0, 0, 0, ..., 1, 1, 1], dtype=uint16)</span>
+<span class="c1"># )</span>
+
+<span class="n">dataloader</span> <span class="o">=</span> <span class="n">DataLoader</span><span class="p">(</span><span class="n">arxiv_dataset</span><span class="p">,</span> <span class="n">batch_size</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span> <span class="n">collate_fn</span><span class="o">=</span><span class="n">torch_collate_fn</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="nb">next</span><span class="p">(</span><span class="nb">iter</span><span class="p">(</span><span class="n">dataloader</span><span class="p">)))</span>
+<span class="c1"># {&#39;token_ids&#39;: tensor([[    3,     2, 14309,  ...,  1644,  4179,    16],</span>
+<span class="c1">#         [ 3731,  3229,     2,  ...,    15,     2,     3],</span>
+<span class="c1">#         [    2, 14309,     2,  ...,   356,     5, 22218],</span>
+<span class="c1">#         [    7,    16,     8,  ..., 14780,     8,  2537]], dtype=torch.uint16), </span>
+<span class="c1">#    &#39;document_ids&#39;: tensor([[0, 0, 0,  ..., 0, 0, 0],</span>
+<span class="c1">#         [0, 0, 0,  ..., 0, 0, 0],</span>
+<span class="c1">#         [0, 0, 0,  ..., 0, 0, 0],</span>
+<span class="c1">#         [0, 0, 0,  ..., 1, 1, 1]], dtype=torch.uint16)}</span>
+
+</pre></div>
+</div>
+<p>Fields in the <code class="docutils literal notranslate"><span class="pre">TatmMemmapDatasetItem</span></code> object include:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">token_ids</span></code>: The tokenized text data</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">document_ids</span></code> (Optional): The document ids for each token. We use example packing to ease the processing of the data in the LLM. To support document masking, we include the document ids for each token in the dataset. Included by default to support document masking.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">document_mask</span></code> (Optional): A boolean attention mask that can be used for causal data masking. This masks tokens that are not part of the same document as the current token, as well as tokens that should not be considered in a given token’s attention calculation. Excluded by default for performance reasons.</p></li>
+</ul>
+<p>For more information on how to use the <a class="reference internal" href="data.html#tatm.data.TatmMemmapDataset" title="tatm.data.TatmMemmapDataset"><span class="xref myst py py-class"><code class="docutils literal notranslate"><span class="pre">tatm.data.TatmMemmapDataset</span></code></span></a> class, see the <a class="reference internal" href="data.html#tatm.data.TatmMemmapDataset" title="tatm.data.TatmMemmapDataset"><span class="xref myst py py-class">Data</span></a> documentation.</p>
+<p>The provide <a class="reference internal" href="data.html#tatm.data.torch_collate_fn" title="tatm.data.torch_collate_fn"><span class="xref myst py py-func"><code class="docutils literal notranslate"><span class="pre">torch_collate_fn</span></code></span></a> function is used to collate the data into a batch for training. The function will create stacked tensors or lists for the fields in
+the returned <code class="docutils literal notranslate"><span class="pre">TatmMemmapDatasetItem</span></code> object and return a dictionary with the same key names as the dataset item pointing to the stacked items.</p>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="getting_started.html" class="btn btn-neutral float-left" title="Getting Started" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="cli.html" class="btn btn-neutral float-right" title="tatm CLI" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2024, Kempner Institute at Harvard University.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
