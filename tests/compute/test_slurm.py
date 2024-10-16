@@ -120,5 +120,5 @@ def test_submission_error():
     )
 
     job_file_path = "test_job_file"
-    with pytest.raises(ValueError):
+    with pytest.raises(RuntimeError):
         submit_job(job, job_file_path)

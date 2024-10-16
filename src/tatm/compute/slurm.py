@@ -148,9 +148,9 @@ def submit_job(
         LOGGER.error(
             f"Error submitting job: {e}\nstdout: {e.stdout}\nstderr: {e.stderr}"
         )
-        raise ValueError(f"Error submitting job: {e.stderr}")
+        raise RuntimeError(f"Error submitting job: {e.stderr}")
     except FileNotFoundError as e:
         LOGGER.error(f"Error submitting job: {e.filename} not found.")
-        raise ValueError(f"Error submitting job: {e.filename} not found.")
+        raise RuntimeError(f"Error submitting job: {e.filename} not found.")
 
     return result
