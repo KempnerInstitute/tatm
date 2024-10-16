@@ -67,9 +67,13 @@ class TatmDataMetadata:
     corpuses: List[str] = dataclasses.field(
         default_factory=list
     )  #: List of corpuses in the dataset.
-    corpus_separation_strategy: CorpusSeparationStrategy = None
-    corpus_data_dir_parent: str = None
-    tokenized_info: TokenizedMetadataComponenet = None
+
+    # fmt: off
+    corpus_separation_strategy: CorpusSeparationStrategy = None  #: Strategy for separating corpuses in the dataset (data_dirs or configs).
+    corpus_data_dir_parent: str = None  #: Parent directory of corpus data directories, to be used with corpus_separation_strategy='data_dirs'.
+    # fmt: on
+
+    tokenized_info: TokenizedMetadataComponenet = None  #: Metadata for tokenized data.
 
     def __post_init__(self):
         self._validate()
