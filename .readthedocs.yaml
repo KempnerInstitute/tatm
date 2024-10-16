@@ -8,6 +8,7 @@ build:
     python: "3.10"
   commands:
     - python -m venv .venv
+    - chmod +x .venv/bin/activate
     - .venv/bin/activate
     - poetry install --with docs
     - make build-docs
