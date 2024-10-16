@@ -4,13 +4,15 @@
 
 ## Documentation
 
-[![Documentation Status](https://readthedocs.org/projects/tatm/badge/?version=latest)](https://tatm.readthedocs.io/en/latest/?badge=latest)
+[![Documentation Status](https://readthedocs.org/projects/tatm/badge/?version=latest)](https://tatm.readthedocs.io/en/latest/?badge=latest)x
 
 - [Stable Version Documentation](https://tatm.readthedocs.io/en/latest/index.html)
    - [Getting Started](https://tatm.readthedocs.io/en/latest/getting_started.html)
+   - [Getting Started](https://tatm.readthedocs.io/en/latest/text_dataset.html)
 
 - [Nightly Version Documentaiton](https://kempnerinstitute.github.io/tatm/)
    - [Getting Started](https://kempnerinstitute.github.io/tatm/getting_started.html)
+   - [Example Working with a Text Dataset](https://kempnerinstitute.github.io/tatm/text_dataset.html)
 
 ## Installation
 
