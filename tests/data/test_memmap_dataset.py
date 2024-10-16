@@ -43,6 +43,7 @@ def test_memmap_dataset(sample_dataset):
     assert len(dataset) == 100
     assert np.all(dataset[0]["token_ids"] == np.arange(100))
     assert np.all(dataset[20]["token_ids"] == np.arange(100) + 2000)
+    assert np.all(dataset[-1]["token_ids"] == np.arange(100) + 9900)
     assert isinstance(dataset[0]["token_ids"], np.ndarray)
     assert not isinstance(dataset[0]["token_ids"], np.memmap)
     assert isinstance(dataset[0]["document_ids"], np.ndarray)

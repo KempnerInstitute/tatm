@@ -215,6 +215,11 @@ class TatmMemmapDataset(TatmDataset):
 
     def __getitem__(self, idx: int):
         """Get the token at the given index."""
+        if idx < 0:
+            idx = len(self) + idx
+            if idx < 0:
+                raise IndexError("Index out of bounds.")
+
         for start, array in self.file_list:
             if idx < start + len(array):
                 # Linear search right now, can be optimized with binary search, but feels premature atm.
