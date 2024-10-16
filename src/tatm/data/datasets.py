@@ -10,7 +10,6 @@ from pathlib import Path
 from typing import Optional, Union
 
 import numpy as np
-import torch
 
 from tatm.data.metadata import TatmDataMetadata
 
@@ -128,13 +127,8 @@ class TokenMemMapArray:
 
 
 @dataclass
-class TatmMemmapDatasetItem:
-    """Class for representing a single item in the TatmMemmapDataset.
-    Includes __getitem__ method for dictlike access to the tokenized data."""
-
-    token_ids: np.ndarray
-    document_ids: Optional[np.ndarray] = None
-    document_mask: Optional[np.ndarray] = None
+class TatmDatasetItem:
+    """Base class for representing a single item in a TatmDataset."""
 
     def __getitem__(self, item):
         """Dict like access to attributes."""
@@ -142,6 +136,16 @@ class TatmMemmapDatasetItem:
             return getattr(self, item)
         except AttributeError:
             raise KeyError(f"{item} not found in dataset item.")
+
+
+@dataclass(kw_only=True)
+class TatmMemmapDatasetItem(TatmDatasetItem):
+    """Class for representing a single item in the TatmMemmapDataset.
+    Includes __getitem__ method for dictlike access to the tokenized data."""
+
+    token_ids: np.ndarray
+    document_ids: Optional[np.ndarray] = None
+    document_mask: Optional[np.ndarray] = None
 
 
 class TatmMemmapDataset(TatmDataset):
@@ -248,25 +252,6 @@ class TatmMemmapDataset(TatmDataset):
     def num_tokens(self):
         """Get the number of tokens in the dataset."""
         return sum([i.num_tokens for _, i in self.file_list])
-
-    @staticmethod
-    def torch_collate_fn(batch) -> dict[str, torch.Tensor]:
-        """Collate function for torch DataLoader. Assumes that all items in the batch are of the same type."""
-        out = {}
-        token_ids = torch.stack([torch.from_numpy(i.token_ids) for i in batch])
-        out["token_ids"] = token_ids
-        if batch[0].document_ids is not None:
-            document_ids = torch.stack(
-                [torch.from_numpy(i.document_ids) for i in batch]
-            )
-            out["document_ids"] = document_ids
-        if batch[0].document_mask is not None:
-            document_masks = torch.stack(
-                [torch.from_numpy(i.document_mask) for i in batch]
-            )
-            out["document_masks"] = document_masks
-
-        return out
 
 
 def _get_document_ids(tokens: np.ndarray, eos_token: int = 1) -> np.ndarray:

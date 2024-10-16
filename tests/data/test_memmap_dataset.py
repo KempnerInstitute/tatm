@@ -2,7 +2,7 @@ import numpy as np
 import pytest
 from torch.utils.data import DataLoader
 
-from tatm.data import TatmMemmapDataset, get_dataset
+from tatm.data import TatmMemmapDataset, get_dataset, torch_collate_fn
 from tatm.data.datasets import TokenMemMapArray
 from tatm.tokenizer.metadata import write_metadata
 
@@ -108,13 +108,13 @@ def test_dataloader_integration(sample_dataset):
         dataset,
         batch_size=10,
         num_workers=0,
-        collate_fn=TatmMemmapDataset.torch_collate_fn,
+        collate_fn=torch_collate_fn,
     )
 
     batch = next(iter(dl))
     assert batch["token_ids"].shape == (10, 100)
     assert batch["document_ids"].shape == (10, 100)
-    assert batch["document_masks"].shape == (10, 100, 100)
+    assert batch["document_mask"].shape == (10, 100, 100)
 
     dataset = TatmMemmapDataset(
         str(sample_dataset[0] / sample_dataset[1]), 100, "uint16", create_doc_ids=False
@@ -123,7 +123,7 @@ def test_dataloader_integration(sample_dataset):
         dataset,
         batch_size=10,
         num_workers=0,
-        collate_fn=TatmMemmapDataset.torch_collate_fn,
+        collate_fn=torch_collate_fn,
     )
     batch = next(iter(dl))
     assert "document_ids" not in batch
@@ -135,7 +135,7 @@ def test_dataloader_integration(sample_dataset):
         dataset,
         batch_size=10,
         num_workers=0,
-        collate_fn=TatmMemmapDataset.torch_collate_fn,
+        collate_fn=torch_collate_fn,
     )
     batch = next(iter(dl))
-    assert "document_masks" not in batch
+    assert "document_mask" not in batch
