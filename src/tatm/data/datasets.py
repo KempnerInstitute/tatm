@@ -7,7 +7,7 @@ from abc import ABC, abstractmethod
 from dataclasses import dataclass
 from glob import glob
 from pathlib import Path
-from typing import Union
+from typing import Optional, Union
 
 import numpy as np
 
@@ -97,30 +97,38 @@ class TokenMemMapArray:
         )
 
     def __len__(self):
-        """Get the number of tokens in the array."""
+        """Get the number of tokens or chunks in the array."""
         if self.chunked:
-            return self.num_tokens // self.context_length
+            chunks = self.num_tokens // self.context_length
+            if self.num_tokens % self.context_length != 0:
+                chunks += 1
+            return chunks
         else:
             return self.num_tokens
 
     def __getitem__(self, idx):
-        """Get the token at the given index."""
+        """
+        Get the token or chunk at the given index.
+
+        The last chunk will be right-padded if there are
+        not enough tokens left to fill it.
+        """
         if self.chunked:
-            return np.array(
-                self.array[idx * self.context_length : (idx + 1) * self.context_length]
+            chunk = self.array[
+                idx * self.context_length : (idx + 1) * self.context_length
+            ]
+            return np.pad(
+                chunk,
+                (0, (self.context_length - len(chunk)) % self.context_length),
+                "constant",
             )
         else:
             return self.array[idx : idx + self.context_length]
 
 
 @dataclass
-class TatmMemmapDatasetItem:
-    """Class for representing a single item in the TatmMemmapDataset.
-    Includes __getitem__ method for dictlike access to the tokenized data."""
-
-    token_ids: np.ndarray
-    document_ids: np.ndarray
-    document_mask: np.ndarray
+class TatmDatasetItem:
+    """Base class for representing a single item in a TatmDataset."""
 
     def __getitem__(self, item):
         """Dict like access to attributes."""
@@ -128,6 +136,16 @@ class TatmMemmapDatasetItem:
             return getattr(self, item)
         except AttributeError:
             raise KeyError(f"{item} not found in dataset item.")
+
+
+@dataclass(kw_only=True)
+class TatmMemmapDatasetItem(TatmDatasetItem):
+    """Class for representing a single item in the TatmMemmapDataset.
+    Includes __getitem__ method for dictlike access to the tokenized data."""
+
+    token_ids: np.ndarray
+    document_ids: Optional[np.ndarray] = None
+    document_mask: Optional[np.ndarray] = None
 
 
 class TatmMemmapDataset(TatmDataset):
@@ -142,6 +160,8 @@ class TatmMemmapDataset(TatmDataset):
         file_suffix: str = "bin",
         eos_token: int = 1,
         vocab_size: Union[int, None] = None,
+        create_doc_ids: bool = True,
+        create_doc_mask: bool = False,
     ):
         """Initialize the TatmTokenizedDataset.
 
@@ -160,6 +180,9 @@ class TatmMemmapDataset(TatmDataset):
             file_suffix: Suffix for the tokenized files.
             eos_token: The end of sequence token ID.
             vocab_size (optional): The vocabulary size of the tokenizer used to create the dataset.
+            create_doc_ids (optional): Whether or not to create document ids (IDs linking tokens to each local documents, based on the EOS token). Defaults to True.
+            create_doc_mask (optional): Whether or not to create a document mask (mask for attention based on document IDs). Defaults to False. Note that this incurs a memory overhead and significant
+                performance hit in the current implementation. Requires create_doc_ids to be True.
         """
         self.file_prefix = file_prefix
         self.file_suffix = file_suffix
@@ -168,6 +191,12 @@ class TatmMemmapDataset(TatmDataset):
         self.chunked = chunked
         self.eos_token = eos_token
         self.vocab_size = vocab_size
+        self.create_doc_ids = create_doc_ids
+        self.create_doc_mask = create_doc_mask
+        if self.create_doc_mask and not self.create_doc_ids:
+            raise ValueError(
+                "Document mask creation requires create_doc_ids to be True."
+            )
         self._construct_file_list()
 
     def _construct_file_list(self):
@@ -191,6 +220,11 @@ class TatmMemmapDataset(TatmDataset):
 
     def __getitem__(self, idx: int):
         """Get the token at the given index."""
+        if idx < 0:
+            idx = len(self) + idx
+            if idx < 0:
+                raise IndexError("Index out of bounds.")
+
         for start, array in self.file_list:
             if idx < start + len(array):
                 # Linear search right now, can be optimized with binary search, but feels premature atm.
@@ -199,12 +233,16 @@ class TatmMemmapDataset(TatmDataset):
 
     def _process_item(self, item):
         """Process the item. Construct item response."""
-        doc_ids = _get_document_ids(item, eos_token=self.eos_token)
+
         out = TatmMemmapDatasetItem(
             token_ids=item,
-            document_ids=doc_ids,
-            document_mask=_create_document_mask(doc_ids),
         )
+        if self.create_doc_ids:
+            doc_ids = _get_document_ids(item, eos_token=self.eos_token)
+            out.document_ids = doc_ids
+        if self.create_doc_mask:
+            doc_mask = _create_document_mask(doc_ids)
+            out.document_mask = doc_mask
         return out
 
     def num_files(self):
