@@ -84,6 +84,7 @@
 </li>
 <li class="toctree-l2"><a class="reference internal" href="#tatm.data.get_data"><code class="docutils literal notranslate"><span class="pre">get_data()</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="#tatm.data.get_dataset"><code class="docutils literal notranslate"><span class="pre">get_dataset()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#tatm.data.torch_collate_fn"><code class="docutils literal notranslate"><span class="pre">torch_collate_fn()</span></code></a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="config.html">Configuring <code class="docutils literal notranslate"><span class="pre">tatm</span></code></a></li>
@@ -368,6 +369,12 @@
 <dd class="field-odd"><p>TatmDataset</p>
 </dd>
 </dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="tatm.data.torch_collate_fn">
+<span class="sig-prename descclassname"><span class="pre">tatm.data.</span></span><span class="sig-name descname"><span class="pre">torch_collate_fn</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">batch</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">TatmDatasetItem</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Tensor</span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#tatm.data.torch_collate_fn" title="Link to this definition"></a></dt>
+<dd><p>Collate function for torch DataLoader. Assumes that all items in the batch are of the same type.</p>
 </dd></dl>
 
 </section>
