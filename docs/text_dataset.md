@@ -102,7 +102,7 @@ import numpy as np
 import torch
 from torch.utils.data import DataLoader
 
-from tatm.data import get_dataset
+from tatm.data import get_dataset, torch_collate_fn
 arxiv_dataset = get_dataset("./tokenized_redpj_arxiv", context_length=1024)
 len(arxiv_dataset) # number of examples in set
 # 35651584
@@ -117,15 +117,9 @@ arxiv_dataset[3]
 # TatmMemmapDatasetItem(
 #    token_ids=array([    7,    16,     8, ..., 14780,     8,  2537], dtype=uint16), 
 #    document_ids=array([0, 0, 0, ..., 1, 1, 1], dtype=uint16)
+# )
 
-def collate_fn(batch):
-    out = {
-        "token_ids": torch.tensor(np.array([item.token_ids for item in batch])),
-        "document_ids": torch.tensor(np.array([item.document_ids for item in batch]))
-    }
-    return out
-
-dataloader = DataLoader(arxiv_dataset, batch_size=4, collate_fn=collate_fn)
+dataloader = DataLoader(arxiv_dataset, batch_size=4, collate_fn=torch_collate_fn)
 print(next(iter(dataloader)))
 # {'token_ids': tensor([[    3,     2, 14309,  ...,  1644,  4179,    16],
 #         [ 3731,  3229,     2,  ...,    15,     2,     3],
@@ -147,3 +141,6 @@ Fields in the `TatmMemmapDatasetItem` object include:
 - `document_mask` (Optional): A boolean attention mask that can be used for causal data masking. This masks tokens that are not part of the same document as the current token, as well as tokens that should not be considered in a given token's attention calculation. Excluded by default for performance reasons.
 
 For more information on how to use the [`tatm.data.TatmMemmapDataset`](tatm.data.TatmMemmapDataset) class, see the [Data](tatm.data.TatmMemmapDataset) documentation.
+
+The provide [`torch_collate_fn`](tatm.data.torch_collate_fn) function is used to collate the data into a batch for training. The function will create stacked tensors or lists for the fields in
+the returned `TatmMemmapDatasetItem` object and return a dictionary with the same key names as the dataset item pointing to the stacked items.
