@@ -8,7 +8,7 @@ build:
     python:
       version: 3.10
   jobs:
-    pre-install:
+    pre_install:
       - python -m venv .venv
       - source .venv/bin/activate
       - pip install poetry
