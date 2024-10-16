@@ -4,7 +4,7 @@
 
 ## Documentation
 
-[![Documentation Status](https://readthedocs.org/projects/tatm/badge/?version=latest)](https://tatm.readthedocs.io/en/latest/?badge=latest)x
+[![Documentation Status](https://readthedocs.org/projects/tatm/badge/?version=latest)](https://tatm.readthedocs.io/en/latest/?badge=latest)
 
 - [Stable Version Documentation](https://tatm.readthedocs.io/en/latest/index.html)
    - [Getting Started](https://tatm.readthedocs.io/en/latest/getting_started.html)
