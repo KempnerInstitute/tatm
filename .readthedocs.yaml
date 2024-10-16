@@ -6,10 +6,17 @@ build:
   os: ubuntu-22.04
   tools:
     python: "3.10"
-  commands:
-    - python -m venv .venv
-    - chmod +x .venv/bin/activate
-    - source .venv/bin/activate
-    - pip install poetry
-    - poetry install --with docs
-    - make build-docs
+  jobs:
+    post_create_environment:
+      # Install poetry
+      # https://python-poetry.org/docs/#installing-manually
+      - pip install poetry
+    post_install:
+      # Install dependencies with 'docs' dependency group
+      # https://python-poetry.org/docs/managing-dependencies/#dependency-groups
+      # VIRTUAL_ENV needs to be set manually for now.
+      # See https://github.com/readthedocs/readthedocs.org/pull/11152/
+      - VIRTUAL_ENV=$READTHEDOCS_VIRTUALENV_PATH poetry install --with docs
+
+sphinx:
+  configuration: docs/conf.py
