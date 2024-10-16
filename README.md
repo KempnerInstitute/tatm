@@ -10,7 +10,7 @@
    - [Getting Started](https://tatm.readthedocs.io/en/latest/getting_started.html)
    - [Example Working with a Text Dataset](https://tatm.readthedocs.io/en/latest/text_dataset.html)
 
-- [Nightly Version Documentaiton](https://kempnerinstitute.github.io/tatm/)
+- [Nightly Version Documentation](https://kempnerinstitute.github.io/tatm/)
    - [Getting Started](https://kempnerinstitute.github.io/tatm/getting_started.html)
    - [Example Working with a Text Dataset](https://kempnerinstitute.github.io/tatm/text_dataset.html)
 
