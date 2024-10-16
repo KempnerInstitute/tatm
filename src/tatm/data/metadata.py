@@ -38,6 +38,17 @@ class DataContentType(str, Enum):
         return any(value == item.value for item in cls)
 
 
+class CorpusSeparationStrategy(str, Enum):
+    """Enum class for corpus separation strategy"""
+
+    DATA_DIRS = "data_dirs"
+    CONFIGS = "configs"
+
+    @classmethod
+    def has_value(cls, value):
+        return any(value == item.value for item in cls)
+
+
 @dataclasses.dataclass(kw_only=True)
 class TatmDataMetadata:
     """Generic Dataset Metadata Class holding information about a dataset.
@@ -56,11 +67,17 @@ class TatmDataMetadata:
     corpuses: List[str] = dataclasses.field(
         default_factory=list
     )  #: List of corpuses in the dataset.
+    corpus_separation_strategy: CorpusSeparationStrategy = None
+    corpus_data_dir_parent: str = None
     tokenized_info: TokenizedMetadataComponenet = None
 
     def __post_init__(self):
         self._validate()
         self.data_content = DataContentType(self.data_content)
+        if self.corpus_separation_strategy is not None:
+            self.corpus_separation_strategy = CorpusSeparationStrategy(
+                self.corpus_separation_strategy
+            )
 
         if isinstance(self.tokenized_info, dict):
             self.tokenized_info = TokenizedMetadataComponenet(**self.tokenized_info)
@@ -68,6 +85,11 @@ class TatmDataMetadata:
     def _validate(self):
         if not DataContentType.has_value(self.data_content):
             raise ValueError(f"Invalid data_content value: {self.data_content}")
+        if self.corpus_separation_strategy is not None:
+            if not CorpusSeparationStrategy.has_value(self.corpus_separation_strategy):
+                raise ValueError(
+                    f"Invalid corpus_separation_strategy value: {self.corpus_separation_strategy}"
+                )
 
     def as_json(self):
         """Return the metadata as a JSON string.
@@ -102,6 +124,8 @@ class TatmDataMetadata:
     def as_yaml(self):
         out = {k: v for k, v in dataclasses.asdict(self).items() if v is not None}
         out["data_content"] = self.data_content.value
+        if self.corpus_separation_strategy:
+            out["corpus_separation_strategy"] = self.corpus_separation_strategy.value
         return yaml.dump(out)
 
     def to_yaml(self, filename):
@@ -204,6 +228,28 @@ def create_metadata_interactive():
             break
         corpuses.append(corpus)
 
+    corpus_separation_strategy = None
+    if len(corpuses) > 1:
+        while True:
+            corpus_separation_strategy = input(
+                "Corpus separation strategy ([data_dirs], configs): "
+            )
+            print(f"corpus_separation_strategy: {corpus_separation_strategy}")
+            if not corpus_separation_strategy:
+
+                corpus_separation_strategy = "data_dirs"
+                break
+            if corpus_separation_strategy not in ["data_dirs", "configs"]:
+                print("Invalid input. Please enter 'data_dirs' or 'configs'.")
+                continue
+            break
+        if corpus_separation_strategy == "data_dirs":
+            corpus_data_dir_parent = input(
+                "Parent directory of corpus data directories: "
+            )
+            if not corpus_data_dir_parent:
+                corpus_data_dir_parent = None
+
     while True:
         tokenized = input("Is the dataset tokenized? (y/n) [n]:")
         if not tokenized:
@@ -226,6 +272,8 @@ def create_metadata_interactive():
         data_content=DataContentType(data_content),
         content_field=content_field,
         corpuses=corpuses,
+        corpus_separation_strategy=corpus_separation_strategy,
+        corpus_data_dir_parent=corpus_data_dir_parent,
         tokenized_info=tokenized_info,
     )
 
