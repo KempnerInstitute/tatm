@@ -37,6 +37,10 @@ jobs:
                     source .venv/bin/activate
                     which sphinx-build
                     make build-docs
+            - name: check links
+              run: |
+                    source .venv/bin/activate
+                    make check-doc-links
             - name: deploy docs
               if: github.ref == 'refs/heads/dev'
               uses: peaceiris/actions-gh-pages@v3

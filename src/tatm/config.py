@@ -44,7 +44,7 @@ class TatmConfig:
     )  #: Slurm specific configuration.
     environment: EnvironmentConfig = dataclasses.field(
         default_factory=lambda: EnvironmentConfig()
-    )
+    )  #: Environment configuration for compute jobs.
 
     def __post_init__(self):
         if not Backend.has_value(self.backend):
