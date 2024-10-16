@@ -8,7 +8,7 @@
 
 - [Stable Version Documentation](https://tatm.readthedocs.io/en/latest/index.html)
    - [Getting Started](https://tatm.readthedocs.io/en/latest/getting_started.html)
-   - [Getting Started](https://tatm.readthedocs.io/en/latest/text_dataset.html)
+   - [Example Working with a Text Dataset](https://tatm.readthedocs.io/en/latest/text_dataset.html)
 
 - [Nightly Version Documentaiton](https://kempnerinstitute.github.io/tatm/)
    - [Getting Started](https://kempnerinstitute.github.io/tatm/getting_started.html)
