@@ -127,13 +127,8 @@ class TokenMemMapArray:
 
 
 @dataclass
-class TatmMemmapDatasetItem:
-    """Class for representing a single item in the TatmMemmapDataset.
-    Includes __getitem__ method for dictlike access to the tokenized data."""
-
-    token_ids: np.ndarray
-    document_ids: Optional[np.ndarray] = None
-    document_mask: Optional[np.ndarray] = None
+class TatmDatasetItem:
+    """Base class for representing a single item in a TatmDataset."""
 
     def __getitem__(self, item):
         """Dict like access to attributes."""
@@ -141,6 +136,16 @@ class TatmMemmapDatasetItem:
             return getattr(self, item)
         except AttributeError:
             raise KeyError(f"{item} not found in dataset item.")
+
+
+@dataclass(kw_only=True)
+class TatmMemmapDatasetItem(TatmDatasetItem):
+    """Class for representing a single item in the TatmMemmapDataset.
+    Includes __getitem__ method for dictlike access to the tokenized data."""
+
+    token_ids: np.ndarray
+    document_ids: Optional[np.ndarray] = None
+    document_mask: Optional[np.ndarray] = None
 
 
 class TatmMemmapDataset(TatmDataset):
