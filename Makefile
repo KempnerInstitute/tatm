@@ -25,3 +25,6 @@ lint:
 
 build-docs:
 	cd docs && make html
+
+check-doc-links:
+	cd docs && make linkcheck

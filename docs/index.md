@@ -15,6 +15,7 @@ of new models, datasets, and training frameworks.
 :maxdepth: 2
 :caption: Contents:
 getting_started.md
+text_dataset.md
 cli.md
 data.md
 config.md
