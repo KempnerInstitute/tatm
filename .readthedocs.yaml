@@ -7,9 +7,7 @@ build:
   tools:
     python: "3.10"
   jobs:
-    pre_install:
-      - python -m venv .venv
-      - source .venv/bin/activate
+    post_install:
       - pip install poetry
       - poetry install --with docs
 
