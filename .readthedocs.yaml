@@ -10,5 +10,6 @@ build:
     - python -m venv .venv
     - chmod +x .venv/bin/activate
     - .venv/bin/activate
+    - pip install poetry
     - poetry install --with docs
     - make build-docs
