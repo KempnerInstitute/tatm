@@ -6,12 +6,8 @@ build:
   os: ubuntu-20.04
   tools:
     python: "3.10"
-  jobs:
-    post_install:
-      - pip install poetry
-      - poetry install --with docs
-
-        
-
-sphinx:
-  configuration: docs/conf.py
+  commands:
+    - python -m venv .venv
+    - bash source .venv/bin/activate
+    - poetry install --with docs
+    - make build-docs
