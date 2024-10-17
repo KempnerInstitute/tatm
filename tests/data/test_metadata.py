@@ -178,6 +178,8 @@ def test_interactive_creation(monkeypatch, tmp_path):
                 "corpus2",
                 "",
                 "",
+                "",
+                "",
             ]
         )
         monkeypatch.setattr("builtins.input", lambda _: next(responses))
@@ -194,6 +196,8 @@ def test_interactive_creation(monkeypatch, tmp_path):
         assert metadata.data_content == DataContentType.TEXT
         assert metadata.content_field == "text"
         assert metadata.corpuses == ["corpus1", "corpus2"]
+        assert metadata.corpus_separation_strategy == "data_dirs"
+        assert metadata.corpus_data_dir_parent is None
         assert metadata.tokenized_info is None
 
 
@@ -218,6 +222,8 @@ def test_tokenized_interactive_creation(monkeypatch, tmp_path):
                 "corpus1",
                 "corpus2",
                 "",
+                "",
+                "",
                 "y",
                 "test_tokenizer",
                 "tokenized",
@@ -239,6 +245,8 @@ def test_tokenized_interactive_creation(monkeypatch, tmp_path):
         assert metadata.data_content == DataContentType.TEXT
         assert metadata.content_field == "text"
         assert metadata.corpuses == ["corpus1", "corpus2"]
+        assert metadata.corpus_separation_strategy == "data_dirs"
+        assert metadata.corpus_data_dir_parent is None
         assert metadata.tokenized_info is not None
         assert metadata.tokenized_info.tokenizer == "test_tokenizer"
         assert metadata.tokenized_info.file_prefix == "tokenized"

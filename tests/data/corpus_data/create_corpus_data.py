@@ -13,6 +13,8 @@ def main():
         data_content="text",
         content_field="text",
         corpuses=["primary", "secondary"],
+        corpus_separation_strategy="configs",
+        corpus_data_dir_parent=None,
     )
     dataset_metadata.to_yaml("metadata.yaml")
 
