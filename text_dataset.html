@@ -19,7 +19,7 @@
     <script src="_static/js/theme.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="tatm CLI" href="cli.html" />
+    <link rel="next" title="Dataset Metadata" href="metadata.html" />
     <link rel="prev" title="Getting Started" href="getting_started.html" /> 
 </head>
 
@@ -56,6 +56,7 @@
 <li class="toctree-l2"><a class="reference internal" href="#loading-tokenized-data-with-tatm-for-use-with-pytorch">Loading Tokenized Data with <code class="docutils literal notranslate"><span class="pre">tatm</span></code> for use with PyTorch</a></li>
 </ul>
 </li>
+<li class="toctree-l1"><a class="reference internal" href="metadata.html">Dataset Metadata</a></li>
 <li class="toctree-l1"><a class="reference internal" href="cli.html"><code class="docutils literal notranslate"><span class="pre">tatm</span></code> CLI</a></li>
 <li class="toctree-l1"><a class="reference internal" href="data.html"><code class="docutils literal notranslate"><span class="pre">tatm</span></code> Data Module</a></li>
 <li class="toctree-l1"><a class="reference internal" href="config.html">Configuring <code class="docutils literal notranslate"><span class="pre">tatm</span></code></a></li>
@@ -101,7 +102,8 @@ raw data files, and the format of the data. The tool will then create a metadata
 and how it is stored on disk. The <code class="docutils literal notranslate"><span class="pre">tatm</span></code> library uses this metadata file to load and process the data.</p>
 <p><code class="docutils literal notranslate"><span class="pre">tatm</span></code> assumes that your data is stored in a format that the huggingface <code class="docutils literal notranslate"><span class="pre">datasets</span></code> library can load.
 If your data is not in a format supported by <code class="docutils literal notranslate"><span class="pre">datasets</span></code>, you should create a custom dataset script that can load your data.
-More details on how to structure data for use with <code class="docutils literal notranslate"><span class="pre">datasets</span></code> can be found <a class="reference external" href="https://huggingface.co/docs/datasets/en/loading">here</a>.</p>
+More details on how to structure data for use with <code class="docutils literal notranslate"><span class="pre">datasets</span></code> can be found <a class="reference external" href="https://huggingface.co/docs/datasets/en/loading">here</a>.
+More details on what information is stored in the metadata file can be found <a class="reference internal" href="metadata.html"><span class="std std-doc">here</span></a>.</p>
 </section>
 <section id="tokenizing-raw-text-data-with-tatm">
 <h2>Tokenizing Raw Text Data with <code class="docutils literal notranslate"><span class="pre">tatm</span></code><a class="headerlink" href="#tokenizing-raw-text-data-with-tatm" title="Link to this heading"></a></h2>
@@ -217,7 +219,7 @@ the returned <code class="docutils literal notranslate"><span class="pre">TatmMe
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
         <a href="getting_started.html" class="btn btn-neutral float-left" title="Getting Started" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
-        <a href="cli.html" class="btn btn-neutral float-right" title="tatm CLI" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="metadata.html" class="btn btn-neutral float-right" title="Dataset Metadata" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>

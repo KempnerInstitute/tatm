@@ -46,6 +46,7 @@
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="getting_started.html">Getting Started</a></li>
 <li class="toctree-l1"><a class="reference internal" href="text_dataset.html">Loading Text Data for LLM Training</a></li>
+<li class="toctree-l1"><a class="reference internal" href="metadata.html">Dataset Metadata</a></li>
 <li class="toctree-l1"><a class="reference internal" href="cli.html"><code class="docutils literal notranslate"><span class="pre">tatm</span></code> CLI</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#"><code class="docutils literal notranslate"><span class="pre">tatm</span></code> Data Module</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#tatm.data.TatmData"><code class="docutils literal notranslate"><span class="pre">TatmData</span></code></a><ul>
@@ -57,6 +58,8 @@
 <li class="toctree-l3"><a class="reference internal" href="#tatm.data.TatmDataMetadata.as_json"><code class="docutils literal notranslate"><span class="pre">TatmDataMetadata.as_json()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="#tatm.data.TatmDataMetadata.as_yaml"><code class="docutils literal notranslate"><span class="pre">TatmDataMetadata.as_yaml()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="#tatm.data.TatmDataMetadata.content_field"><code class="docutils literal notranslate"><span class="pre">TatmDataMetadata.content_field</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#tatm.data.TatmDataMetadata.corpus_data_dir_parent"><code class="docutils literal notranslate"><span class="pre">TatmDataMetadata.corpus_data_dir_parent</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#tatm.data.TatmDataMetadata.corpus_separation_strategy"><code class="docutils literal notranslate"><span class="pre">TatmDataMetadata.corpus_separation_strategy</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="#tatm.data.TatmDataMetadata.corpuses"><code class="docutils literal notranslate"><span class="pre">TatmDataMetadata.corpuses</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="#tatm.data.TatmDataMetadata.data_content"><code class="docutils literal notranslate"><span class="pre">TatmDataMetadata.data_content</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="#tatm.data.TatmDataMetadata.dataset_path"><code class="docutils literal notranslate"><span class="pre">TatmDataMetadata.dataset_path</span></code></a></li>
@@ -155,7 +158,7 @@
 
 <dl class="py class">
 <dt class="sig sig-object py" id="tatm.data.TatmDataMetadata">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">tatm.data.</span></span><span class="sig-name descname"><span class="pre">TatmDataMetadata</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name:</span> <span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dataset_path:</span> <span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">description:</span> <span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">date_downloaded:</span> <span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">download_source:</span> <span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">data_content:</span> <span class="pre">~tatm.data.metadata.DataContentType</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">content_field:</span> <span class="pre">str</span> <span class="pre">=</span> <span class="pre">'text'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">corpuses:</span> <span class="pre">~typing.List[str]</span> <span class="pre">=</span> <span class="pre">&lt;factory&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tokenized_info:</span> <span class="pre">~tatm.data.metadata.TokenizedMetadataComponenet</span> <span class="pre">|</span> <span class="pre">None</span> <span class="pre">=</span> <span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#tatm.data.TatmDataMetadata" title="Link to this definition"></a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">tatm.data.</span></span><span class="sig-name descname"><span class="pre">TatmDataMetadata</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name:</span> <span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dataset_path:</span> <span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">description:</span> <span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">date_downloaded:</span> <span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">download_source:</span> <span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">data_content:</span> <span class="pre">~tatm.data.metadata.DataContentType</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">content_field:</span> <span class="pre">str</span> <span class="pre">=</span> <span class="pre">'text'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">corpuses:</span> <span class="pre">~typing.List[str]</span> <span class="pre">=</span> <span class="pre">&lt;factory&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">corpus_separation_strategy:</span> <span class="pre">~tatm.data.metadata.CorpusSeparationStrategy</span> <span class="pre">|</span> <span class="pre">None</span> <span class="pre">=</span> <span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">corpus_data_dir_parent:</span> <span class="pre">str</span> <span class="pre">|</span> <span class="pre">None</span> <span class="pre">=</span> <span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tokenized_info:</span> <span class="pre">~tatm.data.metadata.TokenizedMetadataComponenet</span> <span class="pre">|</span> <span class="pre">None</span> <span class="pre">=</span> <span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#tatm.data.TatmDataMetadata" title="Link to this definition"></a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <p>Generic Dataset Metadata Class holding information about a dataset.</p>
 <dl class="field-list simple">
@@ -186,6 +189,18 @@
 <dt class="sig sig-object py" id="tatm.data.TatmDataMetadata.content_field">
 <span class="sig-name descname"><span class="pre">content_field</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'text'</span></em><a class="headerlink" href="#tatm.data.TatmDataMetadata.content_field" title="Link to this definition"></a></dt>
 <dd><p>Field in the dataset that contains the content.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="tatm.data.TatmDataMetadata.corpus_data_dir_parent">
+<span class="sig-name descname"><span class="pre">corpus_data_dir_parent</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#tatm.data.TatmDataMetadata.corpus_data_dir_parent" title="Link to this definition"></a></dt>
+<dd><p>Parent directory of corpus data directories, to be used with corpus_separation_strategy=’data_dirs’. If None, the corpus name is assumed to map to a directory in the top level of the dataset path.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="tatm.data.TatmDataMetadata.corpus_separation_strategy">
+<span class="sig-name descname"><span class="pre">corpus_separation_strategy</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">CorpusSeparationStrategy</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#tatm.data.TatmDataMetadata.corpus_separation_strategy" title="Link to this definition"></a></dt>
+<dd><p>Strategy for separating corpuses in the dataset (data_dirs or configs). data_dirs maps to using the data_dir parameter in the datasets.load_dataset function, and configs maps to using the name parameter.</p>
 </dd></dl>
 
 <dl class="py attribute">
@@ -272,7 +287,8 @@
 <dl class="py attribute">
 <dt class="sig sig-object py" id="tatm.data.TatmDataMetadata.tokenized_info">
 <span class="sig-name descname"><span class="pre">tokenized_info</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">TokenizedMetadataComponenet</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#tatm.data.TatmDataMetadata.tokenized_info" title="Link to this definition"></a></dt>
-<dd></dd></dl>
+<dd><p>Metadata for tokenized data.</p>
+</dd></dl>
 
 </dd></dl>
 

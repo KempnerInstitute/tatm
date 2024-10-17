@@ -1,0 +1,185 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="./">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Dataset Metadata &mdash; tatm  documentation</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=e59714d7" />
+
+  
+      <script src="_static/jquery.js?v=5d32c60e"></script>
+      <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="_static/documentation_options.js?v=5929fcd5"></script>
+      <script src="_static/doctools.js?v=9a2dae69"></script>
+      <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="tatm CLI" href="cli.html" />
+    <link rel="prev" title="Loading Text Data for LLM Training" href="text_dataset.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="index.html" class="icon icon-home">
+            tatm
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="getting_started.html">Getting Started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="text_dataset.html">Loading Text Data for LLM Training</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Dataset Metadata</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#metadata-fields">Metadata Fields</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#creating-a-metadata-file">Creating a Metadata File</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#using-the-cli">Using the CLI</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#using-the-python-api">Using the Python API</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="cli.html"><code class="docutils literal notranslate"><span class="pre">tatm</span></code> CLI</a></li>
+<li class="toctree-l1"><a class="reference internal" href="data.html"><code class="docutils literal notranslate"><span class="pre">tatm</span></code> Data Module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="config.html">Configuring <code class="docutils literal notranslate"><span class="pre">tatm</span></code></a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">tatm</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Dataset Metadata</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/metadata.md.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="dataset-metadata">
+<h1>Dataset Metadata<a class="headerlink" href="#dataset-metadata" title="Link to this heading"></a></h1>
+<p><code class="docutils literal notranslate"><span class="pre">tatm</span></code> uses metadata files on disk to determine how to load and process data. The metadata file is a JSON file or YAML file that contains information about the dataset, such as the location of the data files, the format of the data, and any other relevant information. These will typically need to be created by administrators or data curators to enable a dataset for use with the library
+and allow for users to easily load and process diverse data with a unified API.</p>
+<section id="metadata-fields">
+<h2>Metadata Fields<a class="headerlink" href="#metadata-fields" title="Link to this heading"></a></h2>
+<p>The metadata file contains the following fields:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">name</span></code>: The name of the dataset. This field is not currently used by the library, but it can be used to provide a human-readable name for the dataset.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">dataset_path</span></code>: The path to the raw data files for the dataset. Passed to the <code class="docutils literal notranslate"><span class="pre">datasets</span></code> library to load the data.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">description</span></code>: A description of the dataset.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">date_downloaded</span></code>: The date the dataset was downloaded.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">download_source</span></code>: The source from which the dataset was downloaded.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">data_content</span></code>: The type of data in the dataset. This field is used to determine how to process the data. Currently only text data is supported.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">content_field</span></code>: The field that contains the primary data in the dataset. This field is used to determine how to process the data. Assumes that the raw data is
+stored in a dictionary-like object.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">corpuses</span></code>: A list of corpus names. This field is used to group the data into different corpora. This field is for documentation purposes only and no validation is done at run time
+when loading the data.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">corpus_separation_strategy</span></code>: How the data is separated into corpora. Currently supports <code class="docutils literal notranslate"><span class="pre">data_dirs</span></code> and <code class="docutils literal notranslate"><span class="pre">configs</span></code>. <code class="docutils literal notranslate"><span class="pre">data_dirs</span></code> leads to <code class="docutils literal notranslate"><span class="pre">tatm</span></code> using the <code class="docutils literal notranslate"><span class="pre">data_dir</span></code> field in <code class="docutils literal notranslate"><span class="pre">datasets.load_dataset</span></code> to load the data. <code class="docutils literal notranslate"><span class="pre">configs</span></code> leads to <code class="docutils literal notranslate"><span class="pre">tatm</span></code> using the <code class="docutils literal notranslate"><span class="pre">config_name</span></code> field in <code class="docutils literal notranslate"><span class="pre">datasets.load_dataset</span></code> to load the data. Defaults to <code class="docutils literal notranslate"><span class="pre">configs</span></code> when not set.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">corpus_data_dir_parent</span></code>: The parent directory of the data directories for each corpus. This field is used when the <code class="docutils literal notranslate"><span class="pre">corpus_separation_strategy</span></code> is set to <code class="docutils literal notranslate"><span class="pre">data_dirs</span></code>. This field is prepended to the corpus name to create the full path to the subdirectory for the corpus. Defaults to <code class="docutils literal notranslate"><span class="pre">None</span></code> (aka the top level of the dataset directory) when not set.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">tokenized_info</span></code>: A sub object defining metadata about tokenized data. This field is used to indicate that a dataset is pretokenized and to provide information about the tokenizer used to tokenize the data. This field is used to determine how to load the data and what tokenizer to use when loading the data. This field is optional and only used when the data is tokenized.</p>
+<ul>
+<li><p><code class="docutils literal notranslate"><span class="pre">tokenizer</span></code>: The name of the tokenizer used to tokenize the data. This field is used to determine which tokenizer to use when loading the data. This field is required when the <code class="docutils literal notranslate"><span class="pre">tokenized_info</span></code> field is present. Maps typically to a huggingface tokenizer name.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">file_prefix</span></code>: The prefix of the tokenized data files. This field is used to determine the file names of the tokenized data files. This field is required when the <code class="docutils literal notranslate"><span class="pre">tokenized_info</span></code> field is present.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">dtype</span></code>: The data type of the tokenized data. This field is used to determine the data type of the tokenized data when loading the data. This field is optional and defaults to <code class="docutils literal notranslate"><span class="pre">np.uint16</span></code>.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">vocab_size</span></code>: The size of the vocabulary used by the tokenizer. This field is used to determine the size of the vocabulary when loading the data. This field is optional and defaults to <code class="docutils literal notranslate"><span class="pre">None</span></code>.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">tatm_version</span></code>: The version of the <code class="docutils literal notranslate"><span class="pre">tatm</span></code> library used to tokenize the data. Provided for reproducibility purposes. This field is optional and defaults to <code class="docutils literal notranslate"><span class="pre">None</span></code>.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">tokenizers_version</span></code>: The version of the <code class="docutils literal notranslate"><span class="pre">tokenizers</span></code> library used to tokenize the data. Provided for reproducibility purposes. This field is optional and defaults to <code class="docutils literal notranslate"><span class="pre">None</span></code>.</p></li>
+</ul>
+</li>
+</ul>
+</section>
+<section id="creating-a-metadata-file">
+<h2>Creating a Metadata File<a class="headerlink" href="#creating-a-metadata-file" title="Link to this heading"></a></h2>
+<section id="using-the-cli">
+<h3>Using the CLI<a class="headerlink" href="#using-the-cli" title="Link to this heading"></a></h3>
+<p>The <code class="docutils literal notranslate"><span class="pre">tatm</span></code> library provides an interactive CLI tool that can help you create a metadata file. To use this tool, run the following command from the directory where your data is stored:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>tatm<span class="w"> </span>data<span class="w"> </span>create-metadata
+</pre></div>
+</div>
+<p>The CLI tool will prompt you for information about your data, such as the name of the dataset, the path to the raw data files, and the format of the data. The tool will then create a metadata file that describes the data and how it is stored on disk. The <code class="docutils literal notranslate"><span class="pre">tatm</span></code> library uses this metadata file to load and process the data.</p>
+</section>
+<section id="using-the-python-api">
+<h3>Using the Python API<a class="headerlink" href="#using-the-python-api" title="Link to this heading"></a></h3>
+<p>The <code class="docutils literal notranslate"><span class="pre">tatm</span></code> library also provides a Python API for creating metadata files. You can use the <code class="docutils literal notranslate"><span class="pre">tatm.data.TatmDataMetadata</span></code> class to create a metadata file programmatically. Here is an example of how to create a metadata file for a text dataset using the Python API:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">tatm.data</span> <span class="kn">import</span> <span class="n">TatmDataMetadata</span>
+
+<span class="n">metadata</span> <span class="o">=</span> <span class="n">TatmDataMetadata</span><span class="p">(</span>
+        <span class="n">name</span><span class="o">=</span><span class="s2">&quot;Example Dataset&quot;</span><span class="p">,</span> <span class="c1"># Name of the dataset, not currently used by the library</span>
+        <span class="n">dataset_path</span><span class="o">=</span><span class="s2">&quot;&lt;ABSOLUTE PATH TO DATA&gt;&quot;</span><span class="p">,</span>
+        <span class="n">description</span><span class="o">=</span><span class="s2">&quot;An example text dataset&quot;</span><span class="p">,</span>
+        <span class="n">date_downloaded</span><span class="o">=</span><span class="s2">&quot;2021-01-01&quot;</span><span class="p">,</span>
+        <span class="n">download_source</span><span class="o">=</span><span class="s2">&quot;http://example.com&quot;</span><span class="p">,</span>
+        <span class="n">data_content</span><span class="o">=</span><span class="s2">&quot;text&quot;</span><span class="p">,</span> <span class="c1"># Type of data in the dataset</span>
+        <span class="n">content_field</span><span class="o">=</span><span class="s2">&quot;text&quot;</span><span class="p">,</span> <span class="c1"># Assuming that the data presents dictionary-like objects, the field that contains the primary data</span>
+        <span class="n">corpuses</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;example_corpus&quot;</span><span class="p">,</span> <span class="s2">&quot;example_corpus_2&quot;</span><span class="p">],</span> <span class="c1"># List of corpus names. Sub corpora within the dataset, list here is for documentation purposes</span>
+        <span class="n">corpus_separation_strategy</span><span class="o">=</span><span class="s2">&quot;data_dirs&quot;</span><span class="p">,</span> <span class="c1"># How the data is separated into corpora, currently supports &quot;data_dirs&quot; and &quot;configs&quot;</span>
+        <span class="n">corpus_data_dir_parent</span><span class="o">=</span><span class="s2">&quot;data&quot;</span><span class="p">,</span> <span class="c1"># Parent directory of the data directories for each corpus. In this example the </span>
+                                       <span class="c1"># &quot;example_corpus&quot; data is stored in &quot;data/example_corpus&quot; within the dataset directory</span>
+    <span class="p">)</span>
+<span class="n">metadata</span><span class="o">.</span><span class="n">to_yaml</span><span class="p">(</span><span class="s2">&quot;metadata.yaml&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="text_dataset.html" class="btn btn-neutral float-left" title="Loading Text Data for LLM Training" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="cli.html" class="btn btn-neutral float-right" title="tatm CLI" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2024, Kempner Institute at Harvard University.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
