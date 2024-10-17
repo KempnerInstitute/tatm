@@ -18,8 +18,7 @@
 
 ### Requirements
 
-- Python 3.10 is the minimum supported version. This is in order to match the standard version of python available on the 
-   Cannon cluster.
+- Python 3.10 is the minimum supported version. 
 
 - `tatm` depends on pytorch, which depends on CUDA. It is recommended to pre-install both pytorch and CUDA prior to installing `tatm`. Instructions for installing pytorch can be found [here](https://pytorch.org/get-started/locally/).
 
