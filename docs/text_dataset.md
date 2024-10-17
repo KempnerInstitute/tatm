@@ -19,6 +19,7 @@ and how it is stored on disk. The `tatm` library uses this metadata file to load
 `tatm` assumes that your data is stored in a format that the huggingface `datasets` library can load. 
 If your data is not in a format supported by `datasets`, you should create a custom dataset script that can load your data. 
 More details on how to structure data for use with `datasets` can be found [here](https://huggingface.co/docs/datasets/en/loading).
+More details on what information is stored in the metadata file can be found [here](metadata.md).
 
 ## Tokenizing Raw Text Data with `tatm`
 
