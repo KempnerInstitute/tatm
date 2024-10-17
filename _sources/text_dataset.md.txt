@@ -142,5 +142,5 @@ Fields in the `TatmMemmapDatasetItem` object include:
 
 For more information on how to use the [`tatm.data.TatmMemmapDataset`](tatm.data.TatmMemmapDataset) class, see the [Data](tatm.data.TatmMemmapDataset) documentation.
 
-The provide [`torch_collate_fn`](tatm.data.torch_collate_fn) function is used to collate the data into a batch for training. The function will create stacked tensors or lists for the fields in
+The provided [`torch_collate_fn`](tatm.data.torch_collate_fn) function is used to collate the data into a batch for training. The function will create stacked tensors or lists for the fields in
 the returned `TatmMemmapDatasetItem` object and return a dictionary with the same key names as the dataset item pointing to the stacked items.

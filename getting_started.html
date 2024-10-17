@@ -54,6 +54,7 @@
 </li>
 </ul>
 </li>
+<li class="toctree-l2"><a class="reference internal" href="#loading-tokenized-data-with-tatm-for-use-with-pytorch">Loading Tokenized Data with <code class="docutils literal notranslate"><span class="pre">tatm</span></code> for use with PyTorch</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="text_dataset.html">Loading Text Data for LLM Training</a></li>
@@ -117,6 +118,43 @@ Cannon cluster.</p></li>
 <p>The package is not yet available on PyPI. Stay tuned for updates!</p>
 </section>
 </section>
+</section>
+<section id="loading-tokenized-data-with-tatm-for-use-with-pytorch">
+<h2>Loading Tokenized Data with <code class="docutils literal notranslate"><span class="pre">tatm</span></code> for use with PyTorch<a class="headerlink" href="#loading-tokenized-data-with-tatm-for-use-with-pytorch" title="Link to this heading"></a></h2>
+<p>In the example code below, we show how to create a PyTorch dataloader with a tokenized dataset for use with a model.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">torch</span>
+<span class="kn">from</span> <span class="nn">torch.utils.data</span> <span class="kn">import</span> <span class="n">DataLoader</span>
+
+<span class="kn">from</span> <span class="nn">tatm.data</span> <span class="kn">import</span> <span class="n">get_dataset</span><span class="p">,</span> <span class="n">torch_collate_fn</span>
+<span class="n">tatm_dataset</span> <span class="o">=</span> <span class="n">get_dataset</span><span class="p">(</span><span class="s2">&quot;&lt;PATH TO TATM TOKENIZED DATA&gt;&quot;</span><span class="p">,</span> <span class="n">context_length</span><span class="o">=</span><span class="mi">1024</span><span class="p">)</span>
+<span class="nb">len</span><span class="p">(</span><span class="n">tatm_dataset</span><span class="p">)</span> <span class="c1"># number of examples in set</span>
+<span class="c1"># 35651584</span>
+<span class="n">tatm_dataset</span><span class="o">.</span><span class="n">num_tokens</span><span class="p">()</span>
+<span class="c1"># 36507222016</span>
+<span class="n">tatm_dataset</span><span class="o">.</span><span class="n">num_files</span><span class="p">()</span>
+<span class="c1"># 34</span>
+<span class="n">tatm_dataset</span><span class="o">.</span><span class="n">vocab_size</span>
+<span class="c1"># 32100</span>
+<span class="n">tatm_dataset</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span>
+<span class="c1"># Note that the output will vary depending on the dataset and the tokenization process as the order documents are tokenized may vary.</span>
+<span class="c1"># TatmMemmapDatasetItem(</span>
+<span class="c1">#    token_ids=array([    7,    16,     8, ..., 14780,     8,  2537], dtype=uint16), </span>
+<span class="c1">#    document_ids=array([0, 0, 0, ..., 1, 1, 1], dtype=uint16)</span>
+<span class="c1"># )</span>
+
+<span class="n">dataloader</span> <span class="o">=</span> <span class="n">DataLoader</span><span class="p">(</span><span class="n">tatm_dataset</span><span class="p">,</span> <span class="n">batch_size</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span> <span class="n">collate_fn</span><span class="o">=</span><span class="n">torch_collate_fn</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="nb">next</span><span class="p">(</span><span class="nb">iter</span><span class="p">(</span><span class="n">dataloader</span><span class="p">)))</span>
+<span class="c1"># {&#39;token_ids&#39;: tensor([[    3,     2, 14309,  ...,  1644,  4179,    16],</span>
+<span class="c1">#         [ 3731,  3229,     2,  ...,    15,     2,     3],</span>
+<span class="c1">#         [    2, 14309,     2,  ...,   356,     5, 22218],</span>
+<span class="c1">#         [    7,    16,     8,  ..., 14780,     8,  2537]], dtype=torch.uint16), </span>
+<span class="c1">#    &#39;document_ids&#39;: tensor([[0, 0, 0,  ..., 0, 0, 0],</span>
+<span class="c1">#         [0, 0, 0,  ..., 0, 0, 0],</span>
+<span class="c1">#         [0, 0, 0,  ..., 0, 0, 0],</span>
+<span class="c1">#         [0, 0, 0,  ..., 1, 1, 1]], dtype=torch.uint16)}</span>
+</pre></div>
+</div>
 </section>
 </section>
 
