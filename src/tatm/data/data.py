@@ -80,12 +80,29 @@ class TatmTextData(TatmData):
         Args:
             corpus: Corpus to load. Defaults to None.
         """
-        self.dataset = datasets.load_dataset(
-            self.metadata.dataset_path,
-            name=corpus,
-            streaming=True,
-            trust_remote_code=True,
-        )[split]
+        if (
+            self.metadata.corpus_separation_strategy == "configs"
+            or self.metadata.corpus_separation_strategy is None  # noqa: W503
+        ):
+            self.dataset = datasets.load_dataset(
+                self.metadata.dataset_path,
+                name=corpus,
+                streaming=True,
+                trust_remote_code=True,
+            )[split]
+        elif self.metadata.corpus_separation_strategy == "data_dirs":
+            if self.metadata.corpus_data_dir_parent is not None:
+                corpus_path = (
+                    pathlib.Path(self.metadata.corpus_data_dir_parent) / corpus
+                )
+            else:
+                corpus_path = corpus
+            self.dataset = datasets.load_dataset(
+                self.metadata.dataset_path,
+                data_dir=corpus_path,
+                streaming=True,
+                trust_remote_code=True,
+            )[split]
 
     def __iter__(self):
         """Iterate over the dataset."""

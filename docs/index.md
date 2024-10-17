@@ -16,6 +16,7 @@ of new models, datasets, and training frameworks.
 :caption: Contents:
 getting_started.md
 text_dataset.md
+metadata.md
 cli.md
 data.md
 config.md

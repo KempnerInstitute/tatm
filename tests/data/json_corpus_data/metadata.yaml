@@ -1,0 +1,11 @@
+content_field: text
+corpus_separation_strategy: data_dirs
+corpuses:
+- primary
+- secondary
+data_content: text
+dataset_path: tests/data/json_corpus_data
+date_downloaded: '2021-01-01'
+description: A test dataset with primary and secondary corpuses.
+download_source: http://example.com
+name: json_corpus_data

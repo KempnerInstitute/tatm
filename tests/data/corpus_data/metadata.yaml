@@ -1,4 +1,5 @@
 content_field: text
+corpus_separation_strategy: configs
 corpuses:
 - primary
 - secondary
