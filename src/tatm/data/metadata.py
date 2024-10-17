@@ -41,8 +41,8 @@ class DataContentType(str, Enum):
 class CorpusSeparationStrategy(str, Enum):
     """Enum class for corpus separation strategy"""
 
-    DATA_DIRS = "data_dirs"
-    CONFIGS = "configs"
+    DATA_DIRS = "data_dirs"  #: Corpus data is separated into directories. Maps to using the data_dir parameter in the datasets.load_dataset function.
+    CONFIGS = "configs"  #: Corpus data is separated into config files. Maps to using the name parameter in the datasets.load_dataset function.
 
     @classmethod
     def has_value(cls, value):
@@ -69,8 +69,8 @@ class TatmDataMetadata:
     )  #: List of corpuses in the dataset.
 
     # fmt: off
-    corpus_separation_strategy: CorpusSeparationStrategy = None  #: Strategy for separating corpuses in the dataset (data_dirs or configs).
-    corpus_data_dir_parent: str = None  #: Parent directory of corpus data directories, to be used with corpus_separation_strategy='data_dirs'.
+    corpus_separation_strategy: CorpusSeparationStrategy = None  #: Strategy for separating corpuses in the dataset (data_dirs or configs). data_dirs maps to using the data_dir parameter in the datasets.load_dataset function, and configs maps to using the name parameter.
+    corpus_data_dir_parent: str = None  #: Parent directory of corpus data directories, to be used with corpus_separation_strategy='data_dirs'. If None, the corpus name is assumed to map to a directory in the top level of the dataset path.
     # fmt: on
 
     tokenized_info: TokenizedMetadataComponenet = None  #: Metadata for tokenized data.
