@@ -126,5 +126,6 @@ Options:
   --output-dir PATH   Output directory for tokenized data
   -v, --verbose       Enable verbose logging
   --file-prefix TEXT  Prefix for tokenized files
+  --token-dtype TEXT     Numpy data type for tokenized files
   --help              Show this message and exit.
 ```
