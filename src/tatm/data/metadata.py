@@ -34,10 +34,6 @@ class DataContentType(TatmOptionEnum):
     VIDEO = "video"
     OTHER = "other"
 
-    @classmethod
-    def has_value(cls, value):
-        return any(value == item.value for item in cls)
-
 
 class CorpusSeparationStrategy(TatmOptionEnum):
     """Enum class for corpus separation strategy"""
@@ -45,9 +41,6 @@ class CorpusSeparationStrategy(TatmOptionEnum):
     DATA_DIRS = "data_dirs"  #: Corpus data is separated into directories. Maps to using the data_dir parameter in the datasets.load_dataset function.
     CONFIGS = "configs"  #: Corpus data is separated into config files. Maps to using the name parameter in the datasets.load_dataset function.
 
-    @classmethod
-    def has_value(cls, value):
-        return any(value == item.value for item in cls)
 
 
 @dataclasses.dataclass(kw_only=True)
