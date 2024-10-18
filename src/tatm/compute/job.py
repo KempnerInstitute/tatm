@@ -1,15 +1,12 @@
 from dataclasses import dataclass
-from enum import Enum
+
+from tatm.utils import TatmOptionEnum
 
 
-class Backend(str, Enum):
+class Backend(TatmOptionEnum):
     """Enum class representing the available compute backends for running a command."""
 
     slurm = "slurm"
-
-    @classmethod
-    def has_value(cls, value):
-        return any(value == item.value for item in cls)
 
 
 @dataclass(kw_only=True)

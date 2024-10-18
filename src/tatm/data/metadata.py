@@ -3,10 +3,11 @@ import datetime
 import json
 import os
 import pathlib
-from enum import Enum
 from typing import List, Union
 
 import yaml
+
+from tatm.utils import TatmOptionEnum
 
 
 @dataclasses.dataclass(kw_only=True)
@@ -24,7 +25,7 @@ class TokenizedMetadataComponenet:
     )
 
 
-class DataContentType(str, Enum):
+class DataContentType(TatmOptionEnum):
     """Enum class for dataset content"""
 
     TEXT = "text"
@@ -33,20 +34,12 @@ class DataContentType(str, Enum):
     VIDEO = "video"
     OTHER = "other"
 
-    @classmethod
-    def has_value(cls, value):
-        return any(value == item.value for item in cls)
 
-
-class CorpusSeparationStrategy(str, Enum):
+class CorpusSeparationStrategy(TatmOptionEnum):
     """Enum class for corpus separation strategy"""
 
     DATA_DIRS = "data_dirs"  #: Corpus data is separated into directories. Maps to using the data_dir parameter in the datasets.load_dataset function.
     CONFIGS = "configs"  #: Corpus data is separated into config files. Maps to using the name parameter in the datasets.load_dataset function.
-
-    @classmethod
-    def has_value(cls, value):
-        return any(value == item.value for item in cls)
 
 
 @dataclasses.dataclass(kw_only=True)
