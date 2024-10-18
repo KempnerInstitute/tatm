@@ -1,4 +1,4 @@
-# Configuring `tatm`
+# `tatm.config` Config API Reference
 
 ```{eval-rst}
 .. automodule:: tatm.config
