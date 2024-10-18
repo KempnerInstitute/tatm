@@ -1,4 +1,4 @@
-# `tatm` CLI
+# `tatm` CLI Reference
 
 The `tatm` library includes a command-line interface (CLI) that provides a set of tools for interacting with the library. The CLI is designed to be
 easy to use and to provide a consistent interface for common tasks. The CLI is built using the `click` library, which provides a simple and

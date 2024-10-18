@@ -42,9 +42,12 @@
   </form>
 </div>
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
-              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
-<ul class="current">
+              <p class="caption" role="heading"><span class="caption-text">Introduction:</span></p>
+<ul>
 <li class="toctree-l1"><a class="reference internal" href="getting_started.html">Getting Started</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Examples:</span></p>
+<ul class="current">
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Loading Text Data for LLM Training</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#preparing-raw-data-for-use-with-tatm">Preparing Raw Data for use with <code class="docutils literal notranslate"><span class="pre">tatm</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="#tokenizing-raw-text-data-with-tatm">Tokenizing Raw Text Data with <code class="docutils literal notranslate"><span class="pre">tatm</span></code></a><ul>
@@ -57,9 +60,13 @@
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="metadata.html">Dataset Metadata</a></li>
-<li class="toctree-l1"><a class="reference internal" href="cli.html"><code class="docutils literal notranslate"><span class="pre">tatm</span></code> CLI</a></li>
-<li class="toctree-l1"><a class="reference internal" href="data.html"><code class="docutils literal notranslate"><span class="pre">tatm</span></code> Data Module</a></li>
-<li class="toctree-l1"><a class="reference internal" href="config.html">Configuring <code class="docutils literal notranslate"><span class="pre">tatm</span></code></a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">API Reference:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="cli.html"><code class="docutils literal notranslate"><span class="pre">tatm</span></code> CLI Reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="data_api.html"><code class="docutils literal notranslate"><span class="pre">tatm.data</span></code> Data Module API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="config_api.html"><code class="docutils literal notranslate"><span class="pre">tatm.config</span></code> Config API Reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tokenizer_api.html"><code class="docutils literal notranslate"><span class="pre">tatm.tokenizer</span></code> Tokenizer API Reference</a></li>
 </ul>
 
         </div>
@@ -127,7 +134,7 @@ interfacing with SLURM to submit tokenization jobs to a cluster with the proper 
 <span class="w">    </span><span class="nt">account</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">example</span><span class="w"> </span><span class="c1"># SLURM account to use for the job</span>
 </pre></div>
 </div>
-<p>For full details on how to configure <code class="docutils literal notranslate"><span class="pre">tatm</span></code>, see the <a class="reference internal" href="config.html"><span class="std std-doc">Configuring <code class="docutils literal notranslate"><span class="pre">tatm</span></code></span></a> documentation.</p>
+<p>For full details on how to configure <code class="docutils literal notranslate"><span class="pre">tatm</span></code>, see the <a class="reference internal" href="#config.md"><span class="xref myst">Configuring <code class="docutils literal notranslate"><span class="pre">tatm</span></code></span></a> documentation.</p>
 </section>
 <section id="running-the-tokenization-process">
 <h3>Running the tokenization process<a class="headerlink" href="#running-the-tokenization-process" title="Link to this heading"></a></h3>
@@ -164,7 +171,7 @@ tokenized versions are available for a given dataset. For now, for specific data
 <h2>Loading Tokenized Data with <code class="docutils literal notranslate"><span class="pre">tatm</span></code> for use with PyTorch<a class="headerlink" href="#loading-tokenized-data-with-tatm-for-use-with-pytorch" title="Link to this heading"></a></h2>
 <p>Once you have tokenized your data, you can load it into a PyTorch dataset using the <code class="docutils literal notranslate"><span class="pre">tatm</span></code> library. The <code class="docutils literal notranslate"><span class="pre">tatm</span></code> library
 provides a PyTorch compatible dataset class that can be used to load tokenized data into a PyTorch model for training
-(<a class="reference internal" href="data.html#tatm.data.TatmMemmapDataset" title="tatm.data.TatmMemmapDataset"><span class="xref myst py py-class"><code class="docutils literal notranslate"><span class="pre">tatm.data.TatmMemmapDataset</span></code></span></a>). You can then load the dataset into a PyTorch <code class="docutils literal notranslate"><span class="pre">DataLoader</span></code> and use it to train your
+(<a class="reference internal" href="data_api.html#tatm.data.TatmMemmapDataset" title="tatm.data.TatmMemmapDataset"><span class="xref myst py py-class"><code class="docutils literal notranslate"><span class="pre">tatm.data.TatmMemmapDataset</span></code></span></a>). You can then load the dataset into a PyTorch <code class="docutils literal notranslate"><span class="pre">DataLoader</span></code> and use it to train your
 model. The <code class="docutils literal notranslate"><span class="pre">TatmMemmapDataset</span></code> implements the appropriate <code class="docutils literal notranslate"><span class="pre">__getitem__</span></code> and <code class="docutils literal notranslate"><span class="pre">__len__</span></code> methods to be compatible with PyTorch’s
 <code class="docutils literal notranslate"><span class="pre">Dataset</span></code> API and supports integration with the Pytorch DistrubutedSampler for distributed training.</p>
 <p>In the example code below, we show how to create a PyTorch dataloader with a tokenized dataset for use with a model.</p>
@@ -208,8 +215,8 @@ model. The <code class="docutils literal notranslate"><span class="pre">TatmMemm
 <li><p><code class="docutils literal notranslate"><span class="pre">document_ids</span></code> (Optional): The document ids for each token. We use example packing to ease the processing of the data in the LLM. To support document masking, we include the document ids for each token in the dataset. Included by default to support document masking.</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">document_mask</span></code> (Optional): A boolean attention mask that can be used for causal data masking. This masks tokens that are not part of the same document as the current token, as well as tokens that should not be considered in a given token’s attention calculation. Excluded by default for performance reasons.</p></li>
 </ul>
-<p>For more information on how to use the <a class="reference internal" href="data.html#tatm.data.TatmMemmapDataset" title="tatm.data.TatmMemmapDataset"><span class="xref myst py py-class"><code class="docutils literal notranslate"><span class="pre">tatm.data.TatmMemmapDataset</span></code></span></a> class, see the <a class="reference internal" href="data.html#tatm.data.TatmMemmapDataset" title="tatm.data.TatmMemmapDataset"><span class="xref myst py py-class">Data</span></a> documentation.</p>
-<p>The provided <a class="reference internal" href="data.html#tatm.data.torch_collate_fn" title="tatm.data.torch_collate_fn"><span class="xref myst py py-func"><code class="docutils literal notranslate"><span class="pre">torch_collate_fn</span></code></span></a> function is used to collate the data into a batch for training. The function will create stacked tensors or lists for the fields in
+<p>For more information on how to use the <a class="reference internal" href="data_api.html#tatm.data.TatmMemmapDataset" title="tatm.data.TatmMemmapDataset"><span class="xref myst py py-class"><code class="docutils literal notranslate"><span class="pre">tatm.data.TatmMemmapDataset</span></code></span></a> class, see the <a class="reference internal" href="data_api.html#tatm.data.TatmMemmapDataset" title="tatm.data.TatmMemmapDataset"><span class="xref myst py py-class">Data</span></a> documentation.</p>
+<p>The provided <a class="reference internal" href="data_api.html#tatm.data.torch_collate_fn" title="tatm.data.torch_collate_fn"><span class="xref myst py py-func"><code class="docutils literal notranslate"><span class="pre">torch_collate_fn</span></code></span></a> function is used to collate the data into a batch for training. The function will create stacked tensors or lists for the fields in
 the returned <code class="docutils literal notranslate"><span class="pre">TatmMemmapDatasetItem</span></code> object and return a dictionary with the same key names as the dataset item pointing to the stacked items.</p>
 </section>
 </section>

@@ -41,14 +41,21 @@
   </form>
 </div>
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
-              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+              <p class="caption" role="heading"><span class="caption-text">Introduction:</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="getting_started.html">Getting Started</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Examples:</span></p>
+<ul>
 <li class="toctree-l1"><a class="reference internal" href="text_dataset.html">Loading Text Data for LLM Training</a></li>
 <li class="toctree-l1"><a class="reference internal" href="metadata.html">Dataset Metadata</a></li>
-<li class="toctree-l1"><a class="reference internal" href="cli.html"><code class="docutils literal notranslate"><span class="pre">tatm</span></code> CLI</a></li>
-<li class="toctree-l1"><a class="reference internal" href="data.html"><code class="docutils literal notranslate"><span class="pre">tatm</span></code> Data Module</a></li>
-<li class="toctree-l1"><a class="reference internal" href="config.html">Configuring <code class="docutils literal notranslate"><span class="pre">tatm</span></code></a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">API Reference:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="cli.html"><code class="docutils literal notranslate"><span class="pre">tatm</span></code> CLI Reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="data_api.html"><code class="docutils literal notranslate"><span class="pre">tatm.data</span></code> Data Module API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="config_api.html"><code class="docutils literal notranslate"><span class="pre">tatm.config</span></code> Config API Reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tokenizer_api.html"><code class="docutils literal notranslate"><span class="pre">tatm.tokenizer</span></code> Tokenizer API Reference</a></li>
 </ul>
 
         </div>
@@ -86,13 +93,18 @@ transformer-based (and other architecture) models for research within the Kempne
 manipulating data, training models, and evaluating models. The library is designed to be modular and extensible, allowing for easy integration
 of new models, datasets, and training frameworks.</p>
 <div class="toctree-wrapper compound">
-<p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<p class="caption" role="heading"><span class="caption-text">Introduction:</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="getting_started.html">Getting Started</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="getting_started.html#installation">Installation</a></li>
 <li class="toctree-l2"><a class="reference internal" href="getting_started.html#loading-tokenized-data-with-tatm-for-use-with-pytorch">Loading Tokenized Data with <code class="docutils literal notranslate"><span class="pre">tatm</span></code> for use with PyTorch</a></li>
 </ul>
 </li>
+</ul>
+</div>
+<div class="toctree-wrapper compound">
+<p class="caption" role="heading"><span class="caption-text">Examples:</span></p>
+<ul>
 <li class="toctree-l1"><a class="reference internal" href="text_dataset.html">Loading Text Data for LLM Training</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="text_dataset.html#preparing-raw-data-for-use-with-tatm">Preparing Raw Data for use with <code class="docutils literal notranslate"><span class="pre">tatm</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="text_dataset.html#tokenizing-raw-text-data-with-tatm">Tokenizing Raw Text Data with <code class="docutils literal notranslate"><span class="pre">tatm</span></code></a></li>
@@ -104,27 +116,37 @@ of new models, datasets, and training frameworks.</p>
 <li class="toctree-l2"><a class="reference internal" href="metadata.html#creating-a-metadata-file">Creating a Metadata File</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="cli.html"><code class="docutils literal notranslate"><span class="pre">tatm</span></code> CLI</a><ul>
+</ul>
+</div>
+<div class="toctree-wrapper compound">
+<p class="caption" role="heading"><span class="caption-text">API Reference:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="cli.html"><code class="docutils literal notranslate"><span class="pre">tatm</span></code> CLI Reference</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="cli.html#organization">Organization</a></li>
 <li class="toctree-l2"><a class="reference internal" href="cli.html#installation">Installation</a></li>
 <li class="toctree-l2"><a class="reference internal" href="cli.html#commands">Commands</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="data.html"><code class="docutils literal notranslate"><span class="pre">tatm</span></code> Data Module</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="data.html#tatm.data.TatmData"><code class="docutils literal notranslate"><span class="pre">TatmData</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="data.html#tatm.data.TatmDataMetadata"><code class="docutils literal notranslate"><span class="pre">TatmDataMetadata</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="data.html#tatm.data.TatmMemmapDataset"><code class="docutils literal notranslate"><span class="pre">TatmMemmapDataset</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="data.html#tatm.data.TatmTextData"><code class="docutils literal notranslate"><span class="pre">TatmTextData</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="data.html#tatm.data.get_data"><code class="docutils literal notranslate"><span class="pre">get_data()</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="data.html#tatm.data.get_dataset"><code class="docutils literal notranslate"><span class="pre">get_dataset()</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="data.html#tatm.data.torch_collate_fn"><code class="docutils literal notranslate"><span class="pre">torch_collate_fn()</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="data_api.html"><code class="docutils literal notranslate"><span class="pre">tatm.data</span></code> Data Module API</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="data_api.html#tatm.data.TatmData"><code class="docutils literal notranslate"><span class="pre">TatmData</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="data_api.html#tatm.data.TatmDataMetadata"><code class="docutils literal notranslate"><span class="pre">TatmDataMetadata</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="data_api.html#tatm.data.TatmMemmapDataset"><code class="docutils literal notranslate"><span class="pre">TatmMemmapDataset</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="data_api.html#tatm.data.TatmTextData"><code class="docutils literal notranslate"><span class="pre">TatmTextData</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="data_api.html#tatm.data.get_data"><code class="docutils literal notranslate"><span class="pre">get_data()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="data_api.html#tatm.data.get_dataset"><code class="docutils literal notranslate"><span class="pre">get_dataset()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="data_api.html#tatm.data.torch_collate_fn"><code class="docutils literal notranslate"><span class="pre">torch_collate_fn()</span></code></a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="config.html">Configuring <code class="docutils literal notranslate"><span class="pre">tatm</span></code></a><ul>
-<li class="toctree-l2"><a class="reference internal" href="config.html#tatm.config.EnvironmentConfig"><code class="docutils literal notranslate"><span class="pre">EnvironmentConfig</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="config.html#tatm.config.SlurmConfig"><code class="docutils literal notranslate"><span class="pre">SlurmConfig</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="config.html#tatm.config.TatmConfig"><code class="docutils literal notranslate"><span class="pre">TatmConfig</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="config.html#tatm.config.load_config"><code class="docutils literal notranslate"><span class="pre">load_config()</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="config_api.html"><code class="docutils literal notranslate"><span class="pre">tatm.config</span></code> Config API Reference</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="config_api.html#tatm.config.EnvironmentConfig"><code class="docutils literal notranslate"><span class="pre">EnvironmentConfig</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="config_api.html#tatm.config.SlurmConfig"><code class="docutils literal notranslate"><span class="pre">SlurmConfig</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="config_api.html#tatm.config.TatmConfig"><code class="docutils literal notranslate"><span class="pre">TatmConfig</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="config_api.html#tatm.config.load_config"><code class="docutils literal notranslate"><span class="pre">load_config()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="tokenizer_api.html"><code class="docutils literal notranslate"><span class="pre">tatm.tokenizer</span></code> Tokenizer API Reference</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="tokenizer_api.html#tatm.tokenizer.TokenizationEngine"><code class="docutils literal notranslate"><span class="pre">TokenizationEngine</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="tokenizer_api.html#module-tatm.tokenizer.engine"><code class="docutils literal notranslate"><span class="pre">tatm.tokenize</span></code> Sub components</a></li>
 </ul>
 </li>
 </ul>

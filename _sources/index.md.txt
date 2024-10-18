@@ -13,12 +13,24 @@ of new models, datasets, and training frameworks.
 
 ```{toctree}
 :maxdepth: 2
-:caption: Contents:
+:caption: Introduction:
 getting_started.md
+```
+
+```{toctree}
+:maxdepth: 2
+:caption: Examples:
 text_dataset.md
 metadata.md
-cli.md
-data.md
-config.md
 ```
+
+```{toctree}
+:maxdepth: 2
+:caption: API Reference:
+cli.md
+data_api.md
+config_api.md
+tokenizer_api.md
+```
+
 
