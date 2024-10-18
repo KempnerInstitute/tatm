@@ -9,7 +9,6 @@ class Backend(TatmOptionEnum):
     slurm = "slurm"
 
 
-
 @dataclass(kw_only=True)
 class Environment:
     """Environment Configuration Class.
