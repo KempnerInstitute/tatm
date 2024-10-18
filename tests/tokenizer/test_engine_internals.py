@@ -107,20 +107,20 @@ def test_token_writer(tmp_path):
         local_mode=True, ignore_reinit_error=True
     )  # Initialize Ray in local mode for testing
     writer = TokenWriter.remote(str(tmp_path / "test"))
-    data = np.array([1, 2, 3, 4, 5], dtype="uint16")
+    data = np.array([1, 2, 3, 4, 5], dtype="uint32")
     writer.put.remote(data)
     writer.put.remote(None)
     ray.get(writer.run.remote())
-    x = np.memmap(str(tmp_path / "test_0.bin"), dtype="uint16", mode="r")
+    x = np.memmap(str(tmp_path / "test_0.bin"), dtype="uint32", mode="r")
     assert np.all(x[0:5] == data)
 
     # Test that we run in debug mode
     writer = TokenWriter.remote(str(tmp_path / "test"), log_level=logging.DEBUG)
-    data = np.array([1, 2, 3, 4, 5], dtype="uint16")
+    data = np.array([1, 2, 3, 4, 5], dtype="uint32")
     writer.put.remote(data)
     writer.put.remote(None)
     ray.get(writer.run.remote())
-    x = np.memmap(str(tmp_path / "test_0.bin"), dtype="uint16", mode="r")
+    x = np.memmap(str(tmp_path / "test_0.bin"), dtype="uint32", mode="r")
     assert np.all(x[0:5] == data)
 
     os.remove(str(tmp_path / "test_0.bin"))

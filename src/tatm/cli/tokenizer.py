@@ -27,7 +27,12 @@ from tatm.tokenizer import TokenizationEngine
 )
 @click.option("--verbose", "-v", is_flag=True, help="Enable verbose logging")
 @click.option("--file-prefix", default="tokenized", help="Prefix for tokenized files")
-def tokenize(datasets, num_workers, tokenizer, output_dir, file_prefix, verbose):
+@click.option(
+    "--token-dtype", default="uint32", help="Numpy data type for tokenized files"
+)
+def tokenize(
+    datasets, num_workers, tokenizer, output_dir, file_prefix, verbose, token_dtype
+):
     """Tokenize a dataset using the tatm ray based tokenization engine.
     If running in a cluster environment, it is recommended to use this command
     in conjunction with the `run` command to submit the tokenization job to the cluster.
@@ -56,6 +61,7 @@ def tokenize(datasets, num_workers, tokenizer, output_dir, file_prefix, verbose)
         output_dir,
         file_prefix,
         log_level=log_level,
+        dtype=token_dtype,
     )
     e.run_with_ray(num_workers)
     ray.shutdown()

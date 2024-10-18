@@ -125,7 +125,7 @@ class TokenWriter:
         file_prefix: str,
         max_file_size: int = 1024 * 1024 * 1024,
         max_queue_size: int = 1024,
-        dtype: str = "uint16",
+        dtype: str = "uint32",
         log_level: str = logging.INFO,
     ):
         self.file_prefix = file_prefix
@@ -276,6 +276,7 @@ class TokenizationEngine:
         tokenizer: str,
         output_dir: str,
         file_prefix: str,
+        dtype: str = "uint32",
         log_level: int = logging.INFO,
     ):
         """Object holding information needed to execute the tokenization process, along with methods to run it.
@@ -285,12 +286,14 @@ class TokenizationEngine:
             tokenizer: The name of a Hugging Face tokenizer or path to a tokenizer file.
             output_dir: The directory where the tokenized files will be saved.
             file_prefix: The prefix for the tokenized files.
+            dtype: The numpy data type to use for the tokenized files. Defaults to "uint32".
             log_level: python logging level to use within Ray. Defaults to logging.INFO.
         """
         self.data = data
         self.tokenizer = tokenizer
         self.output_dir = output_dir
         self.file_prefix = file_prefix
+        self.dtype = dtype
         self.log_level = log_level
 
     def run_with_ray(self, num_workers: int = None):
@@ -325,16 +328,20 @@ class TokenizationEngine:
         )
         writer = TokenWriter.options(max_concurrency=num_workers + 1).remote(
             str(Path(self.output_dir) / self.file_prefix),
+            dtype=self.dtype,
             log_level=self.log_level,
         )
         workers = [
             TokenizerWorker.remote(
-                self.tokenizer, server, writer, log_level=self.log_level
+                self.tokenizer,
+                server,
+                writer,
+                log_level=self.log_level,
             )
             for _ in range(num_workers)
         ]
         write_metadata(
-            self.tokenizer, self.output_dir, self.file_prefix, dtype="uint16"
+            self.tokenizer, self.output_dir, self.file_prefix, dtype=self.dtype
         )
         s = server.run.remote()
         writer.run.remote()
