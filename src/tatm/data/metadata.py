@@ -42,7 +42,6 @@ class CorpusSeparationStrategy(TatmOptionEnum):
     CONFIGS = "configs"  #: Corpus data is separated into config files. Maps to using the name parameter in the datasets.load_dataset function.
 
 
-
 @dataclasses.dataclass(kw_only=True)
 class TatmDataMetadata:
     """Generic Dataset Metadata Class holding information about a dataset.
