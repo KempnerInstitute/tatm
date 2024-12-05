@@ -150,9 +150,31 @@ def get_data(identifier: Union[str, TatmDataMetadata]) -> TatmData:
             corpus = split_identifier[1]
         else:
             corpus = None
+        if identifier[0] != "/" or identifier[0] != ".":
+            try:
+                return _dataset_from_metadata_store(identifier, corpus=corpus)
+            except ValueError:
+                pass
+
         return _dataset_from_path(identifier, corpus=corpus)
     elif isinstance(identifier, TatmDataMetadata):
         return _dataset_from_metadata(identifier, corpus=corpus)
+
+
+def _dataset_from_metadata_store(name: str, corpus=None) -> TatmData:
+    """Create a dataset object from the metadata store.
+
+    Args:
+        name: Name of the dataset.
+
+    Returns:
+        TatmDataset: Dataset object.
+
+    Raises:
+        ValueError: If no metadata is found for the dataset or if there is no metadata store backend set.
+    """
+    metadata = TatmDataMetadata.from_metadata_store(name)
+    return _dataset_from_metadata(metadata, corpus=corpus)
 
 
 def _dataset_from_path(path: str, corpus=None) -> TatmData:
