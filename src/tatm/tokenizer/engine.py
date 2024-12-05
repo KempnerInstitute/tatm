@@ -13,7 +13,7 @@ import numpy as np
 import ray
 import tokenizers
 
-from tatm.data import TatmDataMetadata, get_data
+from tatm.data import TatmDataMetadata, TatmTextData, get_data
 from tatm.tokenizer.metadata import write_metadata
 from tatm.tokenizer.utils import load_tokenizer
 from tatm.utils import configure_logging
@@ -116,6 +116,15 @@ class DataServer:
     def shutdown(self):
         self.shutdown_flag = True
         self.done = True
+
+    def list_source_datasets(self):
+        out = []
+        for dataset in self.datasets:
+            if isinstance(dataset, TatmTextData) and dataset.corpus:
+                out.append(f"{dataset.metadata.name}:{dataset.corpus}")
+            else:
+                out.append(dataset.metadata.name)
+        return out
 
 
 @ray.remote
@@ -341,7 +350,7 @@ class TokenizationEngine:
             for _ in range(num_workers)
         ]
         write_metadata(
-            self.tokenizer, self.output_dir, self.file_prefix, dtype=self.dtype
+            self.tokenizer, self.output_dir, self.file_prefix, dtype=self.dtype, parent_datasets=ray.get(server.list_source_datasets.remote())
         )
         s = server.run.remote()
         writer.run.remote()

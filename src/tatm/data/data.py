@@ -80,6 +80,7 @@ class TatmTextData(TatmData):
         Args:
             corpus: Corpus to load. Defaults to None.
         """
+        self.corpus = corpus
         if (
             self.metadata.corpus_separation_strategy == "configs"
             or self.metadata.corpus_separation_strategy is None  # noqa: W503
