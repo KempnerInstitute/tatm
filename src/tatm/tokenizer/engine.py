@@ -350,7 +350,11 @@ class TokenizationEngine:
             for _ in range(num_workers)
         ]
         write_metadata(
-            self.tokenizer, self.output_dir, self.file_prefix, dtype=self.dtype, parent_datasets=ray.get(server.list_source_datasets.remote())
+            self.tokenizer,
+            self.output_dir,
+            self.file_prefix,
+            dtype=self.dtype,
+            parent_datasets=ray.get(server.list_source_datasets.remote()),
         )
         s = server.run.remote()
         writer.run.remote()

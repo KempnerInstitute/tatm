@@ -71,7 +71,6 @@ def test_worker_process_example():
     ray.shutdown()  # Clean up Ray resources
 
 
-
 def test_token_writer(tmp_path):
     # Test that the token writer correctly writes data to a file
     ray.init(
