@@ -16,6 +16,7 @@ class TokenizedMetadataComponenet:
     file_prefix: str
     dtype: str = "uint16"
     file_extension: str = "bin"
+    parent_datasets: List[str] = dataclasses.field(default_factory=list)
     vocab_size: int = None
     tatm_version: str = (
         None  #: Version of the tatm library used to create the tokenized data. Default to None to avoid breaking changes/overwriting past versions.

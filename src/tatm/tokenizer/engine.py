@@ -117,6 +117,9 @@ class DataServer:
         self.shutdown_flag = True
         self.done = True
 
+    def list_source_datasets(self):
+        return [dataset.get_source() for dataset in self.datasets]
+
 
 @ray.remote
 class TokenWriter:
@@ -341,7 +344,11 @@ class TokenizationEngine:
             for _ in range(num_workers)
         ]
         write_metadata(
-            self.tokenizer, self.output_dir, self.file_prefix, dtype=self.dtype
+            self.tokenizer,
+            self.output_dir,
+            self.file_prefix,
+            dtype=self.dtype,
+            parent_datasets=ray.get(server.list_source_datasets.remote()),
         )
         s = server.run.remote()
         writer.run.remote()
