@@ -13,7 +13,7 @@ import numpy as np
 import ray
 import tokenizers
 
-from tatm.data import TatmDataMetadata, TatmTextData, get_data
+from tatm.data import TatmDataMetadata, get_data
 from tatm.tokenizer.metadata import write_metadata
 from tatm.tokenizer.utils import load_tokenizer
 from tatm.utils import configure_logging
@@ -118,13 +118,7 @@ class DataServer:
         self.done = True
 
     def list_source_datasets(self):
-        out = []
-        for dataset in self.datasets:
-            if isinstance(dataset, TatmTextData) and dataset.corpus:
-                out.append(f"{dataset.metadata.name}:{dataset.corpus}")
-            else:
-                out.append(dataset.metadata.name)
-        return out
+        return [dataset.get_source() for dataset in self.datasets]
 
 
 @ray.remote

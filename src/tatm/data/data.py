@@ -50,6 +50,14 @@ class TatmData(ABC):
         """Initialize the dataset."""
         raise NotImplementedError("This method must be implemented in a subclass.")
 
+    def get_source(self) -> str:
+        """Return a string representing the source of the data. By default, this is the name of the dataset.
+
+        Returns:
+            str: Source of the data.
+        """
+        return self.metadata.name
+
 
 class TatmTextData(TatmData):
     """Text dataset class, provides interface to access text datasets.
@@ -104,6 +112,17 @@ class TatmTextData(TatmData):
                 streaming=True,
                 trust_remote_code=True,
             )[split]
+
+    def get_source(self) -> str:
+        """Returns the name of the dataset. If a corpus is specified, the name of the corpus is returned appended to the dataset name with a colon.
+
+        Returns:
+            str: Data source in the format "name:corpus".
+        """
+        if self.corpus is not None:
+            return f"{self.metadata.name}:{self.corpus}"
+        else:
+            return self.metadata.name
 
     def __iter__(self):
         """Iterate over the dataset."""
