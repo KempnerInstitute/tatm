@@ -7,6 +7,7 @@ from typing import List, Union
 
 import yaml
 
+import tatm.data.metadata_store
 from tatm.utils import TatmOptionEnum
 
 
@@ -170,6 +171,15 @@ class TatmDataMetadata:
             return cls.from_yaml(yml_path)
         else:
             raise ValueError("No metadata file found in the specified directory.")
+
+    @classmethod
+    def from_metadata_store(cls, name: str):
+        metadata_str = tatm.data.metadata_store.get_metadata(name)
+
+        if metadata_str is None:
+            raise ValueError(f"Metadata not found for dataset: {name}")
+
+        return cls(**json.loads(metadata_str))
 
     def __str__(self):
         return self.as_json()
