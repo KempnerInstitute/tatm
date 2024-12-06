@@ -57,6 +57,7 @@
 <li class="toctree-l1 current"><a class="current reference internal" href="#"><code class="docutils literal notranslate"><span class="pre">tatm.data</span></code> Data Module API</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#tatm.data.TatmData"><code class="docutils literal notranslate"><span class="pre">TatmData</span></code></a><ul>
 <li class="toctree-l3"><a class="reference internal" href="#tatm.data.TatmData.from_metadata"><code class="docutils literal notranslate"><span class="pre">TatmData.from_metadata()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#tatm.data.TatmData.get_source"><code class="docutils literal notranslate"><span class="pre">TatmData.get_source()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="#tatm.data.TatmData.initialize"><code class="docutils literal notranslate"><span class="pre">TatmData.initialize()</span></code></a></li>
 </ul>
 </li>
@@ -89,6 +90,7 @@
 </li>
 <li class="toctree-l2"><a class="reference internal" href="#tatm.data.TatmTextData"><code class="docutils literal notranslate"><span class="pre">TatmTextData</span></code></a><ul>
 <li class="toctree-l3"><a class="reference internal" href="#tatm.data.TatmTextData.from_metadata"><code class="docutils literal notranslate"><span class="pre">TatmTextData.from_metadata()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#tatm.data.TatmTextData.get_source"><code class="docutils literal notranslate"><span class="pre">TatmTextData.get_source()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="#tatm.data.TatmTextData.initialize"><code class="docutils literal notranslate"><span class="pre">TatmTextData.initialize()</span></code></a></li>
 </ul>
 </li>
@@ -151,6 +153,20 @@
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>TatmDataset</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="tatm.data.TatmData.get_source">
+<span class="sig-name descname"><span class="pre">get_source</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span></span></span><a class="headerlink" href="#tatm.data.TatmData.get_source" title="Link to this definition"></a></dt>
+<dd><p>Return a string representing the source of the data. By default, this is the name of the dataset.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Source of the data.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>str</p>
 </dd>
 </dl>
 </dd></dl>
@@ -341,6 +357,20 @@
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>TatumTextDataset</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="tatm.data.TatmTextData.get_source">
+<span class="sig-name descname"><span class="pre">get_source</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span></span></span><a class="headerlink" href="#tatm.data.TatmTextData.get_source" title="Link to this definition"></a></dt>
+<dd><p>Returns the name of the dataset. If a corpus is specified, the name of the corpus is returned appended to the dataset name with a colon.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Data source in the format “name:corpus”.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>str</p>
 </dd>
 </dl>
 </dd></dl>
