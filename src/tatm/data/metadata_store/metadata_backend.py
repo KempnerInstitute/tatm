@@ -44,11 +44,6 @@ class JsonTatmMetadataStoreBackend(TatmMetadataStoreBackend):
         with open(self.metadata_store_path) as f:
             metadata = json.load(f)
         if isinstance(metadata[name], str):
-            current_level = metadata[name]
-            while True:
-                # This is a hack to get around the fact that the metadata can be stored as a string and there may be string escapes in the metadata
-                next_level = json.loads(current_level)
-                if not isinstance(next_level, str):
-                    return current_level
-                current_level = next_level
+            return metadata[name]
+
         return json.dumps(metadata[name])
