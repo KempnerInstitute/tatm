@@ -50,7 +50,9 @@ def get_dataset(metadata: Union[str, TatmDataMetadata], **kwargs) -> TatmDataset
         if not metadata_loaded:
             metadata = Path(metadata)
             if not metadata.exists():
-                raise FileNotFoundError(f"Metadata file or directory not found at {metadata}")
+                raise FileNotFoundError(
+                    f"Metadata file or directory not found at {metadata}"
+                )
             if metadata.is_dir():
                 metadata = TatmDataMetadata.from_directory(metadata)
             elif metadata.is_file():
