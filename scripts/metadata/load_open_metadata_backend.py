@@ -350,7 +350,7 @@ def main():
     )
     metadata_dirs = args.dirs.split(",")
     for dir in metadata_dirs:
-        for genre, path, metadata in metadata_files(dir):
+        for genre, path, metadata in metadata_files(dir, exclude_dirs=["raw"]):
             print(f"Processing {metadata.name} located at {path}")
             process_dataset(metadata_connection, data_service, genre, path, metadata)
 

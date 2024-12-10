@@ -1,18 +1,23 @@
 import pathlib
-from typing import Generator
+from typing import Generator, List
 
 import tatm.data
 
 
 def metadata_files(
-    directory, include_tokenized=False
+    directory: pathlib.Path, include_tokenized=False, exclude_dirs: List[str]=None
 ) -> Generator[tuple[str, pathlib.Path, tatm.data.TatmDataMetadata], None, None]:
     root = pathlib.Path(directory)
-    for metadata_file in root.rglob("metadata.*"):
-        if include_tokenized or "tokenized" not in metadata_file.parts:
-            data_genre = metadata_file.parts[2]
-            metadata = tatm.data.TatmDataMetadata.from_file(metadata_file)
-            yield data_genre, metadata_file.parent, metadata
+    for dir, dirs, _ in root.walk():
+        if exclude_dirs is not None:
+            dirs[:] = [d for d in dirs if d not in exclude_dirs]
+
+        metadata_files = dir.glob("metadata.*")
+        for metadata_file in metadata_files:
+            if include_tokenized or "tokenized" not in metadata_file.parts:
+                data_genre = metadata_file.relative_to(root).parts[0]
+                metadata = tatm.data.TatmDataMetadata.from_file(metadata_file)
+                yield data_genre, metadata_file.parent, metadata
 
 
 def tokenized_datasets(
