@@ -293,6 +293,14 @@ class TatmImageTextDataset(TatmDataset):
     Base class for handling all image-text datasets. This includes captioned image datasets and image question-answer (often denoted VQA) datasets.
     """
     def __init__(self, img_root : str, ann_paths: list, *, img_processor = None, text_processor = None):
+        """
+        Args:
+            img_root: The root directory containing all of the images used by this dataset
+            ann_paths: List of files containing the annotations within this dataset. 
+                    Each annotation should give the path (relative to img_root) of the image it is describing
+            img_processor: Function for preprocessing annotation images within the dataset
+            text_processor: Function for preprocessing annotation text within the dataset
+        """
         self.img_root = img_root
         self.img_processor = img_processor
         self.text_processor = text_processor
@@ -311,10 +319,19 @@ class TatmImageTextDataset(TatmDataset):
 
 
 class TatmCaptionedImageDataset(TatmImageTextDataset):
+    """
+    Handles captioned images. Each annotation should have a text caption and a path to an image that the caption describes.
+    """
     def __init__(self, img_root : str, ann_paths: list, *, img_processor = None, text_processor = None):
         super().__init__(img_root, ann_paths, img_processor=img_processor, text_processor=text_processor)
 
-    def __getitem__(self, index):
+    def __getitem__(self, index: int):
+        """
+        Retrieves the caption and image of the requested annotation.
+
+        Args:
+            index: Index of the annotation to retrieve
+        """
         ann = self.annotations[index]
 
         image_path = os.path.join(self.img_root, ann["image"])
