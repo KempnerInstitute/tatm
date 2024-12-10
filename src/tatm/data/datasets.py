@@ -3,16 +3,16 @@ prepared and/or curated by the TATM project. The datasets are intended
 to be consumed by modelling frameworks such as pytorch, JAX, etc.
 """
 
+import json
+import os.path
 from abc import ABC, abstractmethod
 from dataclasses import dataclass
 from glob import glob
 from pathlib import Path
-from PIL import Image
 from typing import Optional, Union
 
-import json
 import numpy as np
-import os.path
+from PIL import Image
 
 from tatm.data.metadata import TatmDataMetadata
 
@@ -292,11 +292,14 @@ class TatmImageTextDataset(TatmDataset):
     """
     Base class for handling all image-text datasets. This includes captioned image datasets and image question-answer (often denoted VQA) datasets.
     """
-    def __init__(self, img_root : str, ann_paths: list, *, img_processor = None, text_processor = None):
+
+    def __init__(
+        self, img_root: str, ann_paths: list, *, img_processor=None, text_processor=None
+    ):
         """
         Args:
             img_root: The root directory containing all of the images used by this dataset
-            ann_paths: List of files containing the annotations within this dataset. 
+            ann_paths: List of files containing the annotations within this dataset.
                     Each annotation should give the path (relative to img_root) of the image it is describing
             img_processor: Function for preprocessing annotation images within the dataset
             text_processor: Function for preprocessing annotation text within the dataset
@@ -312,8 +315,8 @@ class TatmImageTextDataset(TatmDataset):
 
     def __len__(self):
         return len(self.annotations)
-    
-    def set_processors(self, *, img_processor = None, text_processor = None):
+
+    def set_processors(self, *, img_processor=None, text_processor=None):
         self.img_processor = img_processor
         self.text_processor = text_processor
 
@@ -322,8 +325,16 @@ class TatmCaptionedImageDataset(TatmImageTextDataset):
     """
     Handles captioned images. Each annotation should have a text caption and a path to an image that the caption describes.
     """
-    def __init__(self, img_root : str, ann_paths: list, *, img_processor = None, text_processor = None):
-        super().__init__(img_root, ann_paths, img_processor=img_processor, text_processor=text_processor)
+
+    def __init__(
+        self, img_root: str, ann_paths: list, *, img_processor=None, text_processor=None
+    ):
+        super().__init__(
+            img_root,
+            ann_paths,
+            img_processor=img_processor,
+            text_processor=text_processor,
+        )
 
     def __getitem__(self, index: int):
         """
@@ -337,14 +348,10 @@ class TatmCaptionedImageDataset(TatmImageTextDataset):
         image_path = os.path.join(self.img_root, ann["image"])
         try:
             image = Image.open(image_path).convert("RGB")
-        except:
-            return None # image does not exist
+        except FileNotFoundError:
+            return None  # image does not exist
 
         image = self.img_processor(image)
         caption = self.text_processor(ann["caption"])
 
-        return {
-            "image": image,
-            "caption": caption,
-            "image_id": ann["image_id"]
-        }
+        return {"image": image, "caption": caption, "image_id": ann["image_id"]}
