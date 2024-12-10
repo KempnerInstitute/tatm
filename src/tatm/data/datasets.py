@@ -7,9 +7,12 @@ from abc import ABC, abstractmethod
 from dataclasses import dataclass
 from glob import glob
 from pathlib import Path
+from PIL import Image
 from typing import Optional, Union
 
+import json
 import numpy as np
+import os.path
 
 from tatm.data.metadata import TatmDataMetadata
 
@@ -283,3 +286,48 @@ def _create_document_mask(doc_ids: np.ndarray) -> np.ndarray:
     document_equal = np.equal.outer(doc_ids, doc_ids)
     out = np.logical_and(document_equal, np.tri(len(doc_ids)))
     return out
+
+
+class TatmImageTextDataset(TatmDataset):
+    """
+    Base class for handling all image-text datasets. This includes captioned image datasets and image question-answer (often denoted VQA) datasets.
+    """
+    def __init__(self, img_root : str, ann_paths: list, *, img_processor = None, text_processor = None):
+        self.img_root = img_root
+        self.img_processor = img_processor
+        self.text_processor = text_processor
+        self.annotations = []
+
+        for ann_path in ann_paths:
+            with open(ann_path, "r") as f:
+                self.annotations.extend(json.load(f))
+
+    def __len__(self):
+        return len(self.annotations)
+    
+    def set_processors(self, *, img_processor = None, text_processor = None):
+        self.img_processor = img_processor
+        self.text_processor = text_processor
+
+
+class TatmCaptionedImageDataset(TatmImageTextDataset):
+    def __init__(self, img_root : str, ann_paths: list, *, img_processor = None, text_processor = None):
+        super().__init__(img_root, ann_paths, img_processor=img_processor, text_processor=text_processor)
+
+    def __getitem__(self, index):
+        ann = self.annotations[index]
+
+        image_path = os.path.join(self.img_root, ann["image"])
+        try:
+            image = Image.open(image_path).convert("RGB")
+        except:
+            return None # image does not exist
+
+        image = self.img_processor(image)
+        caption = self.text_processor(ann["caption"])
+
+        return {
+            "image": image,
+            "caption": caption,
+            "image_id": ann["image_id"]
+        }
