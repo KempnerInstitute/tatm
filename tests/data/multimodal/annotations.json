@@ -1,0 +1,12 @@
+[
+    {
+        "image_id": "test_image_1",
+        "image": "tatum.jpg",
+        "caption": "Jayson Tatum taking a shot."
+    },
+    {
+        "image_id": "test_image_2",
+        "image": "tatum_olympics.jpg",
+        "caption": "Jayson Tatum playing in the Olympics."
+    }
+]
