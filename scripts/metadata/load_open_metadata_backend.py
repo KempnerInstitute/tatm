@@ -272,7 +272,7 @@ def process_dataset(
     create_database_request = CreateDatabaseRequest(
         name=tatm_metadata.name,
         service=service_entity.fullyQualifiedName,
-        description=tatm_metadata.description,
+        description=f"{tatm_metadata.description}. To load call `tatm.data.get_data('{tatm_metadata.name}')`",
         extension={"TatmMetadata": tatm_metadata.as_json()},
         tags=[
             tag_label("DataFocus", data_genre),
@@ -286,7 +286,7 @@ def process_dataset(
         create_db_schema_request = CreateDatabaseSchemaRequest(
             name=f"{tatm_metadata.name}_{corpus}",
             database=db_entity.fullyQualifiedName,
-            description=f"corpus within {tatm_metadata.name} representing the {corpus} subset of the data",
+            description=f"corpus within {tatm_metadata.name} representing the {corpus} subset of the data. To load call `tatm.data.get_data('{tatm_metadata.name}:{corpus}')`",
             tags=[tag_label("Corpus", "True")],
         )
 
@@ -317,10 +317,11 @@ def process_tokenized_dataset(
     if not isinstance(data_path, pathlib.Path):
         data_path = pathlib.Path(data_path)
     create_tag_value(connection, "Tokenizer", tokenized_data.tokenized_info.tokenizer)
+    name = f"{parent_metadata.name}-tokenized_{tokenized_data.tokenized_info.tokenizer}_{data_path.parts[-1]}"
     create_db_schema_request = CreateDatabaseSchemaRequest(
-        name=f"{parent_metadata.name}-tokenized_{tokenized_data.tokenized_info.tokenizer}_{data_path.parts[-1]}",
+        name=name,
         database=db_entity.fullyQualifiedName,
-        description="tokenized data within the dataset",
+        description=f"tokenized data created from {parent_metadata.name} using the {tokenized_data.tokenized_info.tokenizer} tokenizer. To load call `tatm.data.get_dataset('{name}')`",
         extension={"TatmMetadata": tokenized_data.as_json()},
         tags=[
             tag_label("Tokenizer", tokenized_data.tokenized_info.tokenizer),
