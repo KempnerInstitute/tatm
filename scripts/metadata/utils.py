@@ -5,7 +5,7 @@ import tatm.data
 
 
 def metadata_files(
-    directory: pathlib.Path, include_tokenized=False, exclude_dirs: List[str]=None
+    directory: pathlib.Path, include_tokenized=False, exclude_dirs: List[str] = None
 ) -> Generator[tuple[str, pathlib.Path, tatm.data.TatmDataMetadata], None, None]:
     root = pathlib.Path(directory)
     for dir, dirs, _ in root.walk():

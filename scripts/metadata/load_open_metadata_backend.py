@@ -145,10 +145,19 @@ def setup_classifications(connection: OpenMetadata):
 
     classifications = {
         "DataFocus": "General purpose of the data in the dataset (i.e. code, math, general text, vision, etc)",
+        "ContentType": "The type of data in the dataset (i.e. text, image, audio, etc)",
         "Tokenizer": "The HF name of the tokenizer used to generate the data",
+        "Corpus": "Is the data a corpus within the dataset",
+        "Tokenized": "Is the data tokenized",
     }
     for class_name, description in classifications.items():
         create_classification(connection, class_name, description)
+
+    # Create Base Tag Values
+    create_tag_value(connection, "Corpus", "True")
+    create_tag_value(connection, "Corpus", "False")
+    create_tag_value(connection, "Tokenized", "True")
+    create_tag_value(connection, "Tokenized", "False")
 
 
 def create_classification(
@@ -258,21 +267,27 @@ def process_dataset(
     """
 
     create_tag_value(connection, "DataFocus", data_genre)
+    create_tag_value(connection, "ContentType", tatm_metadata.data_content.value)
 
     create_database_request = CreateDatabaseRequest(
         name=tatm_metadata.name,
         service=service_entity.fullyQualifiedName,
         description=tatm_metadata.description,
         extension={"TatmMetadata": tatm_metadata.as_json()},
-        tags=[tag_label("DataFocus", data_genre)],
+        tags=[
+            tag_label("DataFocus", data_genre),
+            tag_label("Corpus", "False"),
+            tag_label("ContentType", tatm_metadata.data_content.value),
+        ],
     )
     db_entity = connection.create_or_update(data=create_database_request)
 
     for corpus in tatm_metadata.corpuses:
         create_db_schema_request = CreateDatabaseSchemaRequest(
-            name=corpus,
+            name=f"{tatm_metadata.name}_{corpus}",
             database=db_entity.fullyQualifiedName,
-            description="corpus within the dataset representing a specific subset of the data",
+            description=f"corpus within {tatm_metadata.name} representing the {corpus} subset of the data",
+            tags=[tag_label("Corpus", "True")],
         )
 
         connection.create_or_update(data=create_db_schema_request)
@@ -303,11 +318,14 @@ def process_tokenized_dataset(
         data_path = pathlib.Path(data_path)
     create_tag_value(connection, "Tokenizer", tokenized_data.tokenized_info.tokenizer)
     create_db_schema_request = CreateDatabaseSchemaRequest(
-        name=f"{parent_metadata.name}-tokenized-{tokenized_data.tokenized_info.tokenizer}-{data_path.parts[-1]}",
+        name=f"{parent_metadata.name}-tokenized_{tokenized_data.tokenized_info.tokenizer}_{data_path.parts[-1]}",
         database=db_entity.fullyQualifiedName,
         description="tokenized data within the dataset",
         extension={"TatmMetadata": tokenized_data.as_json()},
-        tags=[tag_label("Tokenizer", tokenized_data.tokenized_info.tokenizer)],
+        tags=[
+            tag_label("Tokenizer", tokenized_data.tokenized_info.tokenizer),
+            tag_label("Corpus", "False"),
+        ],
     )
     connection.create_or_update(data=create_db_schema_request)
 
