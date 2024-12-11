@@ -37,7 +37,7 @@ def main():
                 metadata_store[name] = tokenized_metadata.as_json()
 
     with open(args.output, "w") as f:
-        json.dump(metadata_store, f)
+        json.dump(metadata_store, f, indent=4)
 
 
 if __name__ == "__main__":
