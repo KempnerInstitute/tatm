@@ -29,7 +29,7 @@ def main():
                 )
             metadata_store[metadata.name] = metadata.as_json()
             for path, tokenized_metadata in tokenized_datasets(path):
-                name = f"{metadata.name}-tokenized_{tokenized_metadata.tokenized_info['name']}_{path.parts[-1]}"
+                name = f"{metadata.name}-tokenized_{tokenized_metadata.tokenized_info.tokenizer}_{path.parts[-1]}"
                 metadata_store[name] = tokenized_metadata.as_json()
 
     with open(args.output, "w") as f:
