@@ -6,6 +6,8 @@ from tatm.data.metadata_store.metadata_backend import (
     TatmMetadataStoreBackend,
 )
 
+from tatm.config import load_config
+
 BACKEND: TatmMetadataStoreBackend = None
 BACKEND_INITIALIZED = False
 
@@ -46,11 +48,13 @@ def set_backend() -> None:
 
     BACKEND_INITIALIZED = True
 
-    backend_type = os.getenv("TATM_METADATA_STORE_BACKEND")
+    cnf = load_config()
+    backend_type = cnf.metadata_backend.type
     print(backend_type)
     if backend_type == "json":
-        metadata_store_path = os.getenv("TATM_METADATA_STORE_PATH", "metadata.json")
-        BACKEND = JsonTatmMetadataStoreBackend(metadata_store_path)
+        if "metadata_store_path" not in cnf.metadata_backend.args:
+            cnf.metadata_backend.args["metadata_store_path"] = "metadata.json"
+        BACKEND = JsonTatmMetadataStoreBackend(**cnf.metadata_backend.args)
     elif backend_type is None:
         LOGGER.warning(
             "No metadata store backend set. Metadata store will not be used."

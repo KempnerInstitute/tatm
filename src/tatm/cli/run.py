@@ -5,6 +5,7 @@ import click
 
 import tatm.compute.run
 from tatm.config import load_config
+from tatm.globals import set_cli_config_files, set_cli_config_overrides
 
 
 def parse_config_opts(opts: List[str], validate=True) -> Tuple[List[str], List[str]]:
@@ -21,6 +22,7 @@ def parse_config_opts(opts: List[str], validate=True) -> Tuple[List[str], List[s
     Returns:
         Returns a tuple of length 2. The first element is a list of config files, the second is a list of overrides.
     """
+    global CLI_CONFIG_FILES, CLI_CONFIG_OVERRIDES
     files, overrides = [], []
     for opt in opts:
         if "=" in opt:
@@ -30,6 +32,8 @@ def parse_config_opts(opts: List[str], validate=True) -> Tuple[List[str], List[s
             if validate and not file_path.exists():
                 raise FileNotFoundError(f"Config file not found: {opt}")
             files.append(opt)
+    set_cli_config_files(files)
+    set_cli_config_overrides(overrides)
     return files, overrides
 
 
@@ -92,7 +96,7 @@ def run(**kwargs):
     config = kwargs.pop("config")
     wrapped_command = kwargs.pop("wrapped_command")
     files, overrides = parse_config_opts(config)
-    cfg = load_config(files, overrides)
+    cfg = load_config()  # load_config(files, overrides)
 
     options = tatm.compute.run.TatmRunOptions(**kwargs)
     result = tatm.compute.run.run(cfg, options, wrapped_command)
