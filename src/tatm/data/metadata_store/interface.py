@@ -1,12 +1,10 @@
 import logging
-import os
 
+from tatm.config import load_config
 from tatm.data.metadata_store.metadata_backend import (
     JsonTatmMetadataStoreBackend,
     TatmMetadataStoreBackend,
 )
-
-from tatm.config import load_config
 
 BACKEND: TatmMetadataStoreBackend = None
 BACKEND_INITIALIZED = False

@@ -14,8 +14,7 @@ from .test_memmap_dataset import sample_dataset  # noqa: F401
 
 @pytest.fixture
 def json_metadata_store(tmp_path, sample_dataset):  # noqa: F811
-    """Pytest Fixture creating a metadata store with JSON metadata and a config file pointing to it.
-    """
+    """Pytest Fixture creating a metadata store with JSON metadata and a config file pointing to it."""
     metadata_store = tmp_path / "metadata.json"
     config_path = tmp_path / "config.json"
     config = {
@@ -26,7 +25,7 @@ def json_metadata_store(tmp_path, sample_dataset):  # noqa: F811
     }
     with open(config_path, "w") as f:
         f.write(yaml.dump(config))
-        
+
     metadata = TatmDataMetadata(
         name="dataset1",
         dataset_path="./",
