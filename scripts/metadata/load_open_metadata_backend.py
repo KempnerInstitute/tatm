@@ -144,8 +144,8 @@ def setup_classifications(connection: OpenMetadata):
     """
 
     classifications = {
-        "DataFocus": "General purpose of the data in the dataset (i.e. code, math, general text, vision, etc)",
-        "ContentType": "The type of data in the dataset (i.e. text, image, audio, etc)",
+        "ContentContext": "General purpose of the data in the dataset (i.e. code, math, general text, vision, etc)",
+        "DataContentType": "The type of data in the dataset (i.e. text, image, audio, etc)",
         "Tokenizer": "The HF name of the tokenizer used to generate the data",
         "Corpus": "Is the data a corpus within the dataset",
         "Tokenized": "Is the data tokenized",
@@ -154,10 +154,10 @@ def setup_classifications(connection: OpenMetadata):
         create_classification(connection, class_name, description)
 
     # Create Base Tag Values
-    create_tag_value(connection, "Corpus", "True")
-    create_tag_value(connection, "Corpus", "False")
-    create_tag_value(connection, "Tokenized", "True")
-    create_tag_value(connection, "Tokenized", "False")
+    create_tag_value(connection, "Corpus", "Corpus")
+    create_tag_value(connection, "Corpus", "FullDataset")
+    create_tag_value(connection, "Tokenized", "Tokenized")
+    create_tag_value(connection, "Tokenized", "Untokenized")
 
 
 def create_classification(
