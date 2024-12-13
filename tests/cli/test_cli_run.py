@@ -2,7 +2,7 @@ import pytest
 from click.testing import CliRunner
 
 from tatm.cli.run import parse_config_opts, run
-from tatm.globals import set_cli_config_files, set_cli_config_overrides
+from tatm.config import set_cli_config_files, set_cli_config_overrides
 
 
 @pytest.fixture
