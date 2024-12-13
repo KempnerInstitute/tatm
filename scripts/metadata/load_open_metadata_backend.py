@@ -326,7 +326,6 @@ def process_tokenized_dataset(
         extension={"TatmMetadata": tokenized_data.as_json()},
         tags=[
             tag_label("Tokenizer", tokenized_data.tokenized_info.tokenizer),
-            tag_label("Corpus", "False"),
             tag_label("Tokenized", "Tokenized"),
         ],
     )
