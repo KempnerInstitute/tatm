@@ -266,8 +266,8 @@ def process_dataset(
         tatm_metadata: TatmDataMetadata object representing the metadata of the dataset
     """
 
-    create_tag_value(connection, "DataFocus", data_genre)
-    create_tag_value(connection, "ContentType", tatm_metadata.data_content.value)
+    create_tag_value(connection, "ContentContext", data_genre)
+    create_tag_value(connection, "DataContentType", tatm_metadata.data_content.value)
 
     create_database_request = CreateDatabaseRequest(
         name=tatm_metadata.name,
@@ -275,9 +275,10 @@ def process_dataset(
         description=f"{tatm_metadata.description}. To load call `tatm.data.get_data('{tatm_metadata.name}')`",
         extension={"TatmMetadata": tatm_metadata.as_json()},
         tags=[
-            tag_label("DataFocus", data_genre),
-            tag_label("Corpus", "False"),
-            tag_label("ContentType", tatm_metadata.data_content.value),
+            tag_label("ContentContext", data_genre),
+            tag_label("Corpus", "FullDataset"),
+            tag_label("DataContentType", tatm_metadata.data_content.value),
+            tag_label("Tokenized", "Untokenized"),
         ],
     )
     db_entity = connection.create_or_update(data=create_database_request)
@@ -287,7 +288,7 @@ def process_dataset(
             name=f"{tatm_metadata.name}_{corpus}",
             database=db_entity.fullyQualifiedName,
             description=f"corpus within {tatm_metadata.name} representing the {corpus} subset of the data. To load call `tatm.data.get_data('{tatm_metadata.name}:{corpus}')`",
-            tags=[tag_label("Corpus", "True")],
+            tags=[tag_label("Corpus", "Corpus")],
         )
 
         connection.create_or_update(data=create_db_schema_request)
@@ -326,6 +327,7 @@ def process_tokenized_dataset(
         tags=[
             tag_label("Tokenizer", tokenized_data.tokenized_info.tokenizer),
             tag_label("Corpus", "False"),
+            tag_label("Tokenized", "Tokenized"),
         ],
     )
     connection.create_or_update(data=create_db_schema_request)
