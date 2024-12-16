@@ -94,8 +94,8 @@ def run(**kwargs):
     """
     config = kwargs.pop("config")
     wrapped_command = kwargs.pop("wrapped_command")
-    files, overrides = parse_config_opts(config)
-    cfg = load_config()  # load_config(files, overrides)
+    parse_config_opts(config)
+    cfg = load_config()
 
     options = tatm.compute.run.TatmRunOptions(**kwargs)
     result = tatm.compute.run.run(cfg, options, wrapped_command)
