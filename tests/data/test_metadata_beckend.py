@@ -2,6 +2,7 @@ import json
 
 import numpy as np
 import pytest
+import yaml
 
 from tatm.data import get_data, get_dataset
 from tatm.data.metadata import DataContentType, TatmDataMetadata
@@ -13,7 +14,18 @@ from .test_memmap_dataset import sample_dataset  # noqa: F401
 
 @pytest.fixture
 def json_metadata_store(tmp_path, sample_dataset):  # noqa: F811
+    """Pytest Fixture creating a metadata store with JSON metadata and a config file pointing to it."""
     metadata_store = tmp_path / "metadata.json"
+    config_path = tmp_path / "config.json"
+    config = {
+        "metadata_backend": {
+            "type": "json",
+            "args": {"metadata_store_path": str(metadata_store)},
+        }
+    }
+    with open(config_path, "w") as f:
+        f.write(yaml.dump(config))
+
     metadata = TatmDataMetadata(
         name="dataset1",
         dataset_path="./",
@@ -32,13 +44,13 @@ def json_metadata_store(tmp_path, sample_dataset):  # noqa: F811
     }
     with open(metadata_store, "w") as f:
         json.dump(out, f)
-    yield metadata_store
+    yield metadata_store, config_path
 
 
 def test_get_metadata(json_metadata_store, monkeypatch):
     reset_backend()
-    monkeypatch.setenv("TATM_METADATA_STORE_BACKEND", "json")
-    monkeypatch.setenv("TATM_METADATA_STORE_PATH", str(json_metadata_store))
+    _, config_path = json_metadata_store
+    monkeypatch.setenv("TATM_BASE_CONFIG", str(config_path))
     metadata = TatmDataMetadata(
         name="dataset1",
         dataset_path="./",
@@ -53,8 +65,8 @@ def test_get_metadata(json_metadata_store, monkeypatch):
 
 def test_get_data_from_metadata_store(json_metadata_store, monkeypatch):
     reset_backend()
-    monkeypatch.setenv("TATM_METADATA_STORE_BACKEND", "json")
-    monkeypatch.setenv("TATM_METADATA_STORE_PATH", str(json_metadata_store))
+    _, config_path = json_metadata_store
+    monkeypatch.setenv("TATM_BASE_CONFIG", str(config_path))
     data = get_data("dataset2")
     first_item = next(iter(data))
     assert first_item["text"] == "hello world"
@@ -62,8 +74,8 @@ def test_get_data_from_metadata_store(json_metadata_store, monkeypatch):
 
 def test_get_tokenized_from_metadata_store(json_metadata_store, monkeypatch):
     reset_backend()
-    monkeypatch.setenv("TATM_METADATA_STORE_BACKEND", "json")
-    monkeypatch.setenv("TATM_METADATA_STORE_PATH", str(json_metadata_store))
+    _, config_path = json_metadata_store
+    monkeypatch.setenv("TATM_BASE_CONFIG", str(config_path))
     dataset = get_dataset("tokenized", context_length=100)
     assert len(dataset) == 100
     assert dataset.vocab_size == 32100
