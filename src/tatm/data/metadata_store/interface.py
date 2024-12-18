@@ -5,6 +5,9 @@ from tatm.data.metadata_store.metadata_backend import (
     JsonTatmMetadataStoreBackend,
     TatmMetadataStoreBackend,
 )
+from tatm.data.metadata_store.open_metadata_backend import (
+    OpenMetadataTatmMetadataStoreBackend,
+)
 
 BACKEND: TatmMetadataStoreBackend = None
 BACKEND_INITIALIZED = False
@@ -53,6 +56,12 @@ def set_backend() -> None:
         if "metadata_store_path" not in cnf.metadata_backend.args:
             cnf.metadata_backend.args["metadata_store_path"] = "metadata.json"
         BACKEND = JsonTatmMetadataStoreBackend(**cnf.metadata_backend.args)
+    elif backend_type == "open_metadata":
+        if "address" not in cnf.metadata_backend.args:
+            raise ValueError("No address provided for Open Metadata backend.")
+        if "api_key" not in cnf.metadata_backend.args:
+            raise ValueError("No API key provided for Open Metadata backend.")
+        BACKEND = OpenMetadataTatmMetadataStoreBackend(**cnf.metadata_backend.args)
     elif backend_type is None:
         LOGGER.warning(
             "No metadata store backend set. Metadata store will not be used."

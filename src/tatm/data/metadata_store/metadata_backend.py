@@ -18,6 +18,9 @@ class TatmMetadataStoreBackend(ABC):
         Args:
             name: Name of the dataset to lookup.
 
+        Raises:
+            KeyError: If metadata is not found for the dataset.
+
         Returns:
             str: JSON representation of the metadata.
         """
