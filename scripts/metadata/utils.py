@@ -13,13 +13,13 @@ def metadata_files(
     Args:
         directory: The root directory to start the search from
         include_tokenized: Whether or not to return tokenized data sets fron the generator. Tokenized datasets are assumed to
-          be stored in a sub-directory named "tokenized", and therefore if this is False, all metadata objects in such a 
+          be stored in a sub-directory named "tokenized", and therefore if this is False, all metadata objects in such a
           directory will be ignored. Defaults to False.
         exclude_dirs: A list of directory names to be ignored when searching. Any directory at any level matching this name
          will not have its contents included. Defaults to None.
 
     Yields:
-        tuple[str, pathlib.Path, tatm.data.TatmDataMetadata]: A tuple containing the first sub-directory below the root (assumed to be the 
+        tuple[str, pathlib.Path, tatm.data.TatmDataMetadata]: A tuple containing the first sub-directory below the root (assumed to be the
         general context of the data), the path to the directory holding metadata file, and the metadata object.
     """
     root = pathlib.Path(directory)
