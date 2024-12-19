@@ -18,6 +18,7 @@ torch = "^2.4.1"
 requests = "^2.32.3"
 aiohttp = ">=3.10.11"
 openmetadata-ingestion = "1.5.12"
+zstandard = "^0.23.0"
 
 [tool.poetry.scripts]
 tatm = "tatm:cli"
