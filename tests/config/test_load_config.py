@@ -1,6 +1,6 @@
 import pytest
 
-from tatm.config import load_config, _set_cli_config_files, _set_cli_config_overrides
+from tatm.config import _set_cli_config_files, _set_cli_config_overrides, load_config
 
 
 @pytest.fixture

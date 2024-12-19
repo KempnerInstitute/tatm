@@ -4,7 +4,7 @@ from typing import List, Tuple
 import click
 
 import tatm.compute.run
-from tatm.config import load_config, _set_cli_config_files, _set_cli_config_overrides
+from tatm.config import _set_cli_config_files, _set_cli_config_overrides, load_config
 
 
 def parse_config_opts(opts: List[str], validate=True) -> Tuple[List[str], List[str]]:
