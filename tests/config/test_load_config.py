@@ -1,15 +1,15 @@
 import pytest
 
-from tatm.config import load_config, set_cli_config_files, set_cli_config_overrides
+from tatm.config import load_config, _set_cli_config_files, _set_cli_config_overrides
 
 
 @pytest.fixture
 def temp_global_config():
-    set_cli_config_files([])
-    set_cli_config_overrides([])
+    _set_cli_config_files([])
+    _set_cli_config_overrides([])
     yield
-    set_cli_config_files([])
-    set_cli_config_overrides([])
+    _set_cli_config_files([])
+    _set_cli_config_overrides([])
 
 
 class TestConfigLoading:
@@ -72,7 +72,7 @@ class TestConfigLoading:
         monkeypatch.setenv(
             "TATM_BASE_CONFIG", "tests/config/examples/metadata_backend_only.yaml"
         )
-        set_cli_config_files(["tests/config/examples/base2.yaml"])
+        _set_cli_config_files(["tests/config/examples/base2.yaml"])
         config = load_config()
         assert config.backend == "slurm"
         assert config.slurm.partition == "test"

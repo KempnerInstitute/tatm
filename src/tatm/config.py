@@ -11,22 +11,22 @@ _CLI_CONFIG_FILES: List[str] = []
 _CLI_CONFIG_OVERRIDES: List[str] = []
 
 
-def set_cli_config_files(files: List[str]):
+def _set_cli_config_files(files: List[str]):
     global _CLI_CONFIG_FILES
     _CLI_CONFIG_FILES = files
 
 
-def set_cli_config_overrides(overrides: List[str]):
+def _set_cli_config_overrides(overrides: List[str]):
     global _CLI_CONFIG_OVERRIDES
     _CLI_CONFIG_OVERRIDES = overrides
 
 
-def get_cli_config_files():
+def _get_cli_config_files():
     global _CLI_CONFIG_FILES
     return _CLI_CONFIG_FILES
 
 
-def get_config_overrides():
+def _get_config_overrides():
     global _CLI_CONFIG_OVERRIDES
     return _CLI_CONFIG_OVERRIDES
 
@@ -106,9 +106,9 @@ def load_config(
         TatmConfig: Loaded configuration.
     """
     if config_paths is None:
-        config_paths = get_cli_config_files()
+        config_paths = _get_cli_config_files()
     if overrides is None:
-        overrides = get_config_overrides()
+        overrides = _get_config_overrides()
     if isinstance(config_paths, str):
         config_paths = [config_paths]
     if isinstance(overrides, str):

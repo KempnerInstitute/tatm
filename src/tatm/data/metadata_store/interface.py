@@ -74,7 +74,7 @@ def set_backend() -> None:
 
 
 def reset_backend() -> None:
-    """Reset the metadata store backend."""
+    """Reset the metadata store backend. Used for testing and for reloading the backend if the config changes."""
     global BACKEND
     global BACKEND_INITIALIZED
 

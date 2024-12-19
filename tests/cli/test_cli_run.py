@@ -2,16 +2,16 @@ import pytest
 from click.testing import CliRunner
 
 from tatm.cli.run import parse_config_opts, run
-from tatm.config import set_cli_config_files, set_cli_config_overrides
+from tatm.config import _set_cli_config_files, _set_cli_config_overrides
 
 
 @pytest.fixture
 def temp_global_config():
-    set_cli_config_files([])
-    set_cli_config_overrides([])
+    _set_cli_config_files([])
+    _set_cli_config_overrides([])
     yield
-    set_cli_config_files([])
-    set_cli_config_overrides([])
+    _set_cli_config_files([])
+    _set_cli_config_overrides([])
 
 
 def test_parse_config_opts(temp_global_config):

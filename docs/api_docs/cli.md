@@ -14,7 +14,7 @@ The `tatm` CLI consists of both top level commands and (where needed) subcommand
 
 Installing the `tatm` library will automatically install the CLI to your environment.
 
-**DETAILED INSTALLATION INSTRUCTIONS TO BE ADDED**
+See [here](../getting_started.md) for more information on installing the `tatm` library.
 
 ## Commands
 
