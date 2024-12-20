@@ -21,7 +21,6 @@ def parse_config_opts(opts: List[str], validate=True) -> Tuple[List[str], List[s
     Returns:
         Returns a tuple of length 2. The first element is a list of config files, the second is a list of overrides.
     """
-    global CLI_CONFIG_FILES, CLI_CONFIG_OVERRIDES
     files, overrides = [], []
     for opt in opts:
         if "=" in opt:
