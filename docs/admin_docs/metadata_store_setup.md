@@ -45,7 +45,7 @@ As this configuration is likely to be system-wide, it is recommended to place it
 Utility scripts are provided to assist in loading metadata into the metadata store. They can be found in the `scripts/metadata` directory of the `tatm` package. The following scripts are provided:
 
 - `scripts/metadata/create_json_metadata.py`: A script to create a new JSON metadata store file. This script will parse a provided list of structured directories and create a JSON file containing the metadata for each dataset. This script is useful for creating a new JSON metadata store file from a set of directories containing data.
-- `scripts/metadata/load_open_metadata_backend.py`: A script to load metadata into an OpenMetadata store. This script will parse a provided list of structured directories and load the metadata for each dataset into the OpenMetadata store. This script makes assumptions based on the names and structure of the directies (see below) and may need to be modified to work with different directory structures.
+- `scripts/metadata/load_open_metadata_backend.py`: A script to load metadata into an OpenMetadata store. This script will parse a provided list of structured directories and load the metadata for each dataset into the OpenMetadata store. This script makes assumptions based on the names and structure of the directories (see below) and may need to be modified to work with different directory structures.
 
 Note that both scripts assume that all data set names within the metadata store are unique. If a dataset with the same name already exists in the metadata store, the script will overwrite the existing metadata with the new metadata. Care should be taken to ensure that the metadata store is not overwritten unintentionally.
 
