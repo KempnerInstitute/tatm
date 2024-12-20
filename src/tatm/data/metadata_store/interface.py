@@ -51,7 +51,7 @@ def set_backend() -> None:
 
     cnf = load_config()
     backend_type = cnf.metadata_backend.type
-    print(backend_type)
+    print(f"Using {backend_type} metadata backend")
     if backend_type == "json":
         if "metadata_store_path" not in cnf.metadata_backend.args:
             cnf.metadata_backend.args["metadata_store_path"] = "metadata.json"
