@@ -15,6 +15,7 @@ of new models, datasets, and training frameworks.
 :maxdepth: 2
 :caption: Introduction:
 getting_started.md
+configuration.md
 ```
 
 ```{toctree}
@@ -26,11 +27,19 @@ metadata.md
 
 ```{toctree}
 :maxdepth: 2
+:caption: Administration:
+admin_docs/metadata_store_setup.md
+
+```
+
+```{toctree}
+:maxdepth: 2
 :caption: API Reference:
-cli.md
-data_api.md
-config_api.md
-tokenizer_api.md
+api_docs/cli.md
+api_docs/data_api.md
+api_docs/config_api.md
+api_docs/tokenizer_api.md
+api_docs/metadata_store_api.md
 ```
 
 

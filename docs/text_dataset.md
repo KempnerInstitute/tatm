@@ -48,14 +48,14 @@ slurm:
     account: example # SLURM account to use for the job
 ```
 
-For full details on how to configure `tatm`, see the [Configuring `tatm`](config.md) documentation.
+For full details on how to configure `tatm`, see the [Configuring `tatm`](api_docs/config_api.md) documentation.
 
 ### Running the tokenization process
 
 To run the tokenizer on SLURM, use the the command `tatm run` with the `tokenize` subcommand and the 
 appropriate arguments/options. `tatm` will create a submission script based on the configuration file and run time options,
 wrap the `ray` based tokenization process in a SLURM job, and submit the job to the cluster. The options available
-to the `tatm run` command are documented in the [CLI](cli.md) documentation and mirror the flags available to the `sbatch` command.
+to the `tatm run` command are documented in the [CLI](api_docs/cli.md) documentation and mirror the flags available to the `sbatch` command.
 
 To review the submission script before submitting the job, use the `--no-submit` flag to prevent the job from being submitted.
 The submission script will be created in the current working directory and will be named `tatm_tokenize.submit`. The executed `sbatch` command will output to the console.
@@ -75,6 +75,10 @@ tatm run --conf $PWD/tatm_config.yaml -N 4 -c 40 tokenize \
 
 This will submit a slurm job creating the Ray cluster.  The `tokenize` command will utilize the Ray cluster to tokenize `arxiv` corpus the dataset located at `/n/holylfs06/LABS/kempner_shared/Everyone/testbed/text/redpajama-v1` and output the tokenized data to the directory `tokenized_redpj_arxiv` in the current working directory.  This will also create a metadata file associated with the tokenized data that can be used to load the tokenized data into a PyTorch model for training. The metadata file, `metadata.json`,will be located in the output directory. It will also include
 information about the tokenizer, including the tokenizer's vocabulary and configuration, as well as the version of Huggingface `tokenizers` and `tatm` used to tokenize the data.
+
+```{note}
+If your site is set up with a shared backend, you'll be able to use semantic data names in addition to paths. See [](admin_docs/metadata_store_setup.md) for more information.
+```
 
 By default the `tokenize` command uses the `t5-base` tokenizer from Huggingface. You can specify a different tokenizer to use with the `--tokenizer` flag. You can either pass the name of a tokenizer available from HuggingFace or pass the path to a huggingface compatible tokenizer json file.
 

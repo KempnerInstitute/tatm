@@ -18,8 +18,6 @@ LOGGER = logging.getLogger(__name__)
 
 
 class OpenMetadataTatmMetadataStoreBackend(TatmMetadataStoreBackend):
-    """Metadata store backend that stores metadata as JSON files."""
-
     def __init__(
         self,
         address: str,
@@ -28,6 +26,13 @@ class OpenMetadataTatmMetadataStoreBackend(TatmMetadataStoreBackend):
         *args,
         **kwargs,
     ):
+        """Metadata store backend that stores metadata as JSON files.
+
+        Args:
+            address: Address of the Open Metadata backend. Should be in the format "https://example.com[:port]/api".
+            api_key: API key for the Open Metadata backend. Should be a JWT token giving users read only access.
+            data_service_name: Name of the top level data service used for tatm data. Defaults to "tatm-data-service".
+        """
         super().__init__(*args, **kwargs)
         self.address = address
         self.api_key = api_key
