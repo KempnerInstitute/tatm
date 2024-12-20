@@ -16,12 +16,9 @@ pyyaml = "^6.0.2"
 omegaconf = "^2.3.0"
 torch = "^2.4.1"
 requests = "^2.32.3"
-<<<<<<< HEAD
 aiohttp = ">=3.10.11"
 openmetadata-ingestion = "1.5.12"
 zstandard = "^0.23.0"
-=======
->>>>>>> main
 
 [tool.poetry.scripts]
 tatm = "tatm:cli"
@@ -65,9 +62,5 @@ requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
 
 [tool.isort]
-<<<<<<< HEAD
 profile = "black"
 skip = ["scripts/metadata/load_open_metadata_backend.py"]
-=======
-profile = "black"
->>>>>>> main
