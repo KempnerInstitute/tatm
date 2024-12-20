@@ -42,18 +42,24 @@
               <p class="caption" role="heading"><span class="caption-text">Introduction:</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="getting_started.html">Getting Started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="configuration.html">Package Configuration</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Examples:</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="text_dataset.html">Loading Text Data for LLM Training</a></li>
 <li class="toctree-l1"><a class="reference internal" href="metadata.html">Dataset Metadata</a></li>
 </ul>
+<p class="caption" role="heading"><span class="caption-text">Administration:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="admin_docs/metadata_store_setup.html">Metadata Store Setup</a></li>
+</ul>
 <p class="caption" role="heading"><span class="caption-text">API Reference:</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="cli.html"><code class="docutils literal notranslate"><span class="pre">tatm</span></code> CLI Reference</a></li>
-<li class="toctree-l1"><a class="reference internal" href="data_api.html"><code class="docutils literal notranslate"><span class="pre">tatm.data</span></code> Data Module API</a></li>
-<li class="toctree-l1"><a class="reference internal" href="config_api.html"><code class="docutils literal notranslate"><span class="pre">tatm.config</span></code> Config API Reference</a></li>
-<li class="toctree-l1"><a class="reference internal" href="tokenizer_api.html"><code class="docutils literal notranslate"><span class="pre">tatm.tokenizer</span></code> Tokenizer API Reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api_docs/cli.html"><code class="docutils literal notranslate"><span class="pre">tatm</span></code> CLI Reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api_docs/data_api.html"><code class="docutils literal notranslate"><span class="pre">tatm.data</span></code> Data Module API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api_docs/config_api.html"><code class="docutils literal notranslate"><span class="pre">tatm.config</span></code> Config API Reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api_docs/tokenizer_api.html"><code class="docutils literal notranslate"><span class="pre">tatm.tokenizer</span></code> Tokenizer API Reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api_docs/metadata_store_api.html">Metadata Store API</a></li>
 </ul>
 
         </div>
@@ -91,9 +97,11 @@
  | <a href="#F"><strong>F</strong></a>
  | <a href="#G"><strong>G</strong></a>
  | <a href="#I"><strong>I</strong></a>
+ | <a href="#J"><strong>J</strong></a>
  | <a href="#L"><strong>L</strong></a>
  | <a href="#M"><strong>M</strong></a>
  | <a href="#N"><strong>N</strong></a>
+ | <a href="#O"><strong>O</strong></a>
  | <a href="#P"><strong>P</strong></a>
  | <a href="#Q"><strong>Q</strong></a>
  | <a href="#R"><strong>R</strong></a>
@@ -105,15 +113,15 @@
 <h2 id="A">A</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="config.html#tatm.config.SlurmConfig.account">account (tatm.config.SlurmConfig attribute)</a>, <a href="config_api.html#tatm.config.SlurmConfig.account">[1]</a>
+      <li><a href="api_docs/config_api.html#tatm.config.SlurmConfig.account">account (tatm.config.SlurmConfig attribute)</a>
 </li>
-      <li><a href="config.html#tatm.config.MetadataBackendConfig.args">args (tatm.config.MetadataBackendConfig attribute)</a>, <a href="config_api.html#tatm.config.MetadataBackendConfig.args">[1]</a>
+      <li><a href="api_docs/config_api.html#tatm.config.MetadataBackendConfig.args">args (tatm.config.MetadataBackendConfig attribute)</a>
 </li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="data_api.html#tatm.data.TatmDataMetadata.as_json">as_json() (tatm.data.TatmDataMetadata method)</a>
+      <li><a href="api_docs/data_api.html#tatm.data.TatmDataMetadata.as_json">as_json() (tatm.data.TatmDataMetadata method)</a>
 </li>
-      <li><a href="data_api.html#tatm.data.TatmDataMetadata.as_yaml">as_yaml() (tatm.data.TatmDataMetadata method)</a>
+      <li><a href="api_docs/data_api.html#tatm.data.TatmDataMetadata.as_yaml">as_yaml() (tatm.data.TatmDataMetadata method)</a>
 </li>
   </ul></td>
 </tr></table>
@@ -121,7 +129,7 @@
 <h2 id="B">B</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="config.html#tatm.config.TatmConfig.backend">backend (tatm.config.TatmConfig attribute)</a>, <a href="config_api.html#tatm.config.TatmConfig.backend">[1]</a>
+      <li><a href="api_docs/config_api.html#tatm.config.TatmConfig.backend">backend (tatm.config.TatmConfig attribute)</a>
 </li>
   </ul></td>
 </tr></table>
@@ -129,21 +137,21 @@
 <h2 id="C">C</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="config.html#tatm.config.EnvironmentConfig.conda_env">conda_env (tatm.config.EnvironmentConfig attribute)</a>, <a href="config_api.html#tatm.config.EnvironmentConfig.conda_env">[1]</a>
+      <li><a href="api_docs/config_api.html#tatm.config.EnvironmentConfig.conda_env">conda_env (tatm.config.EnvironmentConfig attribute)</a>
 </li>
-      <li><a href="data_api.html#tatm.data.TatmDataMetadata.content_field">content_field (tatm.data.TatmDataMetadata attribute)</a>
+      <li><a href="api_docs/data_api.html#tatm.data.TatmDataMetadata.content_field">content_field (tatm.data.TatmDataMetadata attribute)</a>
 
       <ul>
-        <li><a href="tokenizer_api.html#tatm.tokenizer.engine.ExampleMessage.content_field">(tatm.tokenizer.engine.ExampleMessage attribute)</a>
+        <li><a href="api_docs/tokenizer_api.html#tatm.tokenizer.engine.ExampleMessage.content_field">(tatm.tokenizer.engine.ExampleMessage attribute)</a>
 </li>
       </ul></li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="data_api.html#tatm.data.TatmDataMetadata.corpus_data_dir_parent">corpus_data_dir_parent (tatm.data.TatmDataMetadata attribute)</a>
+      <li><a href="api_docs/data_api.html#tatm.data.TatmDataMetadata.corpus_data_dir_parent">corpus_data_dir_parent (tatm.data.TatmDataMetadata attribute)</a>
 </li>
-      <li><a href="data_api.html#tatm.data.TatmDataMetadata.corpus_separation_strategy">corpus_separation_strategy (tatm.data.TatmDataMetadata attribute)</a>
+      <li><a href="api_docs/data_api.html#tatm.data.TatmDataMetadata.corpus_separation_strategy">corpus_separation_strategy (tatm.data.TatmDataMetadata attribute)</a>
 </li>
-      <li><a href="data_api.html#tatm.data.TatmDataMetadata.corpuses">corpuses (tatm.data.TatmDataMetadata attribute)</a>
+      <li><a href="api_docs/data_api.html#tatm.data.TatmDataMetadata.corpuses">corpuses (tatm.data.TatmDataMetadata attribute)</a>
 </li>
   </ul></td>
 </tr></table>
@@ -151,19 +159,19 @@
 <h2 id="D">D</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="tokenizer_api.html#tatm.tokenizer.engine.ExampleMessage.data">data (tatm.tokenizer.engine.ExampleMessage attribute)</a>
+      <li><a href="api_docs/tokenizer_api.html#tatm.tokenizer.engine.ExampleMessage.data">data (tatm.tokenizer.engine.ExampleMessage attribute)</a>
 </li>
-      <li><a href="data_api.html#tatm.data.TatmDataMetadata.data_content">data_content (tatm.data.TatmDataMetadata attribute)</a>
+      <li><a href="api_docs/data_api.html#tatm.data.TatmDataMetadata.data_content">data_content (tatm.data.TatmDataMetadata attribute)</a>
 </li>
-      <li><a href="data_api.html#tatm.data.TatmDataMetadata.dataset_path">dataset_path (tatm.data.TatmDataMetadata attribute)</a>
+      <li><a href="api_docs/data_api.html#tatm.data.TatmDataMetadata.dataset_path">dataset_path (tatm.data.TatmDataMetadata attribute)</a>
 </li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="data_api.html#tatm.data.TatmDataMetadata.date_downloaded">date_downloaded (tatm.data.TatmDataMetadata attribute)</a>
+      <li><a href="api_docs/data_api.html#tatm.data.TatmDataMetadata.date_downloaded">date_downloaded (tatm.data.TatmDataMetadata attribute)</a>
 </li>
-      <li><a href="data_api.html#tatm.data.TatmDataMetadata.description">description (tatm.data.TatmDataMetadata attribute)</a>
+      <li><a href="api_docs/data_api.html#tatm.data.TatmDataMetadata.description">description (tatm.data.TatmDataMetadata attribute)</a>
 </li>
-      <li><a href="data_api.html#tatm.data.TatmDataMetadata.download_source">download_source (tatm.data.TatmDataMetadata attribute)</a>
+      <li><a href="api_docs/data_api.html#tatm.data.TatmDataMetadata.download_source">download_source (tatm.data.TatmDataMetadata attribute)</a>
 </li>
   </ul></td>
 </tr></table>
@@ -171,13 +179,13 @@
 <h2 id="E">E</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="config.html#tatm.config.TatmConfig.environment">environment (tatm.config.TatmConfig attribute)</a>, <a href="config_api.html#tatm.config.TatmConfig.environment">[1]</a>
+      <li><a href="api_docs/config_api.html#tatm.config.TatmConfig.environment">environment (tatm.config.TatmConfig attribute)</a>
 </li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="config.html#tatm.config.EnvironmentConfig">EnvironmentConfig (class in tatm.config)</a>, <a href="config_api.html#tatm.config.EnvironmentConfig">[1]</a>
+      <li><a href="api_docs/config_api.html#tatm.config.EnvironmentConfig">EnvironmentConfig (class in tatm.config)</a>
 </li>
-      <li><a href="tokenizer_api.html#tatm.tokenizer.engine.ExampleMessage">ExampleMessage (class in tatm.tokenizer.engine)</a>
+      <li><a href="api_docs/tokenizer_api.html#tatm.tokenizer.engine.ExampleMessage">ExampleMessage (class in tatm.tokenizer.engine)</a>
 </li>
   </ul></td>
 </tr></table>
@@ -185,23 +193,23 @@
 <h2 id="F">F</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="data_api.html#tatm.data.TatmDataMetadata.from_directory">from_directory() (tatm.data.TatmDataMetadata class method)</a>
+      <li><a href="api_docs/data_api.html#tatm.data.TatmDataMetadata.from_directory">from_directory() (tatm.data.TatmDataMetadata class method)</a>
 </li>
-      <li><a href="data_api.html#tatm.data.TatmDataMetadata.from_file">from_file() (tatm.data.TatmDataMetadata class method)</a>
+      <li><a href="api_docs/data_api.html#tatm.data.TatmDataMetadata.from_file">from_file() (tatm.data.TatmDataMetadata class method)</a>
 </li>
-      <li><a href="data_api.html#tatm.data.TatmDataMetadata.from_json">from_json() (tatm.data.TatmDataMetadata class method)</a>
+      <li><a href="api_docs/data_api.html#tatm.data.TatmDataMetadata.from_json">from_json() (tatm.data.TatmDataMetadata class method)</a>
 </li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="data_api.html#tatm.data.TatmData.from_metadata">from_metadata() (tatm.data.TatmData class method)</a>
+      <li><a href="api_docs/data_api.html#tatm.data.TatmData.from_metadata">from_metadata() (tatm.data.TatmData class method)</a>
 
       <ul>
-        <li><a href="data_api.html#tatm.data.TatmTextData.from_metadata">(tatm.data.TatmTextData class method)</a>
+        <li><a href="api_docs/data_api.html#tatm.data.TatmTextData.from_metadata">(tatm.data.TatmTextData class method)</a>
 </li>
       </ul></li>
-      <li><a href="data_api.html#tatm.data.TatmDataMetadata.from_metadata_store">from_metadata_store() (tatm.data.TatmDataMetadata class method)</a>
+      <li><a href="api_docs/data_api.html#tatm.data.TatmDataMetadata.from_metadata_store">from_metadata_store() (tatm.data.TatmDataMetadata class method)</a>
 </li>
-      <li><a href="data_api.html#tatm.data.TatmDataMetadata.from_yaml">from_yaml() (tatm.data.TatmDataMetadata class method)</a>
+      <li><a href="api_docs/data_api.html#tatm.data.TatmDataMetadata.from_yaml">from_yaml() (tatm.data.TatmDataMetadata class method)</a>
 </li>
   </ul></td>
 </tr></table>
@@ -209,20 +217,18 @@
 <h2 id="G">G</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="config.html#tatm.config.get_cli_config_files">get_cli_config_files() (in module tatm.config)</a>, <a href="config_api.html#tatm.config.get_cli_config_files">[1]</a>
+      <li><a href="api_docs/data_api.html#tatm.data.get_data">get_data() (in module tatm.data)</a>
 </li>
-      <li><a href="config.html#tatm.config.get_config_overrides">get_config_overrides() (in module tatm.config)</a>, <a href="config_api.html#tatm.config.get_config_overrides">[1]</a>
-</li>
-      <li><a href="data_api.html#tatm.data.get_data">get_data() (in module tatm.data)</a>
+      <li><a href="api_docs/data_api.html#tatm.data.get_dataset">get_dataset() (in module tatm.data)</a>
 </li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="data_api.html#tatm.data.get_dataset">get_dataset() (in module tatm.data)</a>
+      <li><a href="api_docs/metadata_store_api.html#tatm.data.metadata_store.get_metadata">get_metadata() (in module tatm.data.metadata_store)</a>
 </li>
-      <li><a href="data_api.html#tatm.data.TatmData.get_source">get_source() (tatm.data.TatmData method)</a>
+      <li><a href="api_docs/data_api.html#tatm.data.TatmData.get_source">get_source() (tatm.data.TatmData method)</a>
 
       <ul>
-        <li><a href="data_api.html#tatm.data.TatmTextData.get_source">(tatm.data.TatmTextData method)</a>
+        <li><a href="api_docs/data_api.html#tatm.data.TatmTextData.get_source">(tatm.data.TatmTextData method)</a>
 </li>
       </ul></li>
   </ul></td>
@@ -231,50 +237,72 @@
 <h2 id="I">I</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="data_api.html#tatm.data.TatmData.initialize">initialize() (tatm.data.TatmData method)</a>
+      <li><a href="api_docs/data_api.html#tatm.data.TatmData.initialize">initialize() (tatm.data.TatmData method)</a>
 
       <ul>
-        <li><a href="data_api.html#tatm.data.TatmTextData.initialize">(tatm.data.TatmTextData method)</a>
+        <li><a href="api_docs/data_api.html#tatm.data.TatmTextData.initialize">(tatm.data.TatmTextData method)</a>
 </li>
       </ul></li>
+  </ul></td>
+</tr></table>
+
+<h2 id="J">J</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="api_docs/metadata_store_api.html#tatm.data.metadata_store.metadata_backend.JsonTatmMetadataStoreBackend">JsonTatmMetadataStoreBackend (class in tatm.data.metadata_store.metadata_backend)</a>
+</li>
   </ul></td>
 </tr></table>
 
 <h2 id="L">L</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="config.html#tatm.config.load_base_config">load_base_config() (in module tatm.config)</a>, <a href="config_api.html#tatm.config.load_base_config">[1]</a>
+      <li><a href="api_docs/config_api.html#tatm.config.load_base_config">load_base_config() (in module tatm.config)</a>
+</li>
+      <li><a href="api_docs/config_api.html#tatm.config.load_config">load_config() (in module tatm.config)</a>
 </li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="config.html#tatm.config.load_config">load_config() (in module tatm.config)</a>, <a href="config_api.html#tatm.config.load_config">[1]</a>
+      <li><a href="api_docs/metadata_store_api.html#tatm.data.metadata_store.metadata_backend.JsonTatmMetadataStoreBackend.lookup">lookup() (tatm.data.metadata_store.metadata_backend.JsonTatmMetadataStoreBackend method)</a>
+
+      <ul>
+        <li><a href="api_docs/metadata_store_api.html#tatm.data.metadata_store.metadata_backend.TatmMetadataStoreBackend.lookup">(tatm.data.metadata_store.metadata_backend.TatmMetadataStoreBackend method)</a>
 </li>
+        <li><a href="api_docs/metadata_store_api.html#tatm.data.metadata_store.open_metadata_backend.OpenMetadataTatmMetadataStoreBackend.lookup">(tatm.data.metadata_store.open_metadata_backend.OpenMetadataTatmMetadataStoreBackend method)</a>
+</li>
+      </ul></li>
   </ul></td>
 </tr></table>
 
 <h2 id="M">M</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="config.html#tatm.config.TatmConfig.metadata_backend">metadata_backend (tatm.config.TatmConfig attribute)</a>, <a href="config_api.html#tatm.config.TatmConfig.metadata_backend">[1]</a>
+      <li><a href="api_docs/config_api.html#tatm.config.TatmConfig.metadata_backend">metadata_backend (tatm.config.TatmConfig attribute)</a>
 </li>
-      <li><a href="config.html#tatm.config.MetadataBackendConfig">MetadataBackendConfig (class in tatm.config)</a>, <a href="config_api.html#tatm.config.MetadataBackendConfig">[1]</a>
+      <li><a href="api_docs/config_api.html#tatm.config.MetadataBackendConfig">MetadataBackendConfig (class in tatm.config)</a>
 </li>
       <li>
     module
 
       <ul>
-        <li><a href="config.html#module-tatm.config">tatm.config</a>, <a href="config_api.html#module-tatm.config">[1]</a>
+        <li><a href="api_docs/config_api.html#module-tatm.config">tatm.config</a>
 </li>
-        <li><a href="data_api.html#module-tatm.data">tatm.data</a>
+        <li><a href="api_docs/data_api.html#module-tatm.data">tatm.data</a>
 </li>
-        <li><a href="tokenizer_api.html#module-tatm.tokenizer">tatm.tokenizer</a>
+        <li><a href="api_docs/metadata_store_api.html#module-tatm.data.metadata_store">tatm.data.metadata_store</a>
 </li>
-        <li><a href="tokenizer_api.html#module-tatm.tokenizer.engine">tatm.tokenizer.engine</a>
+        <li><a href="api_docs/metadata_store_api.html#module-tatm.data.metadata_store.metadata_backend">tatm.data.metadata_store.metadata_backend</a>
+</li>
+        <li><a href="api_docs/metadata_store_api.html#module-tatm.data.metadata_store.open_metadata_backend">tatm.data.metadata_store.open_metadata_backend</a>
+</li>
+        <li><a href="api_docs/tokenizer_api.html#module-tatm.tokenizer">tatm.tokenizer</a>
+</li>
+        <li><a href="api_docs/tokenizer_api.html#module-tatm.tokenizer.engine">tatm.tokenizer.engine</a>
 </li>
       </ul></li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="config.html#tatm.config.EnvironmentConfig.modules">modules (tatm.config.EnvironmentConfig attribute)</a>, <a href="config_api.html#tatm.config.EnvironmentConfig.modules">[1]</a>
+      <li><a href="api_docs/config_api.html#tatm.config.EnvironmentConfig.modules">modules (tatm.config.EnvironmentConfig attribute)</a>
 </li>
   </ul></td>
 </tr></table>
@@ -282,13 +310,21 @@
 <h2 id="N">N</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="data_api.html#tatm.data.TatmDataMetadata.name">name (tatm.data.TatmDataMetadata attribute)</a>
+      <li><a href="api_docs/data_api.html#tatm.data.TatmDataMetadata.name">name (tatm.data.TatmDataMetadata attribute)</a>
 </li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="data_api.html#tatm.data.TatmMemmapDataset.num_files">num_files() (tatm.data.TatmMemmapDataset method)</a>
+      <li><a href="api_docs/data_api.html#tatm.data.TatmMemmapDataset.num_files">num_files() (tatm.data.TatmMemmapDataset method)</a>
 </li>
-      <li><a href="data_api.html#tatm.data.TatmMemmapDataset.num_tokens">num_tokens() (tatm.data.TatmMemmapDataset method)</a>
+      <li><a href="api_docs/data_api.html#tatm.data.TatmMemmapDataset.num_tokens">num_tokens() (tatm.data.TatmMemmapDataset method)</a>
+</li>
+  </ul></td>
+</tr></table>
+
+<h2 id="O">O</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="api_docs/metadata_store_api.html#tatm.data.metadata_store.open_metadata_backend.OpenMetadataTatmMetadataStoreBackend">OpenMetadataTatmMetadataStoreBackend (class in tatm.data.metadata_store.open_metadata_backend)</a>
 </li>
   </ul></td>
 </tr></table>
@@ -296,7 +332,7 @@
 <h2 id="P">P</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="config.html#tatm.config.SlurmConfig.partition">partition (tatm.config.SlurmConfig attribute)</a>, <a href="config_api.html#tatm.config.SlurmConfig.partition">[1]</a>
+      <li><a href="api_docs/config_api.html#tatm.config.SlurmConfig.partition">partition (tatm.config.SlurmConfig attribute)</a>
 </li>
   </ul></td>
 </tr></table>
@@ -304,7 +340,7 @@
 <h2 id="Q">Q</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="config.html#tatm.config.SlurmConfig.qos">qos (tatm.config.SlurmConfig attribute)</a>, <a href="config_api.html#tatm.config.SlurmConfig.qos">[1]</a>
+      <li><a href="api_docs/config_api.html#tatm.config.SlurmConfig.qos">qos (tatm.config.SlurmConfig attribute)</a>
 </li>
   </ul></td>
 </tr></table>
@@ -312,10 +348,14 @@
 <h2 id="R">R</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="tokenizer_api.html#tatm.tokenizer.engine.TokenizationEngine.run_with_ray">run_with_ray() (tatm.tokenizer.engine.TokenizationEngine method)</a>
+      <li><a href="api_docs/metadata_store_api.html#tatm.data.metadata_store.reset_backend">reset_backend() (in module tatm.data.metadata_store)</a>
+</li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="api_docs/tokenizer_api.html#tatm.tokenizer.engine.TokenizationEngine.run_with_ray">run_with_ray() (tatm.tokenizer.engine.TokenizationEngine method)</a>
 
       <ul>
-        <li><a href="tokenizer_api.html#tatm.tokenizer.TokenizationEngine.run_with_ray">(tatm.tokenizer.TokenizationEngine method)</a>
+        <li><a href="api_docs/tokenizer_api.html#tatm.tokenizer.TokenizationEngine.run_with_ray">(tatm.tokenizer.TokenizationEngine method)</a>
 </li>
       </ul></li>
   </ul></td>
@@ -324,19 +364,15 @@
 <h2 id="S">S</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="config.html#tatm.config.set_cli_config_files">set_cli_config_files() (in module tatm.config)</a>, <a href="config_api.html#tatm.config.set_cli_config_files">[1]</a>
+      <li><a href="api_docs/config_api.html#tatm.config.EnvironmentConfig.singularity_image">singularity_image (tatm.config.EnvironmentConfig attribute)</a>
 </li>
-      <li><a href="config.html#tatm.config.set_cli_config_overrides">set_cli_config_overrides() (in module tatm.config)</a>, <a href="config_api.html#tatm.config.set_cli_config_overrides">[1]</a>
-</li>
-      <li><a href="config.html#tatm.config.EnvironmentConfig.singularity_image">singularity_image (tatm.config.EnvironmentConfig attribute)</a>, <a href="config_api.html#tatm.config.EnvironmentConfig.singularity_image">[1]</a>
+      <li><a href="api_docs/config_api.html#tatm.config.TatmConfig.slurm">slurm (tatm.config.TatmConfig attribute)</a>
 </li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="config.html#tatm.config.TatmConfig.slurm">slurm (tatm.config.TatmConfig attribute)</a>, <a href="config_api.html#tatm.config.TatmConfig.slurm">[1]</a>
+      <li><a href="api_docs/config_api.html#tatm.config.SlurmConfig.slurm_bin_dir">slurm_bin_dir (tatm.config.SlurmConfig attribute)</a>
 </li>
-      <li><a href="config.html#tatm.config.SlurmConfig.slurm_bin_dir">slurm_bin_dir (tatm.config.SlurmConfig attribute)</a>, <a href="config_api.html#tatm.config.SlurmConfig.slurm_bin_dir">[1]</a>
-</li>
-      <li><a href="config.html#tatm.config.SlurmConfig">SlurmConfig (class in tatm.config)</a>, <a href="config_api.html#tatm.config.SlurmConfig">[1]</a>
+      <li><a href="api_docs/config_api.html#tatm.config.SlurmConfig">SlurmConfig (class in tatm.config)</a>
 </li>
   </ul></td>
 </tr></table>
@@ -348,57 +384,80 @@
     tatm.config
 
       <ul>
-        <li><a href="config.html#module-tatm.config">module</a>, <a href="config_api.html#module-tatm.config">[1]</a>
+        <li><a href="api_docs/config_api.html#module-tatm.config">module</a>
 </li>
       </ul></li>
       <li>
     tatm.data
 
       <ul>
-        <li><a href="data_api.html#module-tatm.data">module</a>
+        <li><a href="api_docs/data_api.html#module-tatm.data">module</a>
+</li>
+      </ul></li>
+      <li>
+    tatm.data.metadata_store
+
+      <ul>
+        <li><a href="api_docs/metadata_store_api.html#module-tatm.data.metadata_store">module</a>
+</li>
+      </ul></li>
+      <li>
+    tatm.data.metadata_store.metadata_backend
+
+      <ul>
+        <li><a href="api_docs/metadata_store_api.html#module-tatm.data.metadata_store.metadata_backend">module</a>
+</li>
+      </ul></li>
+      <li>
+    tatm.data.metadata_store.open_metadata_backend
+
+      <ul>
+        <li><a href="api_docs/metadata_store_api.html#module-tatm.data.metadata_store.open_metadata_backend">module</a>
 </li>
       </ul></li>
       <li>
     tatm.tokenizer
 
       <ul>
-        <li><a href="tokenizer_api.html#module-tatm.tokenizer">module</a>
+        <li><a href="api_docs/tokenizer_api.html#module-tatm.tokenizer">module</a>
 </li>
       </ul></li>
       <li>
     tatm.tokenizer.engine
 
       <ul>
-        <li><a href="tokenizer_api.html#module-tatm.tokenizer.engine">module</a>
+        <li><a href="api_docs/tokenizer_api.html#module-tatm.tokenizer.engine">module</a>
 </li>
       </ul></li>
-      <li><a href="config.html#tatm.config.TatmConfig">TatmConfig (class in tatm.config)</a>, <a href="config_api.html#tatm.config.TatmConfig">[1]</a>
-</li>
-      <li><a href="data_api.html#tatm.data.TatmData">TatmData (class in tatm.data)</a>
-</li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="data_api.html#tatm.data.TatmDataMetadata">TatmDataMetadata (class in tatm.data)</a>
+      <li><a href="api_docs/config_api.html#tatm.config.TatmConfig">TatmConfig (class in tatm.config)</a>
 </li>
-      <li><a href="data_api.html#tatm.data.TatmMemmapDataset">TatmMemmapDataset (class in tatm.data)</a>
+      <li><a href="api_docs/data_api.html#tatm.data.TatmData">TatmData (class in tatm.data)</a>
 </li>
-      <li><a href="data_api.html#tatm.data.TatmTextData">TatmTextData (class in tatm.data)</a>
+      <li><a href="api_docs/data_api.html#tatm.data.TatmDataMetadata">TatmDataMetadata (class in tatm.data)</a>
 </li>
-      <li><a href="data_api.html#tatm.data.TatmDataMetadata.to_json">to_json() (tatm.data.TatmDataMetadata method)</a>
+      <li><a href="api_docs/data_api.html#tatm.data.TatmMemmapDataset">TatmMemmapDataset (class in tatm.data)</a>
 </li>
-      <li><a href="data_api.html#tatm.data.TatmDataMetadata.to_yaml">to_yaml() (tatm.data.TatmDataMetadata method)</a>
+      <li><a href="api_docs/metadata_store_api.html#tatm.data.metadata_store.metadata_backend.TatmMetadataStoreBackend">TatmMetadataStoreBackend (class in tatm.data.metadata_store.metadata_backend)</a>
 </li>
-      <li><a href="tokenizer_api.html#tatm.tokenizer.TokenizationEngine">TokenizationEngine (class in tatm.tokenizer)</a>
+      <li><a href="api_docs/data_api.html#tatm.data.TatmTextData">TatmTextData (class in tatm.data)</a>
+</li>
+      <li><a href="api_docs/data_api.html#tatm.data.TatmDataMetadata.to_json">to_json() (tatm.data.TatmDataMetadata method)</a>
+</li>
+      <li><a href="api_docs/data_api.html#tatm.data.TatmDataMetadata.to_yaml">to_yaml() (tatm.data.TatmDataMetadata method)</a>
+</li>
+      <li><a href="api_docs/tokenizer_api.html#tatm.tokenizer.TokenizationEngine">TokenizationEngine (class in tatm.tokenizer)</a>
 
       <ul>
-        <li><a href="tokenizer_api.html#tatm.tokenizer.engine.TokenizationEngine">(class in tatm.tokenizer.engine)</a>
+        <li><a href="api_docs/tokenizer_api.html#tatm.tokenizer.engine.TokenizationEngine">(class in tatm.tokenizer.engine)</a>
 </li>
       </ul></li>
-      <li><a href="data_api.html#tatm.data.TatmDataMetadata.tokenized_info">tokenized_info (tatm.data.TatmDataMetadata attribute)</a>
+      <li><a href="api_docs/data_api.html#tatm.data.TatmDataMetadata.tokenized_info">tokenized_info (tatm.data.TatmDataMetadata attribute)</a>
 </li>
-      <li><a href="data_api.html#tatm.data.torch_collate_fn">torch_collate_fn() (in module tatm.data)</a>
+      <li><a href="api_docs/data_api.html#tatm.data.torch_collate_fn">torch_collate_fn() (in module tatm.data)</a>
 </li>
-      <li><a href="config.html#tatm.config.MetadataBackendConfig.type">type (tatm.config.MetadataBackendConfig attribute)</a>, <a href="config_api.html#tatm.config.MetadataBackendConfig.type">[1]</a>
+      <li><a href="api_docs/config_api.html#tatm.config.MetadataBackendConfig.type">type (tatm.config.MetadataBackendConfig attribute)</a>
 </li>
   </ul></td>
 </tr></table>
@@ -406,7 +465,7 @@
 <h2 id="V">V</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="config.html#tatm.config.EnvironmentConfig.venv">venv (tatm.config.EnvironmentConfig attribute)</a>, <a href="config_api.html#tatm.config.EnvironmentConfig.venv">[1]</a>
+      <li><a href="api_docs/config_api.html#tatm.config.EnvironmentConfig.venv">venv (tatm.config.EnvironmentConfig attribute)</a>
 </li>
   </ul></td>
 </tr></table>

@@ -19,7 +19,7 @@
     <script src="_static/js/theme.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="Loading Text Data for LLM Training" href="text_dataset.html" />
+    <link rel="next" title="Package Configuration" href="configuration.html" />
     <link rel="prev" title="tatm: The Kempner AI Testbed Library" href="index.html" /> 
 </head>
 
@@ -47,28 +47,31 @@
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Getting Started</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#installation">Installation</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="#requirements">Requirements</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#id1">Installation</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="#installing-from-github">Installing from GitHub</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#installing-from-pypi">Installing from PyPI</a></li>
-</ul>
-</li>
+<li class="toctree-l3"><a class="reference internal" href="#installing-from-github">Installing from GitHub</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#installing-from-pypi">Installing from PyPI</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="#loading-tokenized-data-with-tatm-for-use-with-pytorch">Loading Tokenized Data with <code class="docutils literal notranslate"><span class="pre">tatm</span></code> for use with PyTorch</a></li>
 </ul>
 </li>
+<li class="toctree-l1"><a class="reference internal" href="configuration.html">Package Configuration</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Examples:</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="text_dataset.html">Loading Text Data for LLM Training</a></li>
 <li class="toctree-l1"><a class="reference internal" href="metadata.html">Dataset Metadata</a></li>
 </ul>
+<p class="caption" role="heading"><span class="caption-text">Administration:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="admin_docs/metadata_store_setup.html">Metadata Store Setup</a></li>
+</ul>
 <p class="caption" role="heading"><span class="caption-text">API Reference:</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="cli.html"><code class="docutils literal notranslate"><span class="pre">tatm</span></code> CLI Reference</a></li>
-<li class="toctree-l1"><a class="reference internal" href="data_api.html"><code class="docutils literal notranslate"><span class="pre">tatm.data</span></code> Data Module API</a></li>
-<li class="toctree-l1"><a class="reference internal" href="config_api.html"><code class="docutils literal notranslate"><span class="pre">tatm.config</span></code> Config API Reference</a></li>
-<li class="toctree-l1"><a class="reference internal" href="tokenizer_api.html"><code class="docutils literal notranslate"><span class="pre">tatm.tokenizer</span></code> Tokenizer API Reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api_docs/cli.html"><code class="docutils literal notranslate"><span class="pre">tatm</span></code> CLI Reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api_docs/data_api.html"><code class="docutils literal notranslate"><span class="pre">tatm.data</span></code> Data Module API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api_docs/config_api.html"><code class="docutils literal notranslate"><span class="pre">tatm.config</span></code> Config API Reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api_docs/tokenizer_api.html"><code class="docutils literal notranslate"><span class="pre">tatm.tokenizer</span></code> Tokenizer API Reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api_docs/metadata_store_api.html">Metadata Store API</a></li>
 </ul>
 
         </div>
@@ -106,10 +109,8 @@
 <li><p><code class="docutils literal notranslate"><span class="pre">tatm</span></code> depends on pytorch, which depends on CUDA. It is recommended to pre-install both pytorch and CUDA prior to installing <code class="docutils literal notranslate"><span class="pre">tatm</span></code>. Instructions for installing pytorch can be found <a class="reference external" href="https://pytorch.org/get-started/locally/">here</a>.</p></li>
 </ul>
 </section>
-<section id="id1">
-<h3>Installation<a class="headerlink" href="#id1" title="Link to this heading"></a></h3>
 <section id="installing-from-github">
-<h4>Installing from GitHub<a class="headerlink" href="#installing-from-github" title="Link to this heading"></a></h4>
+<h3>Installing from GitHub<a class="headerlink" href="#installing-from-github" title="Link to this heading"></a></h3>
 <p>To install the latest stable version of <code class="docutils literal notranslate"><span class="pre">tatm</span></code> from GitHub, run the following command:</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pip<span class="w"> </span>install<span class="w"> </span>git+ssh://git@github.com/KempnerInstitute/tatm.git@main
 </pre></div>
@@ -121,14 +122,17 @@
 <p>For a specific past version of <code class="docutils literal notranslate"><span class="pre">tatm</span></code>, replace <code class="docutils literal notranslate"><span class="pre">main</span></code> or <code class="docutils literal notranslate"><span class="pre">dev</span></code> with the desired version number (i.e. <code class="docutils literal notranslate"><span class="pre">v0.1.0</span></code>).</p>
 </section>
 <section id="installing-from-pypi">
-<h4>Installing from PyPI<a class="headerlink" href="#installing-from-pypi" title="Link to this heading"></a></h4>
+<h3>Installing from PyPI<a class="headerlink" href="#installing-from-pypi" title="Link to this heading"></a></h3>
 <p>The package is not yet available on PyPI. Stay tuned for updates!</p>
-</section>
 </section>
 </section>
 <section id="loading-tokenized-data-with-tatm-for-use-with-pytorch">
 <h2>Loading Tokenized Data with <code class="docutils literal notranslate"><span class="pre">tatm</span></code> for use with PyTorch<a class="headerlink" href="#loading-tokenized-data-with-tatm-for-use-with-pytorch" title="Link to this heading"></a></h2>
 <p>In the example code below, we show how to create a PyTorch dataloader with a tokenized dataset for use with a model.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>If your site is set up with a metadata backend you can use semantic names for the dataset instead of the path to the tokenized data. See <a class="reference internal" href="admin_docs/metadata_store_setup.html"><span class="std std-doc">Metadata Store Setup</span></a> for more information.</p>
+</div>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="kn">import</span> <span class="nn">torch</span>
 <span class="kn">from</span> <span class="nn">torch.utils.data</span> <span class="kn">import</span> <span class="n">DataLoader</span>
@@ -170,7 +174,7 @@
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
         <a href="index.html" class="btn btn-neutral float-left" title="tatm: The Kempner AI Testbed Library" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
-        <a href="text_dataset.html" class="btn btn-neutral float-right" title="Loading Text Data for LLM Training" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="configuration.html" class="btn btn-neutral float-right" title="Package Configuration" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>

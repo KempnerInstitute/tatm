@@ -3,9 +3,10 @@
 <!DOCTYPE html>
 <html class="writer-html5" lang="en" data-content_root="./">
 <head>
-  <meta charset="utf-8" />
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Python Module Index &mdash; tatm  documentation</title>
+  <title>Package Configuration &mdash; tatm  documentation</title>
       <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=80d5e7a1" />
       <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=e59714d7" />
 
@@ -18,9 +19,8 @@
     <script src="_static/js/theme.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
- 
-
-
+    <link rel="next" title="Loading Text Data for LLM Training" href="text_dataset.html" />
+    <link rel="prev" title="Getting Started" href="getting_started.html" /> 
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -43,9 +43,12 @@
 </div>
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
               <p class="caption" role="heading"><span class="caption-text">Introduction:</span></p>
-<ul>
+<ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="getting_started.html">Getting Started</a></li>
-<li class="toctree-l1"><a class="reference internal" href="configuration.html">Package Configuration</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Package Configuration</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#examples-and-details">Examples and details</a></li>
+</ul>
+</li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Examples:</span></p>
 <ul>
@@ -79,8 +82,9 @@
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
       <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
-      <li class="breadcrumb-item active">Python Module Index</li>
+      <li class="breadcrumb-item active">Package Configuration</li>
       <li class="wy-breadcrumbs-aside">
+            <a href="_sources/configuration.md.txt" rel="nofollow"> View page source</a>
       </li>
   </ul>
   <hr/>
@@ -88,64 +92,33 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-
-   <h1>Python Module Index</h1>
-
-   <div class="modindex-jumpbox">
-   <a href="#cap-t"><strong>t</strong></a>
-   </div>
-
-   <table class="indextable modindextable">
-     <tr class="pcap"><td></td><td>&#160;</td><td></td></tr>
-     <tr class="cap" id="cap-t"><td></td><td>
-       <strong>t</strong></td><td></td></tr>
-     <tr>
-       <td><img src="_static/minus.png" class="toggler"
-              id="toggle-1" style="display: none" alt="-" /></td>
-       <td>
-       <code class="xref">tatm</code></td><td>
-       <em></em></td></tr>
-     <tr class="cg-1">
-       <td></td>
-       <td>&#160;&#160;&#160;
-       <a href="api_docs/config_api.html#module-tatm.config"><code class="xref">tatm.config</code></a></td><td>
-       <em></em></td></tr>
-     <tr class="cg-1">
-       <td></td>
-       <td>&#160;&#160;&#160;
-       <a href="api_docs/data_api.html#module-tatm.data"><code class="xref">tatm.data</code></a></td><td>
-       <em></em></td></tr>
-     <tr class="cg-1">
-       <td></td>
-       <td>&#160;&#160;&#160;
-       <a href="api_docs/metadata_store_api.html#module-tatm.data.metadata_store"><code class="xref">tatm.data.metadata_store</code></a></td><td>
-       <em></em></td></tr>
-     <tr class="cg-1">
-       <td></td>
-       <td>&#160;&#160;&#160;
-       <a href="api_docs/metadata_store_api.html#module-tatm.data.metadata_store.metadata_backend"><code class="xref">tatm.data.metadata_store.metadata_backend</code></a></td><td>
-       <em></em></td></tr>
-     <tr class="cg-1">
-       <td></td>
-       <td>&#160;&#160;&#160;
-       <a href="api_docs/metadata_store_api.html#module-tatm.data.metadata_store.open_metadata_backend"><code class="xref">tatm.data.metadata_store.open_metadata_backend</code></a></td><td>
-       <em></em></td></tr>
-     <tr class="cg-1">
-       <td></td>
-       <td>&#160;&#160;&#160;
-       <a href="api_docs/tokenizer_api.html#module-tatm.tokenizer"><code class="xref">tatm.tokenizer</code></a></td><td>
-       <em></em></td></tr>
-     <tr class="cg-1">
-       <td></td>
-       <td>&#160;&#160;&#160;
-       <a href="api_docs/tokenizer_api.html#module-tatm.tokenizer.engine"><code class="xref">tatm.tokenizer.engine</code></a></td><td>
-       <em></em></td></tr>
-   </table>
+  <section id="package-configuration">
+<h1>Package Configuration<a class="headerlink" href="#package-configuration" title="Link to this heading"></a></h1>
+<p><code class="docutils literal notranslate"><span class="pre">tatm</span></code> uses a configuration file to manage user and system level settings. The configuration file is a YAML file that is loaded at runtime and used to set the default values for the various options in the library. The configuration file is loaded from the following locations in order they are loaded, with later files taking precedence:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">/etc/tatm/config.yaml</span></code>: The system-wide configuration file. This file is used to set system-wide defaults for all users of the system. It is recommended that this file be used to set the default values for the metadata store and other system-wide settings.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">$TATM_BASE_DIR/config/config.yaml</span></code>: A secondary system-wide configuration file. This should be used if adminstrators don’t have access to the system-wide configuration file or they want to override specific settings.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">$TATM_BASE_CONFIG</span></code>: An environment variable that can be used to specify an alternate configuration file. This can be used to set user-specific configuration options or override system-wide options.</p></li>
+<li><p>CLI provided configuration files: Configuration files can be provided to the CLI using the <code class="docutils literal notranslate"><span class="pre">--config</span></code> option. These files will be merged with the system-wide configuration files and the environment variable configuration file.</p></li>
+<li><p>CLI provided dotlist configuration options: Configuration options can be provided to the CLI using the <code class="docutils literal notranslate"><span class="pre">--config</span></code> option. These options will be merged with the system-wide configuration files and the environment variable configuration file, taking ultimate precedence.</p></li>
+</ul>
+<section id="examples-and-details">
+<h2>Examples and details<a class="headerlink" href="#examples-and-details" title="Link to this heading"></a></h2>
+<ul class="simple">
+<li><p>For details on specific configuration blocks and options, see the <a class="reference internal" href="api_docs/config_api.html"><span class="std std-doc">configuration api docs</span></a>.</p></li>
+<li><p>For an example of User level configuration being used to specify how to interact with slurm, see <a class="reference internal" href="text_dataset.html"><span class="std std-doc">Loading Text Data for LLM Training</span></a>.</p></li>
+<li><p>For an example of how to use configuration file to set the metadata store, see the <a class="reference internal" href="admin_docs/metadata_store_setup.html"><span class="std std-doc">metadata store setup documentation</span></a>.</p></li>
+</ul>
+</section>
+</section>
 
 
            </div>
           </div>
-          <footer>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="getting_started.html" class="btn btn-neutral float-left" title="Getting Started" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="text_dataset.html" class="btn btn-neutral float-right" title="Loading Text Data for LLM Training" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
 
   <hr/>
 

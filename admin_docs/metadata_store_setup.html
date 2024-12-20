@@ -1,0 +1,226 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Metadata Store Setup &mdash; tatm  documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=e59714d7" />
+
+  
+      <script src="../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../_static/documentation_options.js?v=5929fcd5"></script>
+      <script src="../_static/doctools.js?v=9a2dae69"></script>
+      <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="tatm CLI Reference" href="../api_docs/cli.html" />
+    <link rel="prev" title="Dataset Metadata" href="../metadata.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            tatm
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Introduction:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../getting_started.html">Getting Started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../configuration.html">Package Configuration</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Examples:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../text_dataset.html">Loading Text Data for LLM Training</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../metadata.html">Dataset Metadata</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Administration:</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Metadata Store Setup</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#metadata-store-configuration">Metadata Store Configuration</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#metadata-store-types">Metadata Store Types</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#configuration-file">Configuration File</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#loading-metadata-into-the-store">Loading metadata into the store</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#testbed-directory-structure">Testbed Directory Structure</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#json-metadata-backend">JSON Metadata Backend</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#openmetadata-backend">OpenMetadata Backend</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">API Reference:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../api_docs/cli.html"><code class="docutils literal notranslate"><span class="pre">tatm</span></code> CLI Reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api_docs/data_api.html"><code class="docutils literal notranslate"><span class="pre">tatm.data</span></code> Data Module API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api_docs/config_api.html"><code class="docutils literal notranslate"><span class="pre">tatm.config</span></code> Config API Reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api_docs/tokenizer_api.html"><code class="docutils literal notranslate"><span class="pre">tatm.tokenizer</span></code> Tokenizer API Reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api_docs/metadata_store_api.html">Metadata Store API</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">tatm</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Metadata Store Setup</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/admin_docs/metadata_store_setup.md.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="metadata-store-setup">
+<h1>Metadata Store Setup<a class="headerlink" href="#metadata-store-setup" title="Link to this heading"></a></h1>
+<p>In addition to loading data using paths to specific files and directories, <code class="docutils literal notranslate"><span class="pre">tatm</span></code> also supports integration with a metadata store to allow for the data loading
+functions to use semantic names rather than filesystem paths. This is intended to enable users to more easily share data and to enable administrators to manage
+data and systems without affecting user code. Example utility scripts are provided to support the setup and management of the metadata store.</p>
+<section id="metadata-store-configuration">
+<h2>Metadata Store Configuration<a class="headerlink" href="#metadata-store-configuration" title="Link to this heading"></a></h2>
+<section id="metadata-store-types">
+<h3>Metadata Store Types<a class="headerlink" href="#metadata-store-types" title="Link to this heading"></a></h3>
+<p>The metadata store can be configured to use different types of backends to store the metadata. The following backends are currently supported:</p>
+<ul class="simple">
+<li><p>JSON Metadata Store: A simple JSON file that stores the metadata in a human-readable format. The file contains a dictionary with the keys being the names of the datasets and the values being the metadata for that dataset formatted as a json object (or a string containing the json for the metadata object). This backend is useful for small-scale deployments or for testing purposes
+where users are not expected to need to search or filter the available datasets.</p></li>
+<li><p>OpenMetadata Store: A more complex metadata store that uses a database to store the metadata. This backend is useful for larger deployments where users may need to search or filter the available datasets. The OpenMetadata store is built on top of the <a class="reference external" href="https://open-metadata.org/">OpenMetadata</a> project and supports a wide range of features including search, filtering, and versioning of metadata.</p></li>
+</ul>
+</section>
+<section id="configuration-file">
+<h3>Configuration File<a class="headerlink" href="#configuration-file" title="Link to this heading"></a></h3>
+<p>The type and configuration of the metadata store can be managed through <code class="docutils literal notranslate"><span class="pre">tatm</span></code> configuration files. The <code class="docutils literal notranslate"><span class="pre">metadata_backend</span></code> block in the configuration file can be used to specify the type of metadata store to use and any additional configuration options. See the <a class="reference internal" href="../api_docs/metadata_store_api.html"><span class="std std-doc">metadata backend api docs</span></a> for details on specific arguments required for each backend. The following is an example configuration block for a JSON metadata store:</p>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">metadata_backend</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">json</span>
+<span class="w">  </span><span class="nt">args</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">metadata_backend_file</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">/path/to/metadata.json</span>
+</pre></div>
+</div>
+<p>while the following is an example configuration block for an OpenMetadata store:</p>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">metadata_backend</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">open_metadata</span>
+<span class="w">  </span><span class="nt">args</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">address</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">http://localhost:8080/api</span>
+<span class="w">    </span><span class="nt">api_key</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">&lt;read only api_key&gt;</span>
+<span class="w">    </span><span class="nt">data_service_name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">tatm-data-service</span><span class="w"> </span><span class="c1"># optional, defaults to &#39;tatm-data-service&#39;</span>
+<span class="w">    </span>
+</pre></div>
+</div>
+<p>As this configuration is likely to be system-wide, it is recommended to place it in the system-wide configuration file at <code class="docutils literal notranslate"><span class="pre">/etc/tatm/config.yaml</span></code>. This will allow all users to access the same metadata store. If that is not feasible, the <code class="docutils literal notranslate"><span class="pre">TATM_BASE_DIR</span></code> or <code class="docutils literal notranslate"><span class="pre">TATM_BASE_CONFIG</span></code> environment variables can be used to specify an alternate configuration file. See the <a class="reference internal" href="../configuration.html"><span class="std std-doc">configuration api docs</span></a> for more information on configuration file locations and environment variables and how they interact.</p>
+</section>
+</section>
+<section id="loading-metadata-into-the-store">
+<h2>Loading metadata into the store<a class="headerlink" href="#loading-metadata-into-the-store" title="Link to this heading"></a></h2>
+<p>Utility scripts are provided to assist in loading metadata into the metadata store. They can be found in the <code class="docutils literal notranslate"><span class="pre">scripts/metadata</span></code> directory of the <code class="docutils literal notranslate"><span class="pre">tatm</span></code> package. The following scripts are provided:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">scripts/metadata/create_json_metadata.py</span></code>: A script to create a new JSON metadata store file. This script will parse a provided list of structured directories and create a JSON file containing the metadata for each dataset. This script is useful for creating a new JSON metadata store file from a set of directories containing data.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">scripts/metadata/load_open_metadata_backend.py</span></code>: A script to load metadata into an OpenMetadata store. This script will parse a provided list of structured directories and load the metadata for each dataset into the OpenMetadata store. This script makes assumptions based on the names and structure of the directories (see below) and may need to be modified to work with different directory structures.</p></li>
+</ul>
+<p>Note that both scripts assume that all data set names within the metadata store are unique. If a dataset with the same name already exists in the metadata store, the script will overwrite the existing metadata with the new metadata. Care should be taken to ensure that the metadata store is not overwritten unintentionally.</p>
+<section id="testbed-directory-structure">
+<h3>Testbed Directory Structure<a class="headerlink" href="#testbed-directory-structure" title="Link to this heading"></a></h3>
+<p>All scripts assume that the data directories are structured in a specific way, termed a “tatm data garden”. This structure is as follows:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">|</span> <span class="n">top_level_directory</span>
+<span class="o">|---|</span> <span class="n">Data</span> <span class="n">Context</span> <span class="mi">1</span> <span class="p">(</span><span class="n">e</span><span class="o">.</span><span class="n">g</span><span class="o">.</span> <span class="s2">&quot;text&quot;</span><span class="p">)</span>
+<span class="o">|</span>   <span class="o">|---|</span> <span class="n">Dataset</span> <span class="mi">1</span> <span class="p">(</span><span class="n">e</span><span class="o">.</span><span class="n">g</span><span class="o">.</span> <span class="s2">&quot;dolma&quot;</span><span class="p">)</span>
+<span class="o">|</span>   <span class="o">|</span>   <span class="o">|---|</span> <span class="n">metadata</span><span class="o">.</span><span class="n">json</span> <span class="c1"># This is the main metadata file for the dataset</span>
+<span class="o">|</span>   <span class="o">|</span>   <span class="o">|---|</span> <span class="n">raw</span> <span class="c1"># This is the directory containing the raw data, frequently the data as cloned from Huggingface</span>
+<span class="o">|</span>   <span class="o">|</span>   <span class="o">|---|</span> <span class="n">tokenized</span> <span class="c1"># This is the directory containing the tokenized data, if it has been tokenized</span>
+<span class="o">|</span>   <span class="o">|</span>   <span class="o">|</span>   <span class="o">|---|</span> <span class="o">&lt;</span><span class="n">tokenizer</span> <span class="mi">1</span><span class="o">&gt;</span> <span class="p">(</span><span class="n">e</span><span class="o">.</span><span class="n">g</span><span class="o">.</span> <span class="s2">&quot;t5-base&quot;</span><span class="p">)</span>
+<span class="o">|</span>   <span class="o">|</span>   <span class="o">|</span>   <span class="o">|</span>   <span class="o">|---|</span> <span class="o">&lt;</span><span class="n">subset</span> <span class="n">descriptor</span><span class="o">&gt;</span> <span class="p">(</span><span class="n">e</span><span class="o">.</span><span class="n">g</span><span class="o">.</span> <span class="s2">&quot;c4&quot;</span><span class="p">)</span>
+<span class="o">|</span>   <span class="o">|</span>   <span class="o">|</span>   <span class="o">|</span>   <span class="o">|</span>   <span class="o">|---|</span> <span class="n">metadata</span><span class="o">.</span><span class="n">json</span> <span class="c1"># This is the metadata file for the tokenized data</span>
+<span class="o">|</span>   <span class="o">|---|</span> <span class="n">Dataset</span> <span class="mi">2</span> <span class="p">(</span><span class="n">e</span><span class="o">.</span><span class="n">g</span><span class="o">.</span> <span class="s2">&quot;red_pajama&quot;</span><span class="p">)</span>
+<span class="o">|</span>   <span class="o">|</span>   <span class="o">|---|</span> <span class="o">...</span>
+<span class="o">|---|</span> <span class="n">Data</span> <span class="n">Context</span> <span class="mi">2</span> <span class="p">(</span><span class="n">e</span><span class="o">.</span><span class="n">g</span><span class="o">.</span> <span class="s2">&quot;code&quot;</span><span class="p">)</span>
+<span class="o">|</span>   <span class="o">|---|</span> <span class="o">...</span>
+</pre></div>
+</div>
+<p>Names of tokenized datasets are constructed from the subset and their parent dataset, while the “Data Context” is used to tag data with a semantic category. There will be errors
+loading the metadata if the directory structure does not match this format. Both scripts currently support multipe directories structured in this way, although there may be a risk
+of name collisions if the same dataset is present in multiple directories.</p>
+</section>
+<section id="json-metadata-backend">
+<h3>JSON Metadata Backend<a class="headerlink" href="#json-metadata-backend" title="Link to this heading"></a></h3>
+<p>The file at <code class="docutils literal notranslate"><span class="pre">scripts/metadata/create_json_metadata.py</span></code> can be used to create a new JSON metadata store file. This script will parse a provided list of structured directories and create a JSON file containing the metadata for each dataset. It parses the directory structure above, finding all metadata files and adding them to the JSON file. The script can be run with the following command:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>python<span class="w"> </span>scripts/metadata/create_json_metadata.py<span class="w"> </span>--dirs<span class="w"> </span>&lt;comma<span class="w"> </span>separated<span class="w"> </span>directory<span class="w"> </span>list&gt;<span class="w"> </span>--output_file<span class="w"> </span>/path/to/metadata.json
+</pre></div>
+</div>
+</section>
+<section id="openmetadata-backend">
+<h3>OpenMetadata Backend<a class="headerlink" href="#openmetadata-backend" title="Link to this heading"></a></h3>
+<p>The file at <code class="docutils literal notranslate"><span class="pre">scripts/metadata/load_open_metadata_backend.py</span></code> can be used to load metadata into an OpenMetadata store. This script will parse a provided list of structured directories and load the metadata for each dataset into the OpenMetadata store. It makes assumptions based on the names and structure of the directories and may need to be modified to work with different directory structures. The script can be run with the following command:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>python<span class="w"> </span>scripts/metadata/load_open_metadata_backend.py<span class="w"> </span>--dirs<span class="w"> </span>&lt;comma<span class="w"> </span>separated<span class="w"> </span>directory<span class="w"> </span>list&gt;<span class="w"> </span>--host<span class="w"> </span>http://example.com<span class="w"> </span>--port<span class="w"> </span><span class="m">8585</span><span class="w"> </span>--api_key<span class="w"> </span>&lt;<span class="nb">read</span><span class="w"> </span>only<span class="w"> </span>key&gt;
+</pre></div>
+</div>
+<p>The address can also be specified using the <code class="docutils literal notranslate"><span class="pre">OPEN_METADATA_ADDRESS</span></code> environment variable (in the format <code class="docutils literal notranslate"><span class="pre">http://example.com:8585</span></code>), and the api key can be specified using the <code class="docutils literal notranslate"><span class="pre">OPEN_METADATA_API_KEY</span></code> environment variable. This API key should be the key used by the ingestion bot so that the script has permission to update the service</p>
+<p>We somewhat hack the OpenMetadata structures to serve our purposes. Currently we represent the testbed as a custom database, creating a top level service to serve as a parent
+to the other entities we create. We represent all top level datasets as Databases on that data service, while representing the tokenized datasets and corpuses as schemas
+in those databases. This is a bit of a hack, but it allows us to represent the data in a way that is somewhat meaningful to the OpenMetadata system.</p>
+<p>We also tag entities as being tokenized (or not), corpuses (or not), and with the tokenizer used (where applicable), the context of the data, and the content type of the data (i.e. text, image, etc). This allows us to filter and search for data in a meaningful way.</p>
+</section>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="../metadata.html" class="btn btn-neutral float-left" title="Dataset Metadata" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="../api_docs/cli.html" class="btn btn-neutral float-right" title="tatm CLI Reference" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2024, Kempner Institute at Harvard University.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
