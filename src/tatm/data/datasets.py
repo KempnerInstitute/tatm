@@ -39,12 +39,24 @@ def get_dataset(metadata: Union[str, TatmDataMetadata], **kwargs) -> TatmDataset
     Returns:
         TatmDataset: The dataset object.
     """
+    metadata_loaded = False
     if isinstance(metadata, str):
-        metadata = Path(metadata)
-    if metadata.is_dir():
-        metadata = TatmDataMetadata.from_directory(metadata)
-    elif metadata.is_file():
-        metadata = TatmDataMetadata.from_file(metadata)
+        if metadata[0] != "/" and metadata[0] != ".":
+            try:
+                metadata = TatmDataMetadata.from_metadata_store(metadata)
+                metadata_loaded = True
+            except ValueError:
+                pass
+        if not metadata_loaded:
+            metadata = Path(metadata)
+            if not metadata.exists():
+                raise FileNotFoundError(
+                    f"Metadata file or directory not found at {metadata}"
+                )
+            if metadata.is_dir():
+                metadata = TatmDataMetadata.from_directory(metadata)
+            elif metadata.is_file():
+                metadata = TatmDataMetadata.from_file(metadata)
     if metadata.tokenized_info:
         return TatmMemmapDataset(
             file_prefix=metadata.tokenized_info.file_prefix,

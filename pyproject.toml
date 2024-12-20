@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "tatm"
-version = "0.1.0"
+version = "0.2.0"
 description = ""
 authors = ["Kempner Institute at Harvard University <kempner-research-engineering@g.harvard.edu>"]
 readme = "README.md"
@@ -16,6 +16,9 @@ pyyaml = "^6.0.2"
 omegaconf = "^2.3.0"
 torch = "^2.4.1"
 requests = "^2.32.3"
+aiohttp = ">=3.10.11"
+openmetadata-ingestion = "1.5.12"
+zstandard = "^0.23.0"
 
 [tool.poetry.scripts]
 tatm = "tatm:cli"
@@ -60,3 +63,4 @@ build-backend = "poetry.core.masonry.api"
 
 [tool.isort]
 profile = "black"
+skip = ["scripts/metadata/load_open_metadata_backend.py"]

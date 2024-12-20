@@ -50,6 +50,14 @@ class TatmData(ABC):
         """Initialize the dataset."""
         raise NotImplementedError("This method must be implemented in a subclass.")
 
+    def get_source(self) -> str:
+        """Return a string representing the source of the data. By default, this is the name of the dataset.
+
+        Returns:
+            str: Source of the data.
+        """
+        return self.metadata.name
+
 
 class TatmTextData(TatmData):
     """Text dataset class, provides interface to access text datasets.
@@ -80,6 +88,7 @@ class TatmTextData(TatmData):
         Args:
             corpus: Corpus to load. Defaults to None.
         """
+        self.corpus = corpus
         if (
             self.metadata.corpus_separation_strategy == "configs"
             or self.metadata.corpus_separation_strategy is None  # noqa: W503
@@ -103,6 +112,17 @@ class TatmTextData(TatmData):
                 streaming=True,
                 trust_remote_code=True,
             )[split]
+
+    def get_source(self) -> str:
+        """Returns the name of the dataset. If a corpus is specified, the name of the corpus is returned appended to the dataset name with a colon.
+
+        Returns:
+            str: Data source in the format "name:corpus".
+        """
+        if self.corpus is not None:
+            return f"{self.metadata.name}:{self.corpus}"
+        else:
+            return self.metadata.name
 
     def __iter__(self):
         """Iterate over the dataset."""
@@ -130,9 +150,31 @@ def get_data(identifier: Union[str, TatmDataMetadata]) -> TatmData:
             corpus = split_identifier[1]
         else:
             corpus = None
+        if identifier[0] != "/" or identifier[0] != ".":
+            try:
+                return _dataset_from_metadata_store(identifier, corpus=corpus)
+            except ValueError:
+                pass
+
         return _dataset_from_path(identifier, corpus=corpus)
     elif isinstance(identifier, TatmDataMetadata):
         return _dataset_from_metadata(identifier, corpus=corpus)
+
+
+def _dataset_from_metadata_store(name: str, corpus=None) -> TatmData:
+    """Create a dataset object from the metadata store.
+
+    Args:
+        name: Name of the dataset.
+
+    Returns:
+        TatmDataset: Dataset object.
+
+    Raises:
+        ValueError: If no metadata is found for the dataset or if there is no metadata store backend set.
+    """
+    metadata = TatmDataMetadata.from_metadata_store(name)
+    return _dataset_from_metadata(metadata, corpus=corpus)
 
 
 def _dataset_from_path(path: str, corpus=None) -> TatmData:

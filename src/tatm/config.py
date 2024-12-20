@@ -1,9 +1,34 @@
 import dataclasses
+import os
+from pathlib import Path
 from typing import List, Optional, Union
 
 from omegaconf import MISSING, OmegaConf
 
 from tatm.compute.job import Backend
+
+_CLI_CONFIG_FILES: List[str] = []
+_CLI_CONFIG_OVERRIDES: List[str] = []
+
+
+def _set_cli_config_files(files: List[str]):
+    global _CLI_CONFIG_FILES
+    _CLI_CONFIG_FILES = files
+
+
+def _set_cli_config_overrides(overrides: List[str]):
+    global _CLI_CONFIG_OVERRIDES
+    _CLI_CONFIG_OVERRIDES = overrides
+
+
+def _get_cli_config_files():
+    global _CLI_CONFIG_FILES
+    return _CLI_CONFIG_FILES
+
+
+def _get_config_overrides():
+    global _CLI_CONFIG_OVERRIDES
+    return _CLI_CONFIG_OVERRIDES
 
 
 @dataclasses.dataclass
@@ -37,6 +62,16 @@ class EnvironmentConfig:
 
 
 @dataclasses.dataclass
+class MetadataBackendConfig:
+    """Configuration for the metadata backend."""
+
+    type: Optional[str] = None  #: Type of metadata backend to use.
+    args: dict = dataclasses.field(
+        default_factory=dict
+    )  #: Arguments to pass to the metadata backend constructor.
+
+
+@dataclasses.dataclass
 class TatmConfig:
     backend: Backend = Backend.slurm  #: Backend to use for compute jobs.
     slurm: SlurmConfig = dataclasses.field(
@@ -45,6 +80,9 @@ class TatmConfig:
     environment: EnvironmentConfig = dataclasses.field(
         default_factory=lambda: EnvironmentConfig()
     )  #: Environment configuration for compute jobs.
+    metadata_backend: MetadataBackendConfig = dataclasses.field(
+        default_factory=lambda: MetadataBackendConfig()
+    )
 
     def __post_init__(self):
         if not Backend.has_value(self.backend):
@@ -67,19 +105,47 @@ def load_config(
     Returns:
         TatmConfig: Loaded configuration.
     """
-    if not config_paths:
-        config_paths = []
-    if not overrides:
-        overrides = []
+    if config_paths is None:
+        config_paths = _get_cli_config_files()
+    if overrides is None:
+        overrides = _get_config_overrides()
     if isinstance(config_paths, str):
         config_paths = [config_paths]
     if isinstance(overrides, str):
         overrides = [overrides]
-    cnf = OmegaConf.structured(TatmConfig)
+    cnf = load_base_config()
 
     for path in config_paths:
         cnf = OmegaConf.merge(cnf, OmegaConf.load(path))
     if len(overrides) > 0:
         cnf = OmegaConf.merge(cnf, OmegaConf.from_dotlist(overrides))
+
+    return cnf
+
+
+def load_base_config() -> TatmConfig:
+    """Load the base configuration for TATM. First checks for a configuration file at /etc/tatm/config.yaml, then checks for a configuration file at
+    $TATM_BASE_DIR/config/config.yaml and merges them together, with the latter taking precedence. Finally, it checks for a configuration file at
+    $TATM_BASE_CONFIG and merges it with the previous configuration, with the latter again taking precedence. If no configuration files are found,
+    an empty configuration is returned.
+
+    Returns:
+        TatmConfig: Loaded configuration.
+    """
+    paths = [Path("/etc/tatm/config.yaml")]
+
+    base_dir = os.environ.get("TATM_BASE_DIR")
+    if base_dir is not None:
+        paths.append(Path(base_dir) / "config" / "config.yaml")
+
+    base_config = os.environ.get("TATM_BASE_CONFIG")
+    if base_config is not None:
+        paths.append(Path(base_config))
+
+    cnf = OmegaConf.structured(TatmConfig)
+
+    for path in paths:
+        if path.exists():
+            cnf = OmegaConf.merge(cnf, OmegaConf.load(path))
 
     return cnf
