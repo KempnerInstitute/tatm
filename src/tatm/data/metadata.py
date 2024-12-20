@@ -10,6 +10,7 @@ import yaml
 import tatm.data.metadata_store
 from tatm.utils import TatmOptionEnum
 
+
 @dataclasses.dataclass(kw_only=True)
 class TokenizedMetadataComponenet:
     tokenizer: str
