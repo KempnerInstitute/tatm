@@ -4,6 +4,12 @@ on:
         paths:
             - 'src/**'
             - 'tests/**'
+            - 'pyproject.toml'
+            - 'poetry.lock'
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.head_ref }}
+  cancel-in-progress: true
 
 jobs:
     TestPackage:
@@ -39,9 +45,9 @@ jobs:
                 path: .venv
             - name: Check formatting and PEP8
               run: |
-                    poetry run isort --check-only src/tatm tests
-                    poetry run black --check src/tatm tests
-                    poetry run flake8 src/tatm tests
+                    poetry run isort --check-only src/tatm tests scripts
+                    poetry run black --check src/tatm tests scripts
+                    poetry run flake8 src/tatm tests scripts
             - name: Run tests
               run: |
                   poetry run pytest --cov=src/tatm --cov-fail-under=85 tests

@@ -1,4 +1,4 @@
-# `tatm` Data Module
+# `tatm.data` Data Module API
 
 The `tatm.data` module provides a set of tools for accessing and manipulating data. The module is designed to be modular and extensible, allowing for easy integration of new datasets and data processing tools.
 

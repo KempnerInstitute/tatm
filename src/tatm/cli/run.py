@@ -4,7 +4,7 @@ from typing import List, Tuple
 import click
 
 import tatm.compute.run
-from tatm.config import load_config
+from tatm.config import load_config, set_cli_config_files, set_cli_config_overrides
 
 
 def parse_config_opts(opts: List[str], validate=True) -> Tuple[List[str], List[str]]:
@@ -30,6 +30,8 @@ def parse_config_opts(opts: List[str], validate=True) -> Tuple[List[str], List[s
             if validate and not file_path.exists():
                 raise FileNotFoundError(f"Config file not found: {opt}")
             files.append(opt)
+    set_cli_config_files(files)
+    set_cli_config_overrides(overrides)
     return files, overrides
 
 
@@ -91,8 +93,8 @@ def run(**kwargs):
     """
     config = kwargs.pop("config")
     wrapped_command = kwargs.pop("wrapped_command")
-    files, overrides = parse_config_opts(config)
-    cfg = load_config(files, overrides)
+    parse_config_opts(config)
+    cfg = load_config()
 
     options = tatm.compute.run.TatmRunOptions(**kwargs)
     result = tatm.compute.run.run(cfg, options, wrapped_command)

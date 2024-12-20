@@ -3,10 +3,12 @@ import datetime
 import json
 import os
 import pathlib
-from enum import Enum
 from typing import List, Union
 
 import yaml
+
+import tatm.data.metadata_store
+from tatm.utils import TatmOptionEnum
 
 
 @dataclasses.dataclass(kw_only=True)
@@ -15,6 +17,7 @@ class TokenizedMetadataComponenet:
     file_prefix: str
     dtype: str = "uint16"
     file_extension: str = "bin"
+    parent_datasets: List[str] = dataclasses.field(default_factory=list)
     vocab_size: int = None
     tatm_version: str = (
         None  #: Version of the tatm library used to create the tokenized data. Default to None to avoid breaking changes/overwriting past versions.
@@ -24,7 +27,7 @@ class TokenizedMetadataComponenet:
     )
 
 
-class DataContentType(str, Enum):
+class DataContentType(TatmOptionEnum):
     """Enum class for dataset content"""
 
     TEXT = "text"
@@ -33,20 +36,12 @@ class DataContentType(str, Enum):
     VIDEO = "video"
     OTHER = "other"
 
-    @classmethod
-    def has_value(cls, value):
-        return any(value == item.value for item in cls)
 
-
-class CorpusSeparationStrategy(str, Enum):
+class CorpusSeparationStrategy(TatmOptionEnum):
     """Enum class for corpus separation strategy"""
 
     DATA_DIRS = "data_dirs"  #: Corpus data is separated into directories. Maps to using the data_dir parameter in the datasets.load_dataset function.
     CONFIGS = "configs"  #: Corpus data is separated into config files. Maps to using the name parameter in the datasets.load_dataset function.
-
-    @classmethod
-    def has_value(cls, value):
-        return any(value == item.value for item in cls)
 
 
 @dataclasses.dataclass(kw_only=True)
@@ -176,6 +171,15 @@ class TatmDataMetadata:
             return cls.from_yaml(yml_path)
         else:
             raise ValueError("No metadata file found in the specified directory.")
+
+    @classmethod
+    def from_metadata_store(cls, name: str):
+        metadata_str = tatm.data.metadata_store.get_metadata(name)
+
+        if metadata_str is None:
+            raise ValueError(f"Metadata not found for dataset: {name}")
+
+        return cls(**json.loads(metadata_str))
 
     def __str__(self):
         return self.as_json()

@@ -24,7 +24,7 @@ def sample_dataset(tmp_path):
 
 
 def test_memmap_array(sample_dataset):
-    test_file = f"{str(sample_dataset[0]/sample_dataset[1])}_0.bin"
+    test_file = f"{str(sample_dataset[0] / sample_dataset[1])}_0.bin"
     memmap_array = TokenMemMapArray(test_file, 100, "uint16", True)
     assert len(memmap_array) == 10
     assert np.all(memmap_array[0] == np.arange(100))
@@ -139,3 +139,8 @@ def test_dataloader_integration(sample_dataset):
     )
     batch = next(iter(dl))
     assert "document_mask" not in batch
+
+
+def test_handle_nonexistent_path():
+    with pytest.raises(FileNotFoundError):
+        _ = get_dataset("nonexistent_path", context_length=100)

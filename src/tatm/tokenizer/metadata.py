@@ -1,6 +1,7 @@
 import logging
 from importlib.metadata import version
 from pathlib import Path
+from typing import List
 
 from tatm.data.metadata import (
     DataContentType,
@@ -18,6 +19,7 @@ def write_metadata(
     file_prefix: str,
     dtype: str = "uint16",
     file_extension: str = "bin",
+    parent_datasets: List[str] = None,
     data_description=None,
 ) -> None:
     """_summary_
@@ -43,6 +45,9 @@ def write_metadata(
         tatm_version=version("tatm"),
         tokenizers_version=version("tokenizers"),
     )
+    if parent_datasets is not None:
+        tokenizer_metadata.parent_datasets = parent_datasets
+
     if data_description is None:
         data_description = "Tokenized dataset created using tatm"
     metadata = TatmDataMetadata(
