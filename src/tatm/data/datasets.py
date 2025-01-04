@@ -4,7 +4,6 @@ to be consumed by modelling frameworks such as pytorch, JAX, etc.
 """
 
 import json
-import os.path
 from abc import ABC, abstractmethod
 from dataclasses import dataclass
 from glob import glob
@@ -304,7 +303,7 @@ class TatmImageTextDataset(TatmDataset):
             img_processor: Function for preprocessing annotation images within the dataset
             text_processor: Function for preprocessing annotation text within the dataset
         """
-        self.img_root = img_root
+        self.img_root = Path(img_root)
         self.img_processor = img_processor
         self.text_processor = text_processor
         self.annotations = []
@@ -345,7 +344,7 @@ class TatmCaptionedImageDataset(TatmImageTextDataset):
         """
         ann = self.annotations[index]
 
-        image_path = os.path.join(self.img_root, ann["image"])
+        image_path = self.img_root / ann["image"]
         try:
             image = Image.open(image_path).convert("RGB")
         except FileNotFoundError:
