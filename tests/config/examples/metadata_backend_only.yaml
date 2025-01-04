@@ -1,0 +1,5 @@
+metadata_backend:
+  type: 'json'
+  args:
+    metadata_store_path: 'metadata.json'
+    

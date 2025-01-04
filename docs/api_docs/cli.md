@@ -14,7 +14,7 @@ The `tatm` CLI consists of both top level commands and (where needed) subcommand
 
 Installing the `tatm` library will automatically install the CLI to your environment.
 
-**DETAILED INSTALLATION INSTRUCTIONS TO BE ADDED**
+See [here](../getting_started.md) for more information on installing the `tatm` library.
 
 ## Commands
 
@@ -126,6 +126,9 @@ Options:
   --output-dir PATH   Output directory for tokenized data
   -v, --verbose       Enable verbose logging
   --file-prefix TEXT  Prefix for tokenized files
+<<<<<<< HEAD
   --token-dtype TEXT     Numpy data type for tokenized files
+=======
+>>>>>>> main
   --help              Show this message and exit.
 ```

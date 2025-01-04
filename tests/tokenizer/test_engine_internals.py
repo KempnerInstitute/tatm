@@ -6,7 +6,7 @@ import numpy as np
 import ray
 import tokenizers
 
-from tatm.tokenizer.engine import (  # DataServer,; TokenWriter,
+from tatm.tokenizer.engine import (
     DataServer,
     ExampleMessage,
     TokenizerWorker,

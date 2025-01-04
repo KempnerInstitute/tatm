@@ -8,9 +8,8 @@
 
 - `tatm` depends on pytorch, which depends on CUDA. It is recommended to pre-install both pytorch and CUDA prior to installing `tatm`. Instructions for installing pytorch can be found [here](https://pytorch.org/get-started/locally/).
 
-### Installation
 
-#### Installing from GitHub
+### Installing from GitHub
 
 To install the latest stable version of `tatm` from GitHub, run the following command:
 
@@ -26,13 +25,17 @@ pip install git+ssh://git@github.com/KempnerInstitute/tatm.git@dev
 
 For a specific past version of `tatm`, replace `main` or `dev` with the desired version number (i.e. `v0.1.0`).
 
-#### Installing from PyPI
+### Installing from PyPI
 
 The package is not yet available on PyPI. Stay tuned for updates!
 
 ## Loading Tokenized Data with `tatm` for use with PyTorch
 
 In the example code below, we show how to create a PyTorch dataloader with a tokenized dataset for use with a model.
+
+```{note}
+If your site is set up with a metadata backend you can use semantic names for the dataset instead of the path to the tokenized data. See [](admin_docs/metadata_store_setup.md) for more information.
+```
 
 ```python
 import numpy as np

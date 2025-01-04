@@ -18,6 +18,9 @@ class TatmMetadataStoreBackend(ABC):
         Args:
             name: Name of the dataset to lookup.
 
+        Raises:
+            KeyError: If metadata is not found for the dataset.
+
         Returns:
             str: JSON representation of the metadata.
         """
@@ -25,9 +28,12 @@ class TatmMetadataStoreBackend(ABC):
 
 
 class JsonTatmMetadataStoreBackend(TatmMetadataStoreBackend):
-    """Metadata store backend that stores metadata as JSON files."""
-
     def __init__(self, metadata_store_path: str, *args, **kwargs):
+        """Metadata store backend that stores metadata as JSON files.
+
+        Args:
+            metadata_store_path: Path to the JSON serving as a metadata store.
+        """
         super().__init__(*args, **kwargs)
         self.metadata_store_path = metadata_store_path
 
