@@ -19,3 +19,7 @@ class TatmOptionEnum(str, Enum):
     @classmethod
     def has_value(cls, value):
         return any(value == item.value for item in cls)
+
+    @classmethod
+    def values(cls):
+        return [item.value for item in cls]
