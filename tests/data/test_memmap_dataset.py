@@ -1,5 +1,6 @@
 import numpy as np
 import pytest
+import torch
 from torch.utils.data import DataLoader
 
 from tatm.data import TatmMemmapDataset, get_dataset, torch_collate_fn
@@ -39,7 +40,10 @@ def test_memmap_array(sample_dataset):
 
 def test_memmap_dataset(sample_dataset):
     dataset = TatmMemmapDataset(
-        str(sample_dataset[0] / sample_dataset[1]), 100, "uint16"
+        str(sample_dataset[0] / sample_dataset[1]),
+        100,
+        "uint16",
+        token_output_format="numpy",
     )
     assert len(dataset) == 100
     assert np.all(dataset[0]["token_ids"] == np.arange(100))
@@ -53,8 +57,27 @@ def test_memmap_dataset(sample_dataset):
     assert dataset.num_tokens() == 100 * 100
 
 
+def test_memmap_dataset_torch_output_format(sample_dataset):
+    dataset = TatmMemmapDataset(
+        str(sample_dataset[0] / sample_dataset[1]),
+        100,
+        "uint16",
+        token_output_format="torch",
+    )
+    assert len(dataset) == 100
+    assert torch.all(dataset[0]["token_ids"] == torch.arange(100))
+    assert torch.all(dataset[20]["token_ids"] == torch.arange(100) + 2000)
+    assert torch.all(dataset[-1]["token_ids"] == torch.arange(100) + 9900)
+    assert isinstance(dataset[0]["token_ids"], torch.Tensor)
+    assert isinstance(dataset[0]["document_ids"], torch.Tensor)
+    assert dataset.num_files() == 10
+    assert dataset.num_tokens() == 100 * 100
+
+
 def test_memmap_dataset_from_metadata(sample_dataset):
-    dataset = get_dataset(str(sample_dataset[0]), context_length=100)
+    dataset = get_dataset(
+        str(sample_dataset[0]), context_length=100, token_output_format="numpy"
+    )
     assert len(dataset) == 100
     assert dataset.vocab_size == 32100
     assert np.all(dataset[0]["token_ids"] == np.arange(100))
@@ -86,6 +109,7 @@ def test_memmap_dataset_docid_options(sample_dataset):
         chunked=True,
         create_doc_ids=True,
         create_doc_mask=True,
+        token_output_format="numpy",
     )
     assert len(dataset) == 100
     assert np.all(dataset[0]["token_ids"] == np.arange(100))

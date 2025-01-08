@@ -11,9 +11,11 @@ from pathlib import Path
 from typing import Optional, Union
 
 import numpy as np
+import torch
 from PIL import Image
 
 from tatm.data.metadata import TatmDataMetadata
+from tatm.utils import TatmOptionEnum
 
 
 class TatmDataset(ABC):
@@ -157,9 +159,16 @@ class TatmMemmapDatasetItem(TatmDatasetItem):
     """Class for representing a single item in the TatmMemmapDataset.
     Includes __getitem__ method for dictlike access to the tokenized data."""
 
-    token_ids: np.ndarray
+    token_ids: Union[np.ndarray, torch.Tensor] = None
     document_ids: Optional[np.ndarray] = None
     document_mask: Optional[np.ndarray] = None
+
+
+class TokenOutputFormat(TatmOptionEnum):
+    """Enum for token output format."""
+
+    TORCH = "torch"
+    NP = "numpy"
 
 
 class TatmMemmapDataset(TatmDataset):
@@ -173,6 +182,7 @@ class TatmMemmapDataset(TatmDataset):
         chunked: bool = True,
         file_suffix: str = "bin",
         eos_token: int = 1,
+        token_output_format: TokenOutputFormat = TokenOutputFormat.TORCH,
         vocab_size: Union[int, None] = None,
         create_doc_ids: bool = True,
         create_doc_mask: bool = False,
@@ -198,6 +208,8 @@ class TatmMemmapDataset(TatmDataset):
             create_doc_mask (optional): Whether or not to create a document mask (mask for attention based on document IDs). Defaults to False. Note that this incurs a memory overhead and significant
                 performance hit in the current implementation. Requires create_doc_ids to be True.
         """
+        self.token_output_format = token_output_format
+        self._validate()
         self.file_prefix = file_prefix
         self.file_suffix = file_suffix
         self.context_length = context_length
@@ -212,6 +224,15 @@ class TatmMemmapDataset(TatmDataset):
                 "Document mask creation requires create_doc_ids to be True."
             )
         self._construct_file_list()
+
+    def _validate(self):
+        """Validate the passed in inputs"""
+        if not TokenOutputFormat.has_value(self.token_output_format):
+            raise ValueError(
+                f"Invalid token output format {self.token_output_format}. Valid values are {TokenOutputFormat.values()}."
+            )
+        if not isinstance(self.token_output_format, TokenOutputFormat):
+            self.token_output_format = TokenOutputFormat(self.token_output_format)
 
     def _construct_file_list(self):
         """Construct the list of tokenized files."""
@@ -249,15 +270,28 @@ class TatmMemmapDataset(TatmDataset):
         """Process the item. Construct item response."""
 
         out = TatmMemmapDatasetItem(
-            token_ids=item,
+            token_ids=self._format_output_tokens(item),
         )
         if self.create_doc_ids:
-            doc_ids = _get_document_ids(item, eos_token=self.eos_token)
+            doc_ids = self._format_output_tokens(
+                _get_document_ids(item, eos_token=self.eos_token)
+            )
             out.document_ids = doc_ids
         if self.create_doc_mask:
-            doc_mask = _create_document_mask(doc_ids)
+            doc_mask = self._format_output_tokens(_create_document_mask(doc_ids))
             out.document_mask = doc_mask
         return out
+
+    def _format_output_tokens(self, item):
+        """Format the output tokens."""
+        if self.token_output_format == TokenOutputFormat.TORCH:
+            return torch.tensor(item, dtype=torch.long)
+        elif self.token_output_format == TokenOutputFormat.NP:
+            return item
+        else:
+            raise NotImplementedError(
+                f"Token output format {self.token_output_format} not supported."
+            )
 
     def num_files(self):
         """Get the number of files in the dataset."""
