@@ -76,7 +76,7 @@ def test_get_tokenized_from_metadata_store(json_metadata_store, monkeypatch):
     reset_backend()
     _, config_path = json_metadata_store
     monkeypatch.setenv("TATM_BASE_CONFIG", str(config_path))
-    dataset = get_dataset("tokenized", context_length=100)
+    dataset = get_dataset("tokenized", context_length=100, token_output_format="numpy")
     assert len(dataset) == 100
     assert dataset.vocab_size == 32100
     assert np.all(dataset[0]["token_ids"] == np.arange(100))
