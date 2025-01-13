@@ -10,7 +10,7 @@ packages = [{include = "tatm", from = "src"}]
 python = "^3.10"
 click = "^8.1.7"
 datasets = "^3.0.1"
-tokenizers = "^0.20.0"
+tokenizers = ">=0.20.0"
 ray = {extras = ["default"], version = "^2.34.0"}
 pyyaml = "^6.0.2"
 omegaconf = "^2.3.0"
