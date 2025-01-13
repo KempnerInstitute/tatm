@@ -1,11 +1,14 @@
 import logging
+import json
 import os
 from typing import Union
 
 import numpy as np
+import pytest
 import ray
 import tokenizers
 
+from tatm.data.metadata import TatmDataMetadata
 from tatm.tokenizer.engine import (
     DataServer,
     ExampleMessage,
@@ -96,6 +99,25 @@ def test_token_writer(tmp_path):
     os.remove(str(tmp_path / "test_0.bin"))
     ray.shutdown()  # Clean up Ray resources
 
+@pytest.fixture
+def numbered_example_dataset(tmp_path):
+    with open(tmp_path / "data.json", "w") as f:
+        for i in range(10000):
+            f.write(json.dumps({"text": str(i)}) + "\n")
+    
+    metadata = TatmDataMetadata(
+        name="numbered_example",
+        dataset_path=str(tmp_path),
+        description="Dataset of numbered examples, intended for concurrency testing",
+        date_downloaded="2021-01-01",
+        download_source="http://example.com",
+        data_content="text",
+        content_field="text",
+    )
+    metadata.to_yaml(tmp_path / "metadata.yaml")
+
+    yield tmp_path
+
 
 class TestDataServerMethods:
 
@@ -137,3 +159,23 @@ class TestDataServerMethods:
         ray.get(server.shutdown.remote())
 
         ray.shutdown()  # Clean up Ray resources
+
+    def test_data_server_threaded_collisions(self, numbered_example_dataset):
+        ray.init(
+            local_mode=True, num_cpus=4, ignore_reinit_error=True
+        )
+        server = DataServer.remote(
+            [str(numbered_example_dataset)], max_queue_size=100
+        )
+        counter = 0
+        results = set()
+        example = ray.get(server.get_example.remote())
+        while example is not None:
+            counter += 1
+            results.add(int(example.data[example.content_field]))
+            example = ray.get(server.get_example.remote())
+        print(f"Unique Examples seen: {len(results)}")
+        print(f"Total Examples seen: {counter}")
+        assert len(results) == counter # All examples should be unique
+        ray.get(server.shutdown.remote())
+        ray.shutdown()
