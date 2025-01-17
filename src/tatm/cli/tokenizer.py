@@ -30,8 +30,20 @@ from tatm.tokenizer import TokenizationEngine
 @click.option(
     "--token-dtype", default="uint32", help="Numpy data type for tokenized files"
 )
+@click.option(
+    "--reader-thread-count",
+    default=1,
+    help="Number of threads to use for iterating over the dataset",
+)
 def tokenize(
-    datasets, num_workers, tokenizer, output_dir, file_prefix, verbose, token_dtype
+    datasets,
+    num_workers,
+    tokenizer,
+    output_dir,
+    file_prefix,
+    verbose,
+    token_dtype,
+    reader_thread_count,
 ):
     """Tokenize a dataset using the tatm ray based tokenization engine.
     If running in a cluster environment, it is recommended to use this command
@@ -63,5 +75,5 @@ def tokenize(
         log_level=log_level,
         dtype=token_dtype,
     )
-    e.run_with_ray(num_workers)
+    e.run_with_ray(num_workers, reader_thread_count)
     ray.shutdown()

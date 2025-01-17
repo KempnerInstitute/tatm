@@ -37,7 +37,7 @@ class DataServer:
         log_level: str = logging.INFO,
     ):
         self.data = data
-        self.datasets = [get_data(d) for d in data]
+        self.datasets = {x.get_source(): x for x in [get_data(d) for d in data]}
         self.seed = seed
         self.max_queue_size = max_queue_size
         self.initialized = False
@@ -51,32 +51,44 @@ class DataServer:
             )
 
     def initialize(self):
-        self.dataset_iters = [iter(dataset) for dataset in self.datasets]
+        # dictionary rather than list to allow for thread safe pop
+        self.dataset_iters = {i: iter(dataset) for i, dataset in self.datasets.items()}
         self.rng = random.Random(self.seed)
         self.queue = Queue(maxsize=self.max_queue_size)
+        self.dataset_pop_queue = Queue(maxsize=len(self.datasets))
         self.initialized = True
         self.done = False
 
     def get_example(self):
+        if self.done:
+            return None
+        if not self.initialized:
+            raise RuntimeError("DataServer not initialized. Call 'initialize' first.")
         if len(self.dataset_iters) == 0:
             LOGGER.info("No datasets available to iterate over.")
             self.done = True
             self.initialized = False
             return None
-        if self.done:
-            return None
-        if not self.initialized:
-            raise RuntimeError("DataServer not initialized. Call 'initialize' first.")
-        dataset_idx = self.rng.randint(0, len(self.datasets) - 1)
+        dataset_idx = self.rng.choice(list(self.dataset_iters.keys()))
         try:
             example = next(self.dataset_iters[dataset_idx])
             content_field = self.datasets[dataset_idx].metadata.content_field
             return ExampleMessage(data=example, content_field=content_field)
         except StopIteration:
-            self.dataset_iters.pop(dataset_idx)
+            print(f"Dataset {dataset_idx} is empty.")
+            try:
+                self.dataset_iters.pop(dataset_idx)
+            except KeyError:
+                pass
             return self.get_example()
+        except IndexError:
+            print("index error")
+            return None
 
     def run(self):
+        """Start a thread to fetch examples from the datasets and put them in the queue. Can be
+        called multiple times to increase the number of threads fetching examples.
+        """
         while not self.done:
             example = self.get_example()
             if example is None:
@@ -118,7 +130,7 @@ class DataServer:
         self.done = True
 
     def list_source_datasets(self):
-        return [dataset.get_source() for dataset in self.datasets]
+        return [dataset.get_source() for dataset in self.datasets.values()]
 
 
 @ray.remote
@@ -299,7 +311,7 @@ class TokenizationEngine:
         self.dtype = dtype
         self.log_level = log_level
 
-    def run_with_ray(self, num_workers: int = None):
+    def run_with_ray(self, num_workers: int = None, reader_threads: int = 1):
         if not ray.is_initialized():
             raise RuntimeError(
                 "Ray is not initialized. Please initialize Ray before running the engine."
@@ -326,9 +338,13 @@ class TokenizationEngine:
             f"Tokenizing data with 1 reader process, 1 writer process, and {num_workers} worker processes."
         )
 
-        server = DataServer.options(max_concurrency=num_workers + 1).remote(
-            self.data, log_level=self.log_level
-        )
+        server = DataServer.options(
+            max_concurrency=num_workers + reader_threads
+        ).remote(self.data, log_level=self.log_level)
+        # initialize parallel processes to read the data, testing shows that this should be faster/thread safe
+        s = server.run.remote()
+        for _ in range(reader_threads - 1):
+            s = server.run.remote()
         writer = TokenWriter.options(max_concurrency=num_workers + 1).remote(
             str(Path(self.output_dir) / self.file_prefix),
             dtype=self.dtype,
@@ -350,7 +366,6 @@ class TokenizationEngine:
             dtype=self.dtype,
             parent_datasets=ray.get(server.list_source_datasets.remote()),
         )
-        s = server.run.remote()
         writer.run.remote()
         ray.get([worker.run.remote() for worker in workers])
         writer.put.remote(None)  # Signal the writer to shutdown

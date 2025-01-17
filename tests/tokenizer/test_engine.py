@@ -3,6 +3,7 @@ import logging
 import time
 
 import numpy as np
+import pytest
 import ray
 import ray.util.state
 import tokenizers
@@ -26,6 +27,40 @@ def test_ray_run(tmp_path):
     # Run the engine with some input
     engine.run_with_ray(num_workers=1)
     time.sleep(1)  # Wait for the workers to finish
+    gc.collect()
+
+    first_example = next(iter(dataset))
+    tokenized = tokenizer.encode(first_example[dataset.metadata.content_field]).ids
+
+    actors = ray.util.state.list_actors()
+    assert len(actors) == 3  # Ensure only 1 worker is created
+    assert (
+        len([x for x in actors if x.state == "ALIVE"]) == 0
+    )  # Ensure all actors are cleaned up
+
+    # Clean up ray
+    ray.shutdown()
+
+    engine_result = np.memmap(str(tmp_path / "test_0.bin"), dtype="uint32", mode="r")
+    assert np.array_equal(engine_result[0 : len(tokenized)], tokenized)
+
+
+@pytest.mark.parametrize("num_workers", [1, 2, 4, 8])
+def test_ray_run_threaded_reader(tmp_path, num_workers):
+    """Integration test for the Engine class with Ray."""
+    # Initialize Ray
+    ray.init(num_cpus=16, ignore_reinit_error=True)
+    dataset = tatm.data.get_data("tests/data/json_data")
+    tokenizer = tokenizers.Tokenizer.from_pretrained("t5-base")
+
+    # Create an instance of the Engine
+    engine = TokenizationEngine(
+        ["tests/data/json_data"], "t5-base", str(tmp_path), "test"
+    )
+
+    # Run the engine with some input
+    engine.run_with_ray(num_workers=1, reader_threads=num_workers)
+    time.sleep(3)  # Wait for the workers to finish
     gc.collect()
 
     first_example = next(iter(dataset))

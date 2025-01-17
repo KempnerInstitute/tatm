@@ -1,6 +1,7 @@
-import logging
 import json
+import logging
 import os
+import pathlib
 from typing import Union
 
 import numpy as np
@@ -99,24 +100,42 @@ def test_token_writer(tmp_path):
     os.remove(str(tmp_path / "test_0.bin"))
     ray.shutdown()  # Clean up Ray resources
 
-@pytest.fixture
-def numbered_example_dataset(tmp_path):
-    with open(tmp_path / "data.json", "w") as f:
-        for i in range(10000):
-            f.write(json.dumps({"text": str(i)}) + "\n")
-    
-    metadata = TatmDataMetadata(
-        name="numbered_example",
-        dataset_path=str(tmp_path),
-        description="Dataset of numbered examples, intended for concurrency testing",
-        date_downloaded="2021-01-01",
-        download_source="http://example.com",
-        data_content="text",
-        content_field="text",
-    )
-    metadata.to_yaml(tmp_path / "metadata.yaml")
 
-    yield tmp_path
+class ExampleDatasetFactory:
+    def __init__(self, parent_dir: pathlib.Path):
+        self.parent_dir = parent_dir
+        self.dataset_count = 0
+
+    def create_dataset(self, num_examples) -> pathlib.Path:
+        dataset_dir = self.parent_dir / f"dataset_{self.dataset_count}"
+        dataset_dir.mkdir()
+        with open(dataset_dir / "data.json", "w") as f:
+            for i in range(num_examples):
+                f.write(json.dumps({"text": str(i)}) + "\n")
+        metadata = TatmDataMetadata(
+            name=f"dataset_{self.dataset_count}",
+            dataset_path=str(dataset_dir),
+            description="Dataset of numbered examples, intended for concurrency testing",
+            date_downloaded="2021-01-01",
+            download_source="http://example.com",
+            data_content="text",
+            content_field="text",
+        )
+        metadata.to_yaml(dataset_dir / "metadata.yaml")
+        self.dataset_count += 1
+        return dataset_dir
+
+    def __getitem__(self, index):
+        if index <= self.dataset_count:
+            raise IndexError("Index out of range")
+        return self.parent_dir / f"dataset_{index}"
+
+
+@pytest.fixture
+def example_dataset_factory(tmp_path):
+    factory = ExampleDatasetFactory(tmp_path)
+
+    yield factory
 
 
 class TestDataServerMethods:
@@ -160,22 +179,61 @@ class TestDataServerMethods:
 
         ray.shutdown()  # Clean up Ray resources
 
-    def test_data_server_threaded_collisions(self, numbered_example_dataset):
-        ray.init(
-            local_mode=True, num_cpus=4, ignore_reinit_error=True
+    def test_data_server_threaded_collisions(self, example_dataset_factory):
+        ray.init(num_cpus=4, ignore_reinit_error=True)
+        dataset = example_dataset_factory.create_dataset(100)
+        server = DataServer.options(max_concurrency=4).remote(
+            [str(dataset)], max_queue_size=100
         )
-        server = DataServer.remote(
-            [str(numbered_example_dataset)], max_queue_size=100
-        )
+        server.run.remote()
         counter = 0
         results = set()
-        example = ray.get(server.get_example.remote())
+        example = ray.get(server.next_item.remote())
         while example is not None:
             counter += 1
             results.add(int(example.data[example.content_field]))
-            example = ray.get(server.get_example.remote())
+            example = ray.get(server.next_item.remote())
         print(f"Unique Examples seen: {len(results)}")
         print(f"Total Examples seen: {counter}")
-        assert len(results) == counter # All examples should be unique
+        assert len(results) == counter  # All examples should be unique
+        ray.get(server.shutdown.remote())
+        ray.shutdown()
+
+    @pytest.mark.parametrize("num_workers", [1, 2, 4, 8, 16])
+    def test_data_server_multiple_workers(self, example_dataset_factory, num_workers):
+        ray.init(num_cpus=4, ignore_reinit_error=True)
+        dataset = example_dataset_factory.create_dataset(10000)
+        server = DataServer.options(max_concurrency=8 + num_workers).remote(
+            [str(dataset)], max_queue_size=100
+        )
+        for i in range(num_workers):
+            server.run.remote()
+        counter = 0
+        example = ray.get(server.next_item.remote())
+        while example is not None:
+            counter += 1
+            example = ray.get(server.next_item.remote())
+        print(f"Total Examples seen: {counter}")
+        assert counter == 10000
+        ray.get(server.shutdown.remote())
+        ray.shutdown()
+
+    @pytest.mark.parametrize("num_workers", [1, 2, 4, 8, 16])
+    def test_data_server_multiple_sets(self, example_dataset_factory, num_workers):
+        ray.init(num_cpus=4, ignore_reinit_error=True)
+        dataset1 = example_dataset_factory.create_dataset(10000)
+        dataset2 = example_dataset_factory.create_dataset(100)
+        server = DataServer.options(max_concurrency=8 + num_workers).remote(
+            [str(dataset1), str(dataset2)], max_queue_size=100
+        )
+        for i in range(num_workers):
+            server.run.remote()
+        counter = 0
+        example = ray.get(server.next_item.remote())
+        while example is not None:
+            counter += 1
+            example = ray.get(server.next_item.remote())
+        print(f"Total Examples seen: {counter}")
+        assert counter == 10100
         ray.get(server.shutdown.remote())
         ray.shutdown()

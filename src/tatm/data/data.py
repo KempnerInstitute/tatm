@@ -10,6 +10,7 @@ match function with pytorch naming conventions.
 """
 
 import pathlib
+import threading
 from abc import ABC, abstractmethod
 from typing import Union
 
@@ -88,6 +89,7 @@ class TatmTextData(TatmData):
         Args:
             corpus: Corpus to load. Defaults to None.
         """
+        self._lock = threading.Lock()
         self.corpus = corpus
         if (
             self.metadata.corpus_separation_strategy == "configs"
@@ -131,7 +133,9 @@ class TatmTextData(TatmData):
 
     def __next__(self):
         """Get the next item from the dataset."""
-        return next(self.data_iter)
+        # huggingface datasets.IterableDataset objects are not thread safe
+        with self._lock:
+            return next(self.data_iter)
 
 
 def get_data(identifier: Union[str, TatmDataMetadata]) -> TatmData:
