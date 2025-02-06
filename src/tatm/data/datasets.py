@@ -320,9 +320,7 @@ class TatmMemmapDataset(TatmDataset):
         elif self.split == SplitType.TRAIN:
             return self._split_index
         elif self.split == SplitType.VALIDATION:
-            return (
-                self._num_samples() - self._split_index
-            )
+            return self._num_samples() - self._split_index
 
     def __getitem__(self, idx: int):
         """Get the token at the given index."""
@@ -330,7 +328,7 @@ class TatmMemmapDataset(TatmDataset):
             idx = len(self) + idx
             if idx < 0:
                 raise IndexError("Index out of bounds.")
-        
+
         if idx >= len(self):
             raise IndexError("Index out of bounds.")
 
