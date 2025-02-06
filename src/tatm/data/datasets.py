@@ -4,6 +4,7 @@ to be consumed by modelling frameworks such as pytorch, JAX, etc.
 """
 
 import json
+import math
 from abc import ABC, abstractmethod
 from dataclasses import dataclass
 from glob import glob
@@ -18,11 +19,18 @@ from tatm.data.metadata import TatmDataMetadata
 from tatm.utils import TatmOptionEnum
 
 
+class SplitType(TatmOptionEnum):
+    """Enum for split types."""
+
+    TRAIN = "train"
+    VALIDATION = "validation"
+
+
 class TatmDataset(ABC):
     """Abstract base class for TATM datasets."""
 
     @abstractmethod
-    def __len__(self):
+    def __len__(self) -> int:
         """Get the number of tokens in the dataset."""
         pass
 
@@ -30,6 +38,23 @@ class TatmDataset(ABC):
     def __getitem__(self, idx):
         """Get the token at the given index."""
         pass
+
+    def create_split(self, split_size: Union[float, int] = 0.1):
+        """Determine an index to split the dataset into training and validation sets.
+        Splits the dataset into a training and validation set based on the split size where the last
+        indices are used for validation.
+        Sets the index that is the first index of the validation set. THe logic of how to handle
+        that index is left to subclasses to implement in their __len__ and __getitem__ method.
+
+        Args:
+            split_size: Either the ratio of the validation set to the whole data or
+                the number of observations in the validation set. If less than 1,
+                assumed to be a ratio, if greater than one assumed to be an
+                observation account. Defaults to 0.1.
+        """
+        if split_size < 1:
+            split_size = math.ceil(len(self) * split_size)
+        self._split_index = len(self) - split_size
 
 
 def get_dataset(metadata: Union[str, TatmDataMetadata], **kwargs) -> TatmDataset:
@@ -186,6 +211,8 @@ class TatmMemmapDataset(TatmDataset):
         vocab_size: Union[int, None] = None,
         create_doc_ids: bool = True,
         create_doc_mask: bool = False,
+        val_split_size: Optional[Union[float, int]] = None,
+        split: Optional[SplitType] = None,
     ):
         """Initialize the TatmTokenizedDataset.
 
@@ -207,6 +234,10 @@ class TatmMemmapDataset(TatmDataset):
             create_doc_ids (optional): Whether or not to create document ids (IDs linking tokens to each local documents, based on the EOS token). Defaults to True.
             create_doc_mask (optional): Whether or not to create a document mask (mask for attention based on document IDs). Defaults to False. Note that this incurs a memory overhead and significant
                 performance hit in the current implementation. Requires create_doc_ids to be True.
+            val_split_size (optional): The size of the validation split. If less than 1, assumed to be a ratio, if
+                greater than one assumed to be an observation count. Defaults to None.
+            split (optional): The split of the data that the __len__ and __getitem__ will operate on. If None, __len__ and __getitem__ will use the
+                unsplit dataset. This can be adjusted at runtime by using the set_split method. Defaults to None.
         """
         self.token_output_format = token_output_format
         self._validate()
@@ -219,11 +250,19 @@ class TatmMemmapDataset(TatmDataset):
         self.vocab_size = vocab_size
         self.create_doc_ids = create_doc_ids
         self.create_doc_mask = create_doc_mask
+        self.split = None  # Initialize the split to None to prevent errors when calling create_split before set_split
         if self.create_doc_mask and not self.create_doc_ids:
             raise ValueError(
                 "Document mask creation requires create_doc_ids to be True."
             )
         self._construct_file_list()
+
+        if val_split_size is not None:
+            self.create_split(val_split_size)
+        else:
+            self._split_index = None
+
+        self.set_split(split)
 
     def _validate(self):
         """Validate the passed in inputs"""
@@ -251,7 +290,14 @@ class TatmMemmapDataset(TatmDataset):
 
     def __len__(self):
         """Get the number of examples in the dataset."""
-        return self.file_list[-1][0] + len(self.file_list[-1][1])
+        if self.split is None:
+            return self.file_list[-1][0] + len(self.file_list[-1][1])
+        elif self.split == SplitType.TRAIN:
+            return self._split_index
+        elif self.split == SplitType.VALIDATION:
+            return (
+                self.file_list[-1][0] + len(self.file_list[-1][1]) - self._split_index
+            )
 
     def __getitem__(self, idx: int):
         """Get the token at the given index."""
@@ -259,6 +305,9 @@ class TatmMemmapDataset(TatmDataset):
             idx = len(self) + idx
             if idx < 0:
                 raise IndexError("Index out of bounds.")
+
+        if self.split == SplitType.VALIDATION:
+            idx += self._split_index
 
         for start, array in self.file_list:
             if idx < start + len(array):
@@ -300,6 +349,33 @@ class TatmMemmapDataset(TatmDataset):
     def num_tokens(self):
         """Get the number of tokens in the dataset."""
         return sum([i.num_tokens for _, i in self.file_list])
+
+    def create_split(self, split_size: Union[float, int] = 0.1):
+        current_split = self.split
+        self.set_split()  # Reset the split so that the whole dataset length is used to determine the split
+        super().create_split(split_size)
+        self.set_split(current_split)
+
+    def set_split(self, split: Optional[SplitType] = None):
+        """Set the split of the data that the __len__ and __getitem__ will operate on. If called without an argument, __len__ and __getitem__ will use the
+        unsplit dataset.
+
+        Args:
+            split: The split of the data that the __len__ and __getitem__ will operate on. If None, __len__ and __getitem__ will use the
+                unsplit dataset. Defaults to None.
+        """
+        if split is not None:
+            if not SplitType.has_value(split):
+                raise ValueError(
+                    f"Invalid split type {split}. Valid values are {SplitType.values()}."
+                )
+            if self._split_index is None:
+                raise ValueError(
+                    "No current index to split the dataset has been set. Please call create_split prior to setting a split."
+                )
+            self.split = SplitType(split)
+        else:
+            self.split = None
 
 
 def _get_document_ids(tokens: np.ndarray, eos_token: int = 1) -> np.ndarray:
