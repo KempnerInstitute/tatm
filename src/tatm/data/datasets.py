@@ -352,7 +352,7 @@ class TatmMemmapDataset(TatmDataset):
 
     def create_split(self, split_size: Union[float, int] = 0.1):
         current_split = self.split
-        self.set_split()  # Reset the split so that the whole dataset length is used to determine the split
+        self.set_split(None)  # Reset the split so that the whole dataset length is used to determine the split
         super().create_split(split_size)
         self.set_split(current_split)
 
