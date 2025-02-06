@@ -309,15 +309,19 @@ class TatmMemmapDataset(TatmDataset):
             self.file_list.append((start_idx, i))
             start_idx += len(i)
 
+    def _num_samples(self):
+        """Get the number of examples in the dataset, regardless of split."""
+        return self.file_list[-1][0] + len(self.file_list[-1][1])
+
     def __len__(self):
-        """Get the number of examples in the dataset."""
+        """Get the number of examples in the current split of the dataset."""
         if self.split is None:
-            return self.file_list[-1][0] + len(self.file_list[-1][1])
+            return self._num_samples()
         elif self.split == SplitType.TRAIN:
             return self._split_index
         elif self.split == SplitType.VALIDATION:
             return (
-                self.file_list[-1][0] + len(self.file_list[-1][1]) - self._split_index
+                self._num_samples() - self._split_index
             )
 
     def __getitem__(self, idx: int):
@@ -326,6 +330,9 @@ class TatmMemmapDataset(TatmDataset):
             idx = len(self) + idx
             if idx < 0:
                 raise IndexError("Index out of bounds.")
+        
+        if idx >= len(self):
+            raise IndexError("Index out of bounds.")
 
         if self.split == SplitType.VALIDATION:
             idx += self._split_index

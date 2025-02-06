@@ -216,3 +216,21 @@ class TestValidationSplits:
             assert len(dataset) == 80
         else:
             assert len(dataset) == 100
+    
+    @pytest.mark.parametrize("split_size", [20, 0.2])
+    def test_index_bounds(self, sample_dataset, split_size):
+        dataset = TatmMemmapDataset(
+            str(sample_dataset[0] / sample_dataset[1]), 100, "uint16"
+        )
+        dataset.create_split(split_size)
+        dataset.set_split("validation")
+        with pytest.raises(IndexError):
+            _ = dataset[20]
+        with pytest.raises(IndexError):
+            _ = dataset[-21]
+        dataset.set_split("train")
+        with pytest.raises(IndexError):
+            _ = dataset[80]
+        with pytest.raises(IndexError):
+            _ = dataset[-81]
+
