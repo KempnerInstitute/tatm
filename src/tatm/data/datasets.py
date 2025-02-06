@@ -56,6 +56,27 @@ class TatmDataset(ABC):
             split_size = math.ceil(len(self) * split_size)
         self._split_index = len(self) - split_size
 
+    def set_split(self, split: Optional[SplitType] = None):
+        """Set the split of the data that the __len__ and __getitem__ will operate on. If called without an argument, __len__ and __getitem__ will use the
+        unsplit dataset.
+
+        Args:
+            split: The split of the data that the __len__ and __getitem__ will operate on. If None, __len__ and __getitem__ will use the
+                unsplit dataset. Defaults to None.
+        """
+        if split is not None:
+            if not SplitType.has_value(split):
+                raise ValueError(
+                    f"Invalid split type {split}. Valid values are {SplitType.values()}."
+                )
+            if self._split_index is None:
+                raise ValueError(
+                    "No current index to split the dataset has been set. Please call create_split prior to setting a split."
+                )
+            self.split = SplitType(split)
+        else:
+            self.split = None
+
 
 def get_dataset(metadata: Union[str, TatmDataMetadata], **kwargs) -> TatmDataset:
     """Get the dataset object from the metadata.
@@ -352,30 +373,11 @@ class TatmMemmapDataset(TatmDataset):
 
     def create_split(self, split_size: Union[float, int] = 0.1):
         current_split = self.split
-        self.set_split(None)  # Reset the split so that the whole dataset length is used to determine the split
+        self.set_split(
+            None
+        )  # Reset the split so that the whole dataset length is used to determine the split
         super().create_split(split_size)
         self.set_split(current_split)
-
-    def set_split(self, split: Optional[SplitType] = None):
-        """Set the split of the data that the __len__ and __getitem__ will operate on. If called without an argument, __len__ and __getitem__ will use the
-        unsplit dataset.
-
-        Args:
-            split: The split of the data that the __len__ and __getitem__ will operate on. If None, __len__ and __getitem__ will use the
-                unsplit dataset. Defaults to None.
-        """
-        if split is not None:
-            if not SplitType.has_value(split):
-                raise ValueError(
-                    f"Invalid split type {split}. Valid values are {SplitType.values()}."
-                )
-            if self._split_index is None:
-                raise ValueError(
-                    "No current index to split the dataset has been set. Please call create_split prior to setting a split."
-                )
-            self.split = SplitType(split)
-        else:
-            self.split = None
 
 
 def _get_document_ids(tokens: np.ndarray, eos_token: int = 1) -> np.ndarray:
