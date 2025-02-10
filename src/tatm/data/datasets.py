@@ -92,7 +92,7 @@ class TatmDataset(ABC):
         """Determine an index to split the dataset into training and validation sets.
         Splits the dataset into a training and validation set based on the split size where the last
         indices are used for validation.
-        Sets the index that is the first index of the validation set. 
+        Sets the index that is the first index of the validation set.
 
         Args:
             split_size: Either the ratio of the validation set to the whole data or
