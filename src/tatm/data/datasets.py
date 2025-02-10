@@ -29,6 +29,31 @@ class SplitType(TatmOptionEnum):
 class TatmDataset(ABC):
     """Abstract base class for TATM datasets."""
 
+    def __init__(
+        self,
+        *,
+        split: Optional[SplitType] = None,
+        val_split_size: Optional[Union[float, int]] = None,
+    ):
+        """Initialize the TatmDataset.
+
+        Args:
+            split: The split of the data that the __len__ and __getitem__ will operate on. If None, __len__ and __getitem__ will use the
+                unsplit dataset. This can be adjusted at runtime by using the set_split method. If defined here,
+                val_split_size must also be defined. Defaults to None.
+            val_split_size: The size of the validation split. If less than 1, assumed to be a ratio, if
+                greater than one assumed to be an observation count. Defaults to None.
+        """
+        self.split = None  # Initialize the split to None to prevent errors when calling create_split before set_split
+        if split is not None and val_split_size is None:
+            raise ValueError(
+                "If split is defined, val_split_size must also be defined."
+            )
+        if val_split_size is not None:
+            self.create_split(val_split_size)
+
+        self.set_split(split)
+
     @abstractmethod
     def __len__(self) -> int:
         """Get the number of tokens in the dataset."""
@@ -52,9 +77,14 @@ class TatmDataset(ABC):
                 assumed to be a ratio, if greater than one assumed to be an
                 observation account. Defaults to 0.1.
         """
+        current_split = self.split
+        self.set_split(
+            None
+        )  # Reset the split so that the whole dataset length is used to determine the split
         if split_size < 1:
             split_size = math.ceil(len(self) * split_size)
         self._split_index = len(self) - split_size
+        self.set_split(current_split)
 
     def set_split(self, split: Optional[SplitType] = None):
         """Set the split of the data that the __len__ and __getitem__ will operate on. If called without an argument, __len__ and __getitem__ will use the
@@ -258,7 +288,8 @@ class TatmMemmapDataset(TatmDataset):
             val_split_size (optional): The size of the validation split. If less than 1, assumed to be a ratio, if
                 greater than one assumed to be an observation count. Defaults to None.
             split (optional): The split of the data that the __len__ and __getitem__ will operate on. If None, __len__ and __getitem__ will use the
-                unsplit dataset. This can be adjusted at runtime by using the set_split method. Defaults to None.
+                unsplit dataset. If defined here,
+                val_split_size must also be defined. This can be adjusted at runtime by using the set_split method. Defaults to None.
         """
         self.token_output_format = token_output_format
         self._validate()
@@ -271,19 +302,13 @@ class TatmMemmapDataset(TatmDataset):
         self.vocab_size = vocab_size
         self.create_doc_ids = create_doc_ids
         self.create_doc_mask = create_doc_mask
-        self.split = None  # Initialize the split to None to prevent errors when calling create_split before set_split
         if self.create_doc_mask and not self.create_doc_ids:
             raise ValueError(
                 "Document mask creation requires create_doc_ids to be True."
             )
         self._construct_file_list()
 
-        if val_split_size is not None:
-            self.create_split(val_split_size)
-        else:
-            self._split_index = None
-
-        self.set_split(split)
+        super().__init__(split=split, val_split_size=val_split_size)
 
     def _validate(self):
         """Validate the passed in inputs"""
@@ -375,14 +400,6 @@ class TatmMemmapDataset(TatmDataset):
     def num_tokens(self):
         """Get the number of tokens in the dataset."""
         return sum([i.num_tokens for _, i in self.file_list])
-
-    def create_split(self, split_size: Union[float, int] = 0.1):
-        current_split = self.split
-        self.set_split(
-            None
-        )  # Reset the split so that the whole dataset length is used to determine the split
-        super().create_split(split_size)
-        self.set_split(current_split)
 
 
 def _get_document_ids(tokens: np.ndarray, eos_token: int = 1) -> np.ndarray:
