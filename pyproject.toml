@@ -1,3 +1,8 @@
+[build-system]
+requires = ["poetry-core>=2.0.0,<3.0.0"]
+build-backend = "poetry.core.masonry.api"
+
+
 [project]
 name = "tatm"
 version = "0.2.1"
@@ -34,11 +39,6 @@ tatm = "tatm:cli"
 
 [tool.poetry]
 packages = [{include = "tatm", from = "src"}]
-
-
-[build-system]
-requires = ["poetry-core>=2.0.0,<3.0.0"]
-build-backend = "poetry.core.masonry.api"
 
 
 [tool.poetry.group.dev]
