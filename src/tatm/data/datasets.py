@@ -428,7 +428,7 @@ class TatmImageTextDataset(TatmDataset):
     def __init__(
         self,
         img_root: str,
-        ann_paths: list,
+        ann_paths: list[Union[Path, str]],
         *,
         img_processor=None,
         text_processor=None,
@@ -448,11 +448,30 @@ class TatmImageTextDataset(TatmDataset):
         self.text_processor = text_processor
         self.annotations = []
 
-        for ann_path in ann_paths:
-            with open(ann_path, "r") as f:
-                self.annotations.extend(json.load(f))
+        self._load_annotations(ann_paths)
 
         super().__init__(**kwargs)
+
+    def _load_annotations(self, ann_paths: list[Union[Path, str]]):
+        """
+        Handles loading annotations into the dataset. Currently handles json and jsonl files.
+
+        Args:
+            ann_paths: List of files containing the annotations within this dataset.
+                    Each annotation should give the path (relative to img_root) of the image it is describing
+        """
+        for ann_path in ann_paths:
+            ann_path = Path(ann_path)
+            if ann_path.suffix == ".json":
+                with ann_path.open(mode="r") as f:
+                    self.annotations.extend(json.load(f))
+            elif ann_path.suffix == ".jsonl":
+                with ann_path.open(mode="r") as f:
+                    self.annotations.extend([json.loads(line) for line in f])
+            else:
+                raise ValueError(
+                    "Only .json and .jsonl files are supported for image-text annotations."
+                )
 
     def _num_samples(self):
         return len(self.annotations)
@@ -470,7 +489,7 @@ class TatmCaptionedImageDataset(TatmImageTextDataset):
     def __init__(
         self,
         img_root: str,
-        ann_paths: list,
+        ann_paths: list[Union[Path, str]],
         *,
         img_processor=None,
         text_processor=None,
