@@ -428,7 +428,7 @@ class TatmImageTextDataset(TatmDataset):
     def __init__(
         self,
         img_root: str,
-        ann_paths: list,
+        ann_paths: list[Union[Path, str]],
         *,
         img_processor=None,
         text_processor=None,
@@ -449,8 +449,17 @@ class TatmImageTextDataset(TatmDataset):
         self.annotations = []
 
         for ann_path in ann_paths:
-            with open(ann_path, "r") as f:
-                self.annotations.extend(json.load(f))
+            ann_path = Path(ann_path)
+            if ann_path.suffix == ".json":
+                with ann_path.open(mode="r") as f:
+                    self.annotations.extend(json.load(f))
+            elif ann_path.suffix == ".jsonl":
+                with ann_path.open(mode="r") as f:
+                    self.annotations.extend([json.loads(line) for line in f])
+            else:
+                raise ValueError(
+                    "Only .json and .jsonl files are supported for image-text annotations."
+                )
 
         super().__init__(**kwargs)
 
