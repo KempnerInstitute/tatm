@@ -479,7 +479,7 @@ class TatmCaptionedImageDataset(TatmImageTextDataset):
     def __init__(
         self,
         img_root: str,
-        ann_paths: list,
+        ann_paths: list[Union[Path, str]],
         *,
         img_processor=None,
         text_processor=None,
