@@ -240,7 +240,7 @@ class TokenMemMapArray:
             )
         else:
             return self.array[idx : idx + self.context_length]
-        
+
     def __getstate__(self):
         """Get the state for pickling.
         We don't want to pickle the array, so we close it before pickling."""
