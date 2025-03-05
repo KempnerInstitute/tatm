@@ -201,15 +201,13 @@ class TokenMemMapArray:
         self.context_length = context_length
         self.dtype = dtype
         self.chunked = chunked
+        self.array = None
         self._get_file_info()
 
     def _get_file_info(self):
         """Get the file information."""
         file_size = self.file_path.stat().st_size
         self.num_tokens = file_size // np.dtype(self.dtype).itemsize
-        self.array = np.memmap(
-            self.file_path, dtype=self.dtype, mode="r", shape=(self.num_tokens,)
-        )
 
     def __len__(self):
         """Get the number of tokens or chunks in the array."""
@@ -228,6 +226,9 @@ class TokenMemMapArray:
         The last chunk will be right-padded if there are
         not enough tokens left to fill it.
         """
+        if self.array is None:
+            self._open_array()
+
         if self.chunked:
             chunk = self.array[
                 idx * self.context_length : (idx + 1) * self.context_length
@@ -239,6 +240,23 @@ class TokenMemMapArray:
             )
         else:
             return self.array[idx : idx + self.context_length]
+
+    def __getstate__(self):
+        """Get the state for pickling.
+        We don't want to pickle the array, so we close it before pickling."""
+        self.close_array()
+        return super().__getstate__()
+
+    def _open_array(self):
+        """Open the memory map."""
+        self.array = np.memmap(
+            self.file_path, dtype=self.dtype, mode="r", shape=(self.num_tokens,)
+        )
+
+    def close_array(self):
+        """Close the memory map."""
+        del self.array
+        self.array = None
 
 
 @dataclass
