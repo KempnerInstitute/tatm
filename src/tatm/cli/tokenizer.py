@@ -54,7 +54,7 @@ def tokenize(
     ray.init(
         ignore_reinit_error=True,
         logging_config=ray.LoggingConfig(
-            encoding="TEXT", log_level="INFO", additional_log_standard_attrs=["name"]
+            encoding="TEXT", log_level=logging.getLevelName(log_level), additional_log_standard_attrs=["name"]
         ),
     )  # Looks to RAY_ADDRESS env var for connection to remote cluster, or starts a local cluster
 
