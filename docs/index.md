@@ -23,6 +23,7 @@ configuration.md
 :caption: Examples:
 text_dataset.md
 metadata.md
+dataset_splits.md
 ```
 
 ```{toctree}
