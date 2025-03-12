@@ -13,7 +13,9 @@ else
 fi
 
 # choose available port on the head node
-head_port=`comm -23 <(seq 15000 20000 | sort) <(ss -Htan | awk '{print $4}' | cut -d':' -f2 | sort -u) | shuf | head -n 1`
+free_ports=( `comm -23 <(seq 15000 20000 | sort) <(ss -Htan | awk '{print $4}' | cut -d':' -f2 | sort -u) | shuf | head -n 2` )
+head_port=${free_ports[0]}
+dashboard_port=${free_ports[1]}
 nodes=`scontrol show hostnames $SLURM_JOB_NODELIST`
 nodes_array=( $nodes )
 head_node=${nodes_array[0]}
@@ -21,12 +23,14 @@ head_node_ip=$(srun --nodes=1 --ntasks=1 -w "$head_node" hostname --ip-address)
 echo "Head node: $head_node"
 echo "Head node ip: $head_node_ip"
 echo "Head port: $head_port"
+echo "Dashboard port: $dashboard_port"
 export RAY_HEAD_ADDR="$head_node_ip:$head_port"
 echo "Head address: $RAY_HEAD_ADDR"
 
 echo "Starting Ray head on $head_node"
 srun -N 1 -n 1 -w "$head_node"  ray start --head --node-ip-address="$head_node_ip" --temp-dir /tmp/$USER/$SLURM_JOB_ID/ray \
-    --port=$head_port --num-cpus $SLURM_CPUS_PER_TASK --num-gpus $RAY_NUM_GPUS --min-worker-port 20001 --max-worker-port 30000 --block &
+    --port=$head_port --num-cpus $SLURM_CPUS_PER_TASK --num-gpus $RAY_NUM_GPUS --dashboard-port $dashboard_port \
+    --min-worker-port 20001 --max-worker-port 30000 --block &
 
 # wait for head node to start
 sleep 5
