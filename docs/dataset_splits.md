@@ -42,29 +42,40 @@ dataset.set_split("val")
 print(len(dataset))
 # 100
 
-val_dataset = get_dataset("my_data", context_length=512, split="val")
+val_dataset = get_dataset("my_data", context_length=512, val_split_size=150, split="val") # we can also pass in a number of items to use for the validation set
 print(len(val_dataset))
-# 100
+# 150
 ```
 
-Note that we can use the `set_split` method to switch between the training and validation sets at any time. If we want to operate on the full dataset we can call `set_split(None)` or pass `None` as the split argument when initializing the dataset. If we want to change the split size we can call the `create_split`
-method which will create a new split based on the new split size. Note that calling this will not change the current split that we are using.
+Note that we can use the `set_split` method to switch between the training and validation sets at any time. If we want to operate on the full dataset we can call `set_split(None)` or pass `None` as the split argument when initializing the dataset. If we have loaded a dataset without defining a split size, we can still create a split by calling the `create_split` method and passing in the desired split size. This will create a new split based on the current dataset and the specified split size. Note that this has to be done prior to calling `set_split` or passing in a split argument when initializing the dataset. 
 
 ```python
+dataset = get_dataset("my_data", context_length=512)
+print(len(dataset))
+# 1000
+dataset.create_split(0.1) # create a split with 10% of the dataset reserved for validation
+print(len(dataset))
+# 1000
 dataset.set_split("train")
 print(len(dataset))
 # 900
-dataset.create_split(150) # can also pass integer values to indicate a number of indices
+dataset.set_split("val")
 print(len(dataset))
-# 850
+# 100
+dataset.set_split(None) # set the split to None to use the full dataset
+print(len(dataset))
+# 1000
 ```
+
+
 
 When we have the splits created, the indices used to return items in the dataset will be remapped to only return items from the split that we are using. Note that 
 this also means in the case of the validation split, indices will be remapped so that the first index in the validation split can be returned by calling `dataset[0]`.
 
 ```python
+dataset = get_dataset("my_data", context_length=512, val_split_size=0.2)
 dataset.set_split(None)
-val_dataset.create_split(0.2) # 20% of the full dataset, 200 items
+val_dataset = get_dataset("my_data", context_length=512, val_split_size=0.2, split="val")
 print(dataset[800] == val_dataset[0])
 # True
 ```
