@@ -50,7 +50,8 @@ In this repo, we use github actions to manage package versioning and releases. T
 
 All PRs from `dev` to `main` should represent a new release of the package. In order to ensure that, we use the github workflow at `.github/workflows/deploy.yml` to handle changing the semantic version number and to create a new tag/new release on github. 
 
-When you are ready to release a new version of the package, you should create a PR from `dev` to `main`. On a PR from `dev` to `main` you should label the PR with one of 3 labels (bump:major, bump:minor, or bump:patch). On labeling, a workflow will be triggered that will look to the repos existing tags and from those determine what the next semantic version should be. This workflow will also make a commit to `dev` bumping the version number accordingly.
+When you are ready to release a new version of the package, you should create a PR from `dev` to `main`. On a PR from `dev` to `main` you should label the PR with one of 3 labels (bump:major, bump:minor, or bump:patch). On labeling, a workflow will be triggered that will look to the repos existing tags and from those determine what the next semantic version should be. This workflow will ensure that the branch being merged in has 
+the correct version number in the `pyproject.toml` file. In order to update the version number, a separate PR to `dev` (or the hotfix release branch) should be created updating the version number. THe release workflow will fail until the version in the release branch matches the expected version number.
 
 On merging that PR to `main`, the workflow will again be triggered, this time looking to see if the PR being merged was labeled, and creating a tag associated with the new version. The workflow will also use poetry to build a python wheel and create a release including the zipped source code and the built wheel.
 
@@ -60,7 +61,7 @@ If a hotfix is needed, you should create a branch from `main` with a name begini
 
 ### Automated versioning
 
-The versioning is handled by the `haya14busa/action-bumpr` action. This action uses existing tags to determine the next version number. The action will look at the tags in the repo and determine the next version based on the highest tag. If the highest tag is `v1.2.3` then the next version will be `v1.2.4`. If the highest tag is `v1.2.3` and the PR is labeled with `bump:minor` then the next version will be `v1.3.0`. If the highest tag is `v1.2.3` and the PR is labeled with `bump:major` then the next version will be `v2.0.0`. If you make a mistake with your labeling, you can remove the label and apply the proper label and the workflow will rerun and update the code with the proper version number. If you don't want to update the version number, you can remove the label, put will have to make a manual commit to `dev` to update the version number to the previous version.
+The versioning is handled by the `haya14busa/action-bumpr` action. This action uses existing tags to determine the next version number. The action will look at the tags in the repo and determine the next version based on the highest tag. If the highest tag is `v1.2.3` then the next version will be `v1.2.4`. If the highest tag is `v1.2.3` and the PR is labeled with `bump:minor` then the next version will be `v1.3.0`. If the highest tag is `v1.2.3` and the PR is labeled with `bump:major` then the next version will be `v2.0.0`. If you make a mistake with your labeling, you can remove the label and apply the proper label and the workflow will rerun and update the check with the proper version number. 
 
 ## Merging
 
