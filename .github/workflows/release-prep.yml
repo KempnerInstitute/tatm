@@ -30,7 +30,7 @@ jobs:
         - name: bump package version
           run: |
               new_version=`echo ${{ steps.bumpr.outputs.next_version }} | sed 's/^v//'`
-              branch_version=`poetry version | awk '{print $2}'
+              branch_version=`poetry version | awk '{print $2}'`
               echo "Current version: $branch_version"
               echo "New version: $new_version"
               if [ "$branch_version" != "$new_version" ]; then
