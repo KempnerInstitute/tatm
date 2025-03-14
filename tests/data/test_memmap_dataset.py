@@ -168,3 +168,68 @@ def test_dataloader_integration(sample_dataset):
 def test_handle_nonexistent_path():
     with pytest.raises(FileNotFoundError):
         _ = get_dataset("nonexistent_path", context_length=100)
+
+
+class TestValidationSplits:
+
+    def test_split_index_determination(self, sample_dataset):
+        dataset = TatmMemmapDataset(
+            str(sample_dataset[0] / sample_dataset[1]), 100, "uint16"
+        )
+        dataset.create_split(20)
+        print(dataset._split_index)
+        assert dataset._split_index == 80
+        dataset.create_split(0.2)
+        assert dataset._split_index == 80
+
+    @pytest.mark.parametrize("split_size", [20, 0.2])
+    @pytest.mark.parametrize("split", ["train", "validation"])
+    def test_split_indexing(self, sample_dataset, split, split_size):
+        dataset = TatmMemmapDataset(
+            str(sample_dataset[0] / sample_dataset[1]), 100, "uint16"
+        )
+        if split == "train":
+            test_record = dataset[0]
+        elif split == "validation":
+            test_record = dataset[80]
+        dataset.create_split(split_size)
+        dataset.set_split(split)
+        if split == "train":
+            assert len(dataset) == 80
+        elif split == "validation":
+            assert len(dataset) == 20
+        assert torch.all(test_record["token_ids"] == dataset[0]["token_ids"])
+
+    @pytest.mark.parametrize("split_size", [20, 0.2])
+    @pytest.mark.parametrize("split", [None, "train", "validation"])
+    def test_split_indexing_at_instantiation(self, sample_dataset, split, split_size):
+        dataset = TatmMemmapDataset(
+            str(sample_dataset[0] / sample_dataset[1]),
+            100,
+            "uint16",
+            val_split_size=split_size,
+            split=split,
+        )
+        if split == "validation":
+            assert len(dataset) == 20
+        elif split == "train":
+            assert len(dataset) == 80
+        else:
+            assert len(dataset) == 100
+
+    @pytest.mark.parametrize("split_size", [20, 0.2])
+    def test_index_bounds(self, sample_dataset, split_size):
+        dataset = TatmMemmapDataset(
+            str(sample_dataset[0] / sample_dataset[1]), 100, "uint16"
+        )
+        dataset.create_split(split_size)
+        dataset.set_split("validation")
+        with pytest.raises(IndexError):
+            _ = dataset[20]
+        with pytest.raises(IndexError):
+            _ = dataset[-21]
+        dataset.set_split("train")
+        with pytest.raises(IndexError):
+            _ = dataset[80]
+        with pytest.raises(IndexError):
+            _ = dataset[-81]
