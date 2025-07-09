@@ -16,10 +16,10 @@ classifiers = [
 "License :: OSI Approved :: MIT License",
 "Operating System :: OS Independent"
 ]
-requires-python = ">=3.10"
+requires-python = ">=3.10,<4"
 dependencies = [
-    "click >=8.1.7",
-    "datasets >=3.0.1",
+    "click>=8.1.7",
+    "datasets>=3.0.1",
     "tokenizers>=0.20.0",
     "ray[default]>=2.34.0",
     "pyyaml>=6.0.2",
