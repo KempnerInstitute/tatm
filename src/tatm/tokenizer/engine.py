@@ -74,6 +74,7 @@ class DataServer:
             return ExampleMessage(data=example, content_field=content_field)
         except StopIteration:
             self.dataset_iters.pop(dataset_idx)
+            LOGGER.info("A dataset has been exhausted and removed from rotation.")
             return self.get_example()
 
     def run(self):
