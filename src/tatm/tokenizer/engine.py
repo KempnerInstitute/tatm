@@ -58,6 +58,7 @@ class DataServer:
         self.done = False
 
     def get_example(self):
+        LOGGER.info(f"Fetching example from {len(self.dataset_iters)} available datasets.")
         if len(self.dataset_iters) == 0:
             LOGGER.info("No datasets available to iterate over.")
             self.done = True
