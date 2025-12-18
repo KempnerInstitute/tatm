@@ -73,6 +73,7 @@ class DataServer:
             content_field = self.datasets[dataset_idx].metadata.content_field
             return ExampleMessage(data=example, content_field=content_field)
         except StopIteration:
+            LOGGER.info("Dataset iterator exhausted.")
             self.dataset_iters.pop(dataset_idx)
             LOGGER.info("A dataset has been exhausted and removed from rotation.")
             return self.get_example()
