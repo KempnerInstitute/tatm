@@ -58,7 +58,6 @@ class DataServer:
         self.done = False
 
     def get_example(self):
-        LOGGER.info(f"Fetching example from {len(self.dataset_iters)} available datasets.")
         if len(self.dataset_iters) == 0:
             LOGGER.info("No datasets available to iterate over.")
             self.done = True
@@ -68,15 +67,13 @@ class DataServer:
             return None
         if not self.initialized:
             raise RuntimeError("DataServer not initialized. Call 'initialize' first.")
-        dataset_idx = self.rng.randint(0, len(self.datasets) - 1)
+        dataset_idx = self.rng.randint(0, len(self.dataset_iters) - 1)
         try:
             example = next(self.dataset_iters[dataset_idx])
             content_field = self.datasets[dataset_idx].metadata.content_field
             return ExampleMessage(data=example, content_field=content_field)
         except StopIteration:
-            LOGGER.info("Dataset iterator exhausted.")
             self.dataset_iters.pop(dataset_idx)
-            LOGGER.info("A dataset has been exhausted and removed from rotation.")
             return self.get_example()
 
     def run(self):
