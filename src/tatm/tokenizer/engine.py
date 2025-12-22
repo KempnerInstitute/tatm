@@ -67,7 +67,7 @@ class DataServer:
             return None
         if not self.initialized:
             raise RuntimeError("DataServer not initialized. Call 'initialize' first.")
-        dataset_idx = self.rng.randint(0, len(self.datasets) - 1)
+        dataset_idx = self.rng.randint(0, len(self.dataset_iters) - 1)
         try:
             example = next(self.dataset_iters[dataset_idx])
             content_field = self.datasets[dataset_idx].metadata.content_field
